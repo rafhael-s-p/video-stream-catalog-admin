@@ -14,16 +14,16 @@ class CategoryTest extends TestHelper {
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = true;
 
-        final var actualCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+        final var currentCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        Assertions.assertNotNull(actualCategory);
-        Assertions.assertNotNull(actualCategory.getId());
-        Assertions.assertEquals(expectedName, actualCategory.getName());
-        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
-        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
-        Assertions.assertNotNull(actualCategory.getCreatedAt());
-        Assertions.assertNotNull(actualCategory.getUpdatedAt());
-        Assertions.assertNull(actualCategory.getDeletedAt());
+        Assertions.assertNotNull(currentCategory);
+        Assertions.assertNotNull(currentCategory.getId());
+        Assertions.assertEquals(expectedName, currentCategory.getName());
+        Assertions.assertEquals(expectedDescription, currentCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, currentCategory.isActive());
+        Assertions.assertNotNull(currentCategory.getCreatedAt());
+        Assertions.assertNotNull(currentCategory.getUpdatedAt());
+        Assertions.assertNull(currentCategory.getDeletedAt());
     }
 
     @Test
@@ -34,14 +34,14 @@ class CategoryTest extends TestHelper {
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = true;
 
-        final var actualCategory =
+        final var currentCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        final var actualException =
-                Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+        final var currentException =
+                Assertions.assertThrows(DomainException.class, () -> currentCategory.validate(new ThrowsValidationHandler()));
 
-        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, currentException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, currentException.getErrors().get(0).message());
     }
 
     @Test
@@ -52,14 +52,14 @@ class CategoryTest extends TestHelper {
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = true;
 
-        final var actualCategory =
+        final var currentCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        final var actualException =
-                Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+        final var currentException =
+                Assertions.assertThrows(DomainException.class, () -> currentCategory.validate(new ThrowsValidationHandler()));
 
-        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, currentException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, currentException.getErrors().get(0).message());
     }
 
     @Test
@@ -70,14 +70,14 @@ class CategoryTest extends TestHelper {
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = true;
 
-        final var actualCategory =
+        final var currentCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        final var actualException =
-                Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+        final var currentException =
+                Assertions.assertThrows(DomainException.class, () -> currentCategory.validate(new ThrowsValidationHandler()));
 
-        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, currentException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, currentException.getErrors().get(0).message());
     }
 
     @Test
@@ -88,14 +88,14 @@ class CategoryTest extends TestHelper {
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = true;
 
-        final var actualCategory =
+        final var currentCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        final var actualException =
-                Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+        final var currentException =
+                Assertions.assertThrows(DomainException.class, () -> currentCategory.validate(new ThrowsValidationHandler()));
 
-        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, currentException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, currentException.getErrors().get(0).message());
     }
 
     @Test
@@ -104,19 +104,19 @@ class CategoryTest extends TestHelper {
         final var expectedDescription = "  ";
         final var expectedIsActive = true;
 
-        final var actualCategory =
+        final var currentCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
+        Assertions.assertDoesNotThrow(() -> currentCategory.validate(new ThrowsValidationHandler()));
 
-        Assertions.assertNotNull(actualCategory);
-        Assertions.assertNotNull(actualCategory.getId());
-        Assertions.assertEquals(expectedName, actualCategory.getName());
-        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
-        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
-        Assertions.assertNotNull(actualCategory.getCreatedAt());
-        Assertions.assertNotNull(actualCategory.getUpdatedAt());
-        Assertions.assertNull(actualCategory.getDeletedAt());
+        Assertions.assertNotNull(currentCategory);
+        Assertions.assertNotNull(currentCategory.getId());
+        Assertions.assertEquals(expectedName, currentCategory.getName());
+        Assertions.assertEquals(expectedDescription, currentCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, currentCategory.isActive());
+        Assertions.assertNotNull(currentCategory.getCreatedAt());
+        Assertions.assertNotNull(currentCategory.getUpdatedAt());
+        Assertions.assertNull(currentCategory.getDeletedAt());
     }
 
     @Test
@@ -125,19 +125,19 @@ class CategoryTest extends TestHelper {
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = false;
 
-        final var actualCategory =
+        final var currentCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
+        Assertions.assertDoesNotThrow(() -> currentCategory.validate(new ThrowsValidationHandler()));
 
-        Assertions.assertNotNull(actualCategory);
-        Assertions.assertNotNull(actualCategory.getId());
-        Assertions.assertEquals(expectedName, actualCategory.getName());
-        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
-        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
-        Assertions.assertNotNull(actualCategory.getCreatedAt());
-        Assertions.assertNotNull(actualCategory.getUpdatedAt());
-        Assertions.assertNotNull(actualCategory.getDeletedAt());
+        Assertions.assertNotNull(currentCategory);
+        Assertions.assertNotNull(currentCategory.getId());
+        Assertions.assertEquals(expectedName, currentCategory.getName());
+        Assertions.assertEquals(expectedDescription, currentCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, currentCategory.isActive());
+        Assertions.assertNotNull(currentCategory.getCreatedAt());
+        Assertions.assertNotNull(currentCategory.getUpdatedAt());
+        Assertions.assertNotNull(currentCategory.getDeletedAt());
     }
 
     @Test
@@ -156,17 +156,17 @@ class CategoryTest extends TestHelper {
         Assertions.assertTrue(aCategory.isActive());
         Assertions.assertNull(aCategory.getDeletedAt());
 
-        final var actualCategory = aCategory.inactivate();
+        final var currentCategory = aCategory.inactivate();
 
-        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
+        Assertions.assertDoesNotThrow(() -> currentCategory.validate(new ThrowsValidationHandler()));
 
-        Assertions.assertEquals(aCategory.getId(), actualCategory.getId());
-        Assertions.assertEquals(expectedName, actualCategory.getName());
-        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
-        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
-        Assertions.assertEquals(createdAt, actualCategory.getCreatedAt());
-        Assertions.assertTrue(actualCategory.getUpdatedAt().isAfter(updatedAt));
-        Assertions.assertNotNull(actualCategory.getDeletedAt());
+        Assertions.assertEquals(aCategory.getId(), currentCategory.getId());
+        Assertions.assertEquals(expectedName, currentCategory.getName());
+        Assertions.assertEquals(expectedDescription, currentCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, currentCategory.isActive());
+        Assertions.assertEquals(createdAt, currentCategory.getCreatedAt());
+        Assertions.assertTrue(currentCategory.getUpdatedAt().isAfter(updatedAt));
+        Assertions.assertNotNull(currentCategory.getDeletedAt());
     }
 
     @Test
@@ -185,17 +185,17 @@ class CategoryTest extends TestHelper {
         Assertions.assertFalse(aCategory.isActive());
         Assertions.assertNotNull(aCategory.getDeletedAt());
 
-        final var actualCategory = aCategory.activate();
+        final var currentCategory = aCategory.activate();
 
-        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
+        Assertions.assertDoesNotThrow(() -> currentCategory.validate(new ThrowsValidationHandler()));
 
-        Assertions.assertEquals(aCategory.getId(), actualCategory.getId());
-        Assertions.assertEquals(expectedName, actualCategory.getName());
-        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
-        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
-        Assertions.assertEquals(createdAt, actualCategory.getCreatedAt());
-        Assertions.assertTrue(actualCategory.getUpdatedAt().isAfter(updatedAt));
-        Assertions.assertNull(actualCategory.getDeletedAt());
+        Assertions.assertEquals(aCategory.getId(), currentCategory.getId());
+        Assertions.assertEquals(expectedName, currentCategory.getName());
+        Assertions.assertEquals(expectedDescription, currentCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, currentCategory.isActive());
+        Assertions.assertEquals(createdAt, currentCategory.getCreatedAt());
+        Assertions.assertTrue(currentCategory.getUpdatedAt().isAfter(updatedAt));
+        Assertions.assertNull(currentCategory.getDeletedAt());
     }
 
     @Test
@@ -214,16 +214,16 @@ class CategoryTest extends TestHelper {
         final var createdAt = aCategory.getCreatedAt();
         final var updatedAt = aCategory.getUpdatedAt();
 
-        final var actualCategory = aCategory.update(expectedName, expectedDescription, expectedIsActive);
+        final var currentCategory = aCategory.update(expectedName, expectedDescription, expectedIsActive);
 
-        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
+        Assertions.assertDoesNotThrow(() -> currentCategory.validate(new ThrowsValidationHandler()));
 
-        Assertions.assertEquals(aCategory.getId(), actualCategory.getId());
-        Assertions.assertEquals(expectedName, actualCategory.getName());
-        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
+        Assertions.assertEquals(aCategory.getId(), currentCategory.getId());
+        Assertions.assertEquals(expectedName, currentCategory.getName());
+        Assertions.assertEquals(expectedDescription, currentCategory.getDescription());
         Assertions.assertFalse(aCategory.isActive());
-        Assertions.assertEquals(createdAt, actualCategory.getCreatedAt());
-        Assertions.assertTrue(actualCategory.getUpdatedAt().isAfter(updatedAt));
+        Assertions.assertEquals(createdAt, currentCategory.getCreatedAt());
+        Assertions.assertTrue(currentCategory.getUpdatedAt().isAfter(updatedAt));
         Assertions.assertNotNull(aCategory.getDeletedAt());
     }
 
@@ -240,14 +240,14 @@ class CategoryTest extends TestHelper {
         final var createdAt = aCategory.getCreatedAt();
         final var updatedAt = aCategory.getUpdatedAt();
 
-        final var actualCategory = aCategory.update(expectedName, expectedDescription, expectedIsActive);
+        final var currentCategory = aCategory.update(expectedName, expectedDescription, expectedIsActive);
 
-        Assertions.assertEquals(aCategory.getId(), actualCategory.getId());
-        Assertions.assertEquals(expectedName, actualCategory.getName());
-        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
+        Assertions.assertEquals(aCategory.getId(), currentCategory.getId());
+        Assertions.assertEquals(expectedName, currentCategory.getName());
+        Assertions.assertEquals(expectedDescription, currentCategory.getDescription());
         Assertions.assertTrue(aCategory.isActive());
-        Assertions.assertEquals(createdAt, actualCategory.getCreatedAt());
-        Assertions.assertTrue(actualCategory.getUpdatedAt().isAfter(updatedAt));
+        Assertions.assertEquals(createdAt, currentCategory.getCreatedAt());
+        Assertions.assertTrue(currentCategory.getUpdatedAt().isAfter(updatedAt));
         Assertions.assertNull(aCategory.getDeletedAt());
     }
 
