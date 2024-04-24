@@ -1,7 +1,7 @@
 package com.studies.catalog.admin.application;
 
-public abstract class NullaryUseCase<OUT> {
+public abstract class NullaryUseCase<Out> {
 
-    public abstract OUT execute();
+    public abstract Out execute();
 
 }

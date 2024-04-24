@@ -1,7 +1,7 @@
 package com.studies.catalog.admin.application;
 
-public abstract class UnitUseCase<IN> {
+public abstract class UnitUseCase<In> {
 
-    public abstract void execute(IN anIn);
+    public abstract void execute(In anIn);
 
 }

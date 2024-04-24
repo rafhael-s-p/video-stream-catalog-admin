@@ -1,8 +1,8 @@
 package com.studies.catalog.admin.domain;
 
-public abstract class AggregateRoot<ID extends Identifier> extends Entity<ID> {
+public abstract class AggregateRoot<GenericId extends Identifier> extends Entity<GenericId> {
 
-    protected AggregateRoot(final ID id) {
+    protected AggregateRoot(final GenericId id) {
         super(id);
     }
 

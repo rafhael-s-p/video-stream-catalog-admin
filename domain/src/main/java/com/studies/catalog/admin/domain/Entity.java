@@ -4,18 +4,18 @@ import com.studies.catalog.admin.domain.validation.ValidationHandler;
 
 import java.util.Objects;
 
-public abstract class Entity<ID extends Identifier> {
+public abstract class Entity<GenericId extends Identifier> {
 
-    protected final ID id;
+    protected final GenericId id;
 
-    protected Entity(final ID id) {
+    protected Entity(final GenericId id) {
         Objects.requireNonNull(id, "'id' should not be null!");
         this.id = id;
     }
 
     public abstract void validate(ValidationHandler handler);
 
-    public ID getId() {
+    public GenericId getId() {
         return id;
     }
 

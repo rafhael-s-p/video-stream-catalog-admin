@@ -1,7 +1,7 @@
 package com.studies.catalog.admin.application;
 
-public abstract class UseCase<IN, OUT> {
+public abstract class UseCase<In, Out> {
 
-    public abstract OUT execute(IN anIn);
+    public abstract Out execute(In anIn);
 
 }
