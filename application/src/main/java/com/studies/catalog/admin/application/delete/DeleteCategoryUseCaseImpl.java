@@ -5,11 +5,11 @@ import com.studies.catalog.admin.domain.category.CategoryID;
 
 import java.util.Objects;
 
-public class DefaultDeleteCategoryUseCase extends DeleteCategoryUseCase {
+public class DeleteCategoryUseCaseImpl extends DeleteCategoryUseCase {
 
     private final CategoryGateway categoryGateway;
 
-    public DefaultDeleteCategoryUseCase(final CategoryGateway categoryGateway) {
+    public DeleteCategoryUseCaseImpl(final CategoryGateway categoryGateway) {
         this.categoryGateway = Objects.requireNonNull(categoryGateway);
     }
 

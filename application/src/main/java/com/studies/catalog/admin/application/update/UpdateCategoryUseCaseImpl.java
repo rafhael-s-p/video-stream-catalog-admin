@@ -14,11 +14,11 @@ import java.util.function.Supplier;
 import static io.vavr.API.Left;
 import static io.vavr.API.Try;
 
-public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
+public class UpdateCategoryUseCaseImpl extends UpdateCategoryUseCase {
 
     private final CategoryGateway categoryGateway;
 
-    public DefaultUpdateCategoryUseCase(final CategoryGateway categoryGateway) {
+    public UpdateCategoryUseCaseImpl(final CategoryGateway categoryGateway) {
         this.categoryGateway = Objects.requireNonNull(categoryGateway);
     }
 

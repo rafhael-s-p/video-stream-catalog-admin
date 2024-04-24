@@ -10,11 +10,11 @@ import java.util.Objects;
 import static io.vavr.API.Left;
 import static io.vavr.API.Try;
 
-public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
+public class CreateCategoryUseCaseImpl extends CreateCategoryUseCase {
 
     private final CategoryGateway categoryGateway;
 
-    public DefaultCreateCategoryUseCase(final CategoryGateway categoryGateway) {
+    public CreateCategoryUseCaseImpl(final CategoryGateway categoryGateway) {
         this.categoryGateway = Objects.requireNonNull(categoryGateway);
     }
 
