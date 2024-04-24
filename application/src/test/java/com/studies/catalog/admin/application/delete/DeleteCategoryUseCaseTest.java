@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 class DeleteCategoryUseCaseTest {
 
     @InjectMocks
-    private DefaultDeleteCategoryUseCase useCase;
+    private DeleteCategoryUseCaseImpl useCase;
 
     @Mock
     private CategoryGateway categoryGateway;

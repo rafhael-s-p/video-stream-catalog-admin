@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 class UpdateCategoryUseCaseTest {
 
     @InjectMocks
-    private DefaultUpdateCategoryUseCase useCase;
+    private UpdateCategoryUseCaseImpl useCase;
 
     @Mock
     private CategoryGateway categoryGateway;
