@@ -5,7 +5,7 @@ import com.studies.catalog.admin.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 
-public class Category extends AggregateRoot<CategoryID> implements Cloneable {
+public class Category extends AggregateRoot<CategoryID> {
 
     private String name;
     private String description;
@@ -36,6 +36,38 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
         final var deletedAt = isActive ? null : now;
 
         return new Category(id, aName, aDescription, isActive, now, now, deletedAt);
+    }
+
+    public static Category with(
+            final CategoryID anId,
+            final String name,
+            final String description,
+            final boolean active,
+            final Instant createdAt,
+            final Instant updatedAt,
+            final Instant deletedAt
+    ) {
+        return new Category(
+                anId,
+                name,
+                description,
+                active,
+                createdAt,
+                updatedAt,
+                deletedAt
+        );
+    }
+
+    public static Category with(final Category aCategory) {
+        return with(
+                aCategory.getId(),
+                aCategory.name,
+                aCategory.description,
+                aCategory.isActive(),
+                aCategory.createdAt,
+                aCategory.updatedAt,
+                aCategory.deletedAt
+        );
     }
 
     public CategoryID getId() {
@@ -100,15 +132,6 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
     @Override
     public void validate(final ValidationHandler handler) {
         new CategoryValidator(this, handler).validate();
-    }
-
-    @Override
-    public Category clone() {
-        try {
-            return (Category) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
     }
 
 }
