@@ -45,7 +45,7 @@ class UpdateCategoryUseCaseTest {
         );
 
         when(categoryGateway.findById(eq(expectedId)))
-                .thenReturn(Optional.of(aCategory.clone()));
+                .thenReturn(Optional.of(Category.with(aCategory)));
 
         when(categoryGateway.update(any()))
                 .thenAnswer(returnsFirstArg());
@@ -87,7 +87,7 @@ class UpdateCategoryUseCaseTest {
         );
 
         when(categoryGateway.findById(eq(expectedId)))
-                .thenReturn(Optional.of(aCategory.clone()));
+                .thenReturn(Optional.of(Category.with(aCategory)));
 
         final var notification = useCase.execute(aCommand).getLeft();
 
@@ -113,7 +113,7 @@ class UpdateCategoryUseCaseTest {
         );
 
         when(categoryGateway.findById(eq(expectedId)))
-                .thenReturn(Optional.of(aCategory.clone()));
+                .thenReturn(Optional.of(Category.with(aCategory)));
 
         when(categoryGateway.update(any()))
                 .thenAnswer(returnsFirstArg());
@@ -158,7 +158,7 @@ class UpdateCategoryUseCaseTest {
         );
 
         when(categoryGateway.findById(eq(expectedId)))
-                .thenReturn(Optional.of(aCategory.clone()));
+                .thenReturn(Optional.of(Category.with(aCategory)));
 
         when(categoryGateway.update(any()))
                 .thenThrow(new IllegalStateException(expectedErrorMessage));

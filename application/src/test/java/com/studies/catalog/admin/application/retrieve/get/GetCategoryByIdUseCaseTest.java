@@ -36,7 +36,7 @@ class GetCategoryByIdUseCaseTest {
         final var expectedId = aCategory.getId();
 
         when(categoryGateway.findById(eq(expectedId)))
-                .thenReturn(Optional.of(aCategory.clone()));
+                .thenReturn(Optional.of(Category.with(aCategory)));
 
         final var currentCategory = useCase.execute(expectedId.getValue());
 
