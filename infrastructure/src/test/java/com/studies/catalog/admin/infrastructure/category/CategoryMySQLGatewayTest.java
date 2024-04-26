@@ -219,4 +219,39 @@ class CategoryMySQLGatewayTest {
         Assertions.assertTrue(currentCategory.isEmpty());
     }
 
+    @Test
+    void givenAValidCategory_whenCallsCreate_shouldReturnANewCategory() {
+        final var expectedName = "Movies";
+        final var expectedDescription = "The most watched category";
+        final var expectedIsActive = true;
+
+        final var aCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        final var currentCategory = categoryGateway.create(aCategory);
+
+        Assertions.assertEquals(1, categoryRepository.count());
+
+        Assertions.assertEquals(aCategory.getId(), currentCategory.getId());
+        Assertions.assertEquals(expectedName, currentCategory.getName());
+        Assertions.assertEquals(expectedDescription, currentCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, currentCategory.isActive());
+        Assertions.assertEquals(aCategory.getCreatedAt(), currentCategory.getCreatedAt());
+        Assertions.assertEquals(aCategory.getUpdatedAt(), currentCategory.getUpdatedAt());
+        Assertions.assertEquals(aCategory.getDeletedAt(), currentCategory.getDeletedAt());
+        Assertions.assertNull(currentCategory.getDeletedAt());
+
+        final var currentEntity = categoryRepository.findById(aCategory.getId().getValue()).get();
+
+        Assertions.assertEquals(aCategory.getId().getValue(), currentEntity.getId());
+        Assertions.assertEquals(expectedName, currentEntity.getName());
+        Assertions.assertEquals(expectedDescription, currentEntity.getDescription());
+        Assertions.assertEquals(expectedIsActive, currentEntity.isActive());
+        Assertions.assertEquals(aCategory.getCreatedAt(), currentEntity.getCreatedAt());
+        Assertions.assertEquals(aCategory.getUpdatedAt(), currentEntity.getUpdatedAt());
+        Assertions.assertEquals(aCategory.getDeletedAt(), currentEntity.getDeletedAt());
+        Assertions.assertNull(currentEntity.getDeletedAt());
+    }
+
 }
