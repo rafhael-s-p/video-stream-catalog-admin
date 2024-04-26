@@ -1,0 +1,41 @@
+#!/bin/bash
+
+if [ $# -lt 1 ]
+then
+  echo "
+  Use mode:
+
+  $ sh $0 migration_name
+
+  ---
+
+  migration_name: string
+    it must be migration name.
+
+  ";
+
+  exit 1
+fi
+
+migration=$1
+
+timestamp=$(date +%s)
+
+fileV="V${timestamp}__${migration}.sql"
+fileU="U${timestamp}__${migration}.sql"
+
+fullPathV="infrastructure/src/main/resources/db/migration/${fileV}"
+fullPathU="infrastructure/src/main/resources/db/migration/${fileU}"
+
+if test -f "$fullPathV" || test -f "$fullPathU"
+then
+
+  echo "error: File $fullPathV or $fullPathU already exists."
+  exit 2
+
+fi
+
+echo "" > "$fullPathV"
+echo "" > "$fullPathU"
+
+echo "Migrations '$fullPathV' and '$fullPathU' have been successfully created."
