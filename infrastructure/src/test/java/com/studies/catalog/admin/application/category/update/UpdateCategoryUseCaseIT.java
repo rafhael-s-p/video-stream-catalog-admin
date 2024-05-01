@@ -14,8 +14,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
-import java.util.Arrays;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -36,7 +34,7 @@ class UpdateCategoryUseCaseIT {
     void givenAValidCommand_whenCallsUpdateCategory_shouldReturnCategoryId() {
         final var aCategory = Category.newCategory("Moviies", null, true);
 
-        save(aCategory);
+        categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
 
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
@@ -71,7 +69,7 @@ class UpdateCategoryUseCaseIT {
     void givenAnInvalidName_whenCallsUpdateCategory_thenShouldReturnDomainException() {
         final var aCategory = Category.newCategory("Moviies", null, true);
 
-        save(aCategory);
+        categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
 
         final String expectedName = null;
         final var expectedDescription = "The most watched category";
@@ -95,7 +93,7 @@ class UpdateCategoryUseCaseIT {
     void givenAValidInactivateCommand_whenCallsUpdateCategory_shouldReturnInactiveCategoryId() {
         final var aCategory = Category.newCategory("Moviies", null, true);
 
-        save(aCategory);
+        categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
 
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
@@ -131,7 +129,7 @@ class UpdateCategoryUseCaseIT {
     void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnAnException() {
         final var aCategory = Category.newCategory("Movies", null, true);
 
-        save(aCategory);
+        categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
 
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
@@ -185,14 +183,6 @@ class UpdateCategoryUseCaseIT {
 
         Assertions.assertEquals(expectedErrorCount, currentException.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, currentException.getErrors().get(0).message());
-    }
-
-    private void save(final Category... aCategory) {
-        categoryRepository.saveAllAndFlush(
-                Arrays.stream(aCategory)
-                        .map(CategoryJpaEntity::from)
-                        .toList()
-        );
     }
 
 }

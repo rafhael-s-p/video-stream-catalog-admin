@@ -13,8 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
-import java.util.Arrays;
-
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 
@@ -40,7 +38,7 @@ class GetCategoryByIdUseCaseIT {
 
         final var expectedId = aCategory.getId();
 
-        save(aCategory);
+        categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
 
         final var actualCategory = useCase.execute(expectedId.getValue());
 
@@ -79,14 +77,6 @@ class GetCategoryByIdUseCaseIT {
         );
 
         Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
-    }
-
-    private void save(final Category... aCategory) {
-        categoryRepository.saveAllAndFlush(
-                Arrays.stream(aCategory)
-                        .map(CategoryJpaEntity::from)
-                        .toList()
-        );
     }
 
 }

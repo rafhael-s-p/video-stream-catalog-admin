@@ -13,8 +13,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
-import java.util.Arrays;
-
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -36,7 +34,7 @@ class DeleteCategoryUseCaseIT {
         final var aCategory = Category.newCategory("Movies", "The most watched category", true);
         final var expectedId = aCategory.getId();
 
-        save(aCategory);
+        categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
 
         Assertions.assertEquals(1, categoryRepository.count());
 
@@ -69,11 +67,4 @@ class DeleteCategoryUseCaseIT {
         Mockito.verify(categoryGateway, times(1)).deleteById(eq(expectedId));
     }
 
-    private void save(final Category... aCategory) {
-        categoryRepository.saveAllAndFlush(
-                Arrays.stream(aCategory)
-                        .map(CategoryJpaEntity::from)
-                        .toList()
-        );
-    }
 }
