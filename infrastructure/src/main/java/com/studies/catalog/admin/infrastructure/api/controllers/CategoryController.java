@@ -10,9 +10,9 @@ import com.studies.catalog.admin.application.update.UpdateCategoryOutput;
 import com.studies.catalog.admin.application.update.UpdateCategoryUseCase;
 import com.studies.catalog.admin.domain.validation.handler.Notification;
 import com.studies.catalog.admin.infrastructure.api.CategoryAPI;
-import com.studies.catalog.admin.infrastructure.category.models.CategoryApiOutput;
-import com.studies.catalog.admin.infrastructure.category.models.CreateCategoryApiInput;
-import com.studies.catalog.admin.infrastructure.category.models.UpdateCategoryApiInput;
+import com.studies.catalog.admin.infrastructure.category.models.CategoryApiResponse;
+import com.studies.catalog.admin.infrastructure.category.models.CreateCategoryApiRequest;
+import com.studies.catalog.admin.infrastructure.category.models.UpdateCategoryApiRequest;
 import com.studies.catalog.admin.infrastructure.category.presenters.CategoryApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,12 +42,12 @@ public class CategoryController implements CategoryAPI {
     }
 
     @Override
-    public CategoryApiOutput getById(final String id) {
+    public CategoryApiResponse getById(final String id) {
         return CategoryApiPresenter.present(this.getCategoryByIdUseCase.execute(id));
     }
 
     @Override
-    public ResponseEntity<?> createCategory(final CreateCategoryApiInput input) {
+    public ResponseEntity<?> createCategory(final CreateCategoryApiRequest input) {
         final var aCommand = CreateCategoryCommand.with(
                 input.name(),
                 input.description(),
@@ -66,7 +66,7 @@ public class CategoryController implements CategoryAPI {
     }
 
     @Override
-    public ResponseEntity<?> updateById(final String id, final UpdateCategoryApiInput input) {
+    public ResponseEntity<?> updateById(final String id, final UpdateCategoryApiRequest input) {
         final var aCommand = UpdateCategoryCommand.with(
                 id,
                 input.name(),
