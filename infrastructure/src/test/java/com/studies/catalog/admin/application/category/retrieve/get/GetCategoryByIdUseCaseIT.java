@@ -5,7 +5,7 @@ import com.studies.catalog.admin.application.retrieve.get.GetCategoryByIdUseCase
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.category.CategoryID;
-import com.studies.catalog.admin.domain.exceptions.DomainException;
+import com.studies.catalog.admin.domain.exceptions.NotFoundException;
 import com.studies.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import com.studies.catalog.admin.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
@@ -57,7 +57,7 @@ class GetCategoryByIdUseCaseIT {
         final var expectedId = CategoryID.from("321");
 
         final var actualException = Assertions.assertThrows(
-                DomainException.class, () -> useCase.execute(expectedId.getValue())
+                NotFoundException.class, () -> useCase.execute(expectedId.getValue())
         );
 
         Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
