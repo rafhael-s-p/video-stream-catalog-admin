@@ -3,7 +3,7 @@ package com.studies.catalog.admin.application.update;
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.category.CategoryID;
-import com.studies.catalog.admin.domain.exceptions.DomainException;
+import com.studies.catalog.admin.domain.exceptions.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -186,7 +186,6 @@ class UpdateCategoryUseCaseTest {
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = false;
         final var expectedId = "321";
-        final var expectedErrorCount = 1;
         final var expectedErrorMessage = "Category with ID 321 was not found";
 
         final var aCommand = UpdateCategoryCommand.with(
@@ -199,11 +198,9 @@ class UpdateCategoryUseCaseTest {
         when(categoryGateway.findById(eq(CategoryID.from(expectedId))))
                 .thenReturn(Optional.empty());
 
-        final var currentException =
-                Assertions.assertThrows(DomainException.class, () -> useCase.execute(aCommand));
+        final var currentException = Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
 
-        Assertions.assertEquals(expectedErrorCount, currentException.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, currentException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, currentException.getMessage());
 
         Mockito.verify(categoryGateway, times(1)).findById(eq(CategoryID.from(expectedId)));
 
