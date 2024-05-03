@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studies.catalog.admin.ControllerTest;
 import com.studies.catalog.admin.application.create.CreateCategoryOutput;
 import com.studies.catalog.admin.application.create.CreateCategoryUseCase;
+import com.studies.catalog.admin.application.delete.DeleteCategoryUseCase;
 import com.studies.catalog.admin.application.retrieve.get.CategoryOutput;
 import com.studies.catalog.admin.application.retrieve.get.GetCategoryByIdUseCase;
 import com.studies.catalog.admin.application.update.UpdateCategoryOutput;
@@ -50,6 +51,9 @@ class CategoryAPITest {
 
     @MockBean
     private UpdateCategoryUseCase updateCategoryUseCase;
+
+    @MockBean
+    private DeleteCategoryUseCase deleteCategoryUseCase;
 
     @Test
     void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId() throws Exception {
@@ -307,6 +311,28 @@ class CategoryAPITest {
                         && Objects.equals(expectedDescription, cmd.description())
                         && Objects.equals(expectedIsActive, cmd.isActive())
         ));
+    }
+
+    @Test
+    void givenAValidId_whenCallsDeleteCategory_shouldReturnNoContent() throws Exception {
+        // given
+        final var expectedId = "321";
+
+        doNothing()
+                .when(deleteCategoryUseCase).execute(any());
+
+        // when
+        final var request = delete("/categories/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        final var response = this.mvc.perform(request)
+                .andDo(print());
+
+        // then
+        response.andExpect(status().isNoContent());
+
+        verify(deleteCategoryUseCase, times(1)).execute(eq(expectedId));
     }
 
 }
