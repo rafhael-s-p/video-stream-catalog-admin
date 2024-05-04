@@ -1,17 +1,35 @@
 package com.studies.catalog.admin.e2e.category;
 
 import com.studies.catalog.admin.E2ETest;
+import com.studies.catalog.admin.domain.category.CategoryID;
+import com.studies.catalog.admin.infrastructure.category.models.CategoryApiResponse;
+import com.studies.catalog.admin.infrastructure.category.models.CreateCategoryApiRequest;
+import com.studies.catalog.admin.infrastructure.category.persistence.CategoryRepository;
+import com.studies.catalog.admin.infrastructure.configuration.json.Json;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @E2ETest
 @Testcontainers
 public class CategoryE2ETest {
+
+    @Autowired
+    private MockMvc mvc;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Container
     private static final MySQLContainer MYSQL_CONTAINER = new MySQLContainer("mysql:8.0-debian")
@@ -25,8 +43,54 @@ public class CategoryE2ETest {
     }
 
     @Test
-    void testMySQLContainerWorks() {
+    void asACatalogAdminItShouldBeAbleToCreateANewCategoryWithValidValues() throws Exception {
         Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        final var expectedName = "Series";
+        final var expectedDescription = "The most watched category";
+        final var expectedIsActive = true;
+
+        final var currentId = givenACategory(expectedName, expectedDescription, expectedIsActive);
+
+        final var currentCategory = retrieveACategory(currentId.getValue());
+
+        Assertions.assertEquals(expectedName, currentCategory.name());
+        Assertions.assertEquals(expectedDescription, currentCategory.description());
+        Assertions.assertEquals(expectedIsActive, currentCategory.active());
+        Assertions.assertNotNull(currentCategory.createdAt());
+        Assertions.assertNotNull(currentCategory.updatedAt());
+        Assertions.assertNull(currentCategory.deletedAt());
+    }
+
+    private CategoryID givenACategory(final String aName, final String aDescription, final boolean isActive) throws Exception {
+        final var aRequestBody = new CreateCategoryApiRequest(aName, aDescription, isActive);
+
+        final var aRequest = post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(aRequestBody));
+
+        final var currentId = this.mvc.perform(aRequest)
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse().getHeader("Location")
+                .replace("/categories/", "");
+
+        return CategoryID.from(currentId);
+    }
+
+    private CategoryApiResponse retrieveACategory(final String anId) throws Exception {
+
+        final var aRequest = get("/categories/" + anId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        final var json = this.mvc.perform(aRequest)
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse().getContentAsString();
+
+        return Json.readValue(json, CategoryApiResponse.class);
     }
 
 }
