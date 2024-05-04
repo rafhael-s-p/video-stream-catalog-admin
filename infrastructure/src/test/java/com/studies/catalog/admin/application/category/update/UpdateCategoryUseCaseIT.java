@@ -8,12 +8,12 @@ import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.exceptions.NotFoundException;
 import com.studies.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import com.studies.catalog.admin.infrastructure.category.persistence.CategoryRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -48,21 +48,22 @@ class UpdateCategoryUseCaseIT {
                 expectedIsActive
         );
 
-        Assertions.assertEquals(1, categoryRepository.count());
+        assertEquals(1, categoryRepository.count());
 
         final var currentOutput = useCase.execute(aCommand).get();
 
-        Assertions.assertNotNull(currentOutput);
-        Assertions.assertNotNull(currentOutput.id());
+        assertNotNull(currentOutput);
+        assertNotNull(currentOutput.id());
 
         final var currentCategory = categoryRepository.findById(expectedId.getValue()).get();
 
-        Assertions.assertEquals(expectedName, currentCategory.getName());
-        Assertions.assertEquals(expectedDescription, currentCategory.getDescription());
-        Assertions.assertEquals(expectedIsActive, currentCategory.isActive());
-        Assertions.assertEquals(aCategory.getCreatedAt(), currentCategory.getCreatedAt());
-        Assertions.assertTrue(aCategory.getUpdatedAt().isBefore(currentCategory.getUpdatedAt()));
-        Assertions.assertNull(currentCategory.getDeletedAt());
+        assertEquals(expectedName, currentCategory.getName());
+        assertEquals(expectedDescription, currentCategory.getDescription());
+        assertEquals(expectedIsActive, currentCategory.isActive());
+        assertEquals(aCategory.getCreatedAt().getEpochSecond(),
+                currentCategory.getCreatedAt().getEpochSecond());
+        assertTrue(aCategory.getUpdatedAt().isBefore(currentCategory.getUpdatedAt()));
+        assertNull(currentCategory.getDeletedAt());
     }
 
     @Test
@@ -83,8 +84,8 @@ class UpdateCategoryUseCaseIT {
 
         final var notification = useCase.execute(aCommand).getLeft();
 
-        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.firstError().message());
 
         Mockito.verify(categoryGateway, times(0)).update(any());
     }
@@ -107,22 +108,23 @@ class UpdateCategoryUseCaseIT {
                 expectedIsActive
         );
 
-        Assertions.assertTrue(aCategory.isActive());
-        Assertions.assertNull(aCategory.getDeletedAt());
+        assertTrue(aCategory.isActive());
+        assertNull(aCategory.getDeletedAt());
 
         final var currentOutput = useCase.execute(aCommand).get();
 
-        Assertions.assertNotNull(currentOutput);
-        Assertions.assertNotNull(currentOutput.id());
+        assertNotNull(currentOutput);
+        assertNotNull(currentOutput.id());
 
         final var currentCategory = categoryRepository.findById(expectedId.getValue()).get();
 
-        Assertions.assertEquals(expectedName, currentCategory.getName());
-        Assertions.assertEquals(expectedDescription, currentCategory.getDescription());
-        Assertions.assertEquals(expectedIsActive, currentCategory.isActive());
-        Assertions.assertEquals(aCategory.getCreatedAt(), currentCategory.getCreatedAt());
-        Assertions.assertTrue(aCategory.getUpdatedAt().isBefore(currentCategory.getUpdatedAt()));
-        Assertions.assertNotNull(currentCategory.getDeletedAt());
+        assertEquals(expectedName, currentCategory.getName());
+        assertEquals(expectedDescription, currentCategory.getDescription());
+        assertEquals(expectedIsActive, currentCategory.isActive());
+        assertEquals(aCategory.getCreatedAt().getEpochSecond(),
+                currentCategory.getCreatedAt().getEpochSecond());
+        assertTrue(aCategory.getUpdatedAt().isBefore(currentCategory.getUpdatedAt()));
+        assertNotNull(currentCategory.getDeletedAt());
     }
 
     @Test
@@ -150,17 +152,19 @@ class UpdateCategoryUseCaseIT {
 
         final var notification = useCase.execute(aCommand).getLeft();
 
-        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.firstError().message());
 
         final var currentCategory = categoryRepository.findById(expectedId.getValue()).get();
 
-        Assertions.assertEquals(aCategory.getName(), currentCategory.getName());
-        Assertions.assertEquals(aCategory.getDescription(), currentCategory.getDescription());
-        Assertions.assertEquals(aCategory.isActive(), currentCategory.isActive());
-        Assertions.assertEquals(aCategory.getCreatedAt(), currentCategory.getCreatedAt());
-        Assertions.assertEquals(aCategory.getUpdatedAt(), currentCategory.getUpdatedAt());
-        Assertions.assertEquals(aCategory.getDeletedAt(), currentCategory.getDeletedAt());
+        assertEquals(aCategory.getName(), currentCategory.getName());
+        assertEquals(aCategory.getDescription(), currentCategory.getDescription());
+        assertEquals(aCategory.isActive(), currentCategory.isActive());
+        assertEquals(aCategory.getCreatedAt().getEpochSecond(),
+                currentCategory.getCreatedAt().getEpochSecond());
+        assertEquals(aCategory.getUpdatedAt().getEpochSecond(),
+                currentCategory.getUpdatedAt().getEpochSecond());
+        assertEquals(aCategory.getDeletedAt(), currentCategory.getDeletedAt());
     }
 
     @Test
@@ -178,9 +182,9 @@ class UpdateCategoryUseCaseIT {
                 expectedIsActive
         );
 
-        final var currentException = Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
+        final var currentException = assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
 
-        Assertions.assertEquals(expectedErrorMessage, currentException.getMessage());
+        assertEquals(expectedErrorMessage, currentException.getMessage());
     }
 
 }

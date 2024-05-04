@@ -40,15 +40,17 @@ class GetCategoryByIdUseCaseIT {
 
         categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
 
-        final var actualCategory = useCase.execute(expectedId.getValue());
+        final var currentCategory = useCase.execute(expectedId.getValue());
 
-        Assertions.assertEquals(expectedId, actualCategory.id());
-        Assertions.assertEquals(expectedName, actualCategory.name());
-        Assertions.assertEquals(expectedDescription, actualCategory.description());
-        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
-        Assertions.assertEquals(aCategory.getCreatedAt(), actualCategory.createdAt());
-        Assertions.assertEquals(aCategory.getUpdatedAt(), actualCategory.updatedAt());
-        Assertions.assertEquals(aCategory.getDeletedAt(), actualCategory.deletedAt());
+        Assertions.assertEquals(expectedId, currentCategory.id());
+        Assertions.assertEquals(expectedName, currentCategory.name());
+        Assertions.assertEquals(expectedDescription, currentCategory.description());
+        Assertions.assertEquals(expectedIsActive, currentCategory.isActive());
+        Assertions.assertEquals(aCategory.getCreatedAt().getEpochSecond(),
+                currentCategory.createdAt().getEpochSecond());
+        Assertions.assertEquals(aCategory.getUpdatedAt().getEpochSecond(),
+                currentCategory.updatedAt().getEpochSecond());
+        Assertions.assertEquals(aCategory.getDeletedAt(), currentCategory.deletedAt());
     }
 
     @Test
@@ -56,11 +58,11 @@ class GetCategoryByIdUseCaseIT {
         final var expectedErrorMessage = "Category with ID 321 was not found";
         final var expectedId = CategoryID.from("321");
 
-        final var actualException = Assertions.assertThrows(
+        final var currentException = Assertions.assertThrows(
                 NotFoundException.class, () -> useCase.execute(expectedId.getValue())
         );
 
-        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
+        Assertions.assertEquals(expectedErrorMessage, currentException.getMessage());
     }
 
     @Test
@@ -71,12 +73,12 @@ class GetCategoryByIdUseCaseIT {
         doThrow(new IllegalStateException(expectedErrorMessage))
                 .when(categoryGateway).findById(eq(expectedId));
 
-        final var actualException = Assertions.assertThrows(
+        final var currentException = Assertions.assertThrows(
                 IllegalStateException.class,
                 () -> useCase.execute(expectedId.getValue())
         );
 
-        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
+        Assertions.assertEquals(expectedErrorMessage, currentException.getMessage());
     }
 
 }
