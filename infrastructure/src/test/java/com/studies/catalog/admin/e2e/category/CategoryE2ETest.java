@@ -126,7 +126,7 @@ public class CategoryE2ETest {
     }
 
     @Test
-    void asACatalogAdminItShouldBeAbleToCreateANewCategoryWithValidValues() throws Exception {
+    void asACatalogAdminItShouldBeAbleToGetACategoryByItsIdentifier() throws Exception {
         Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
         Assertions.assertEquals(0, categoryRepository.count());
 
@@ -144,6 +144,42 @@ public class CategoryE2ETest {
         Assertions.assertNotNull(currentCategory.createdAt());
         Assertions.assertNotNull(currentCategory.updatedAt());
         Assertions.assertNull(currentCategory.deletedAt());
+    }
+
+    @Test
+    void asACatalogAdminItShouldBeAbleToSeeATreatedErrorByGettingANotFoundCategory() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        final var aRequest = get("/categories/321")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(aRequest)
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", equalTo("Category with ID 321 was not found")));
+    }
+
+    @Test
+    void asACatalogAdminItShouldBeAbleToCreateANewCategoryWithValidValues() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        final var expectedName = "Series";
+        final var expectedDescription = "The most watched category";
+        final var expectedIsActive = true;
+
+        final var currentId = givenACategory(expectedName, expectedDescription, expectedIsActive);
+
+        final var currentCategory = categoryRepository.findById(currentId.getValue()).get();
+        ;
+
+        Assertions.assertEquals(expectedName, currentCategory.getName());
+        Assertions.assertEquals(expectedDescription, currentCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, currentCategory.isActive());
+        Assertions.assertNotNull(currentCategory.getCreatedAt());
+        Assertions.assertNotNull(currentCategory.getUpdatedAt());
+        Assertions.assertNull(currentCategory.getDeletedAt());
     }
 
     private ResultActions listCategories(final int page, final int perPage) throws Exception {
