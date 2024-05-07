@@ -3,6 +3,7 @@ package com.studies.catalog.admin.domain.genre;
 import com.studies.catalog.admin.domain.AggregateRoot;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.exceptions.NotificationException;
+import com.studies.catalog.admin.domain.utils.InstantUtils;
 import com.studies.catalog.admin.domain.validation.ValidationHandler;
 import com.studies.catalog.admin.domain.validation.handler.Notification;
 
@@ -76,11 +77,6 @@ public class Genre extends AggregateRoot<GenreID> {
         );
     }
 
-    @Override
-    public void validate(final ValidationHandler handler) {
-        new GenreValidator(this, handler).validate();
-    }
-
     public String getName() {
         return name;
     }
@@ -103,6 +99,29 @@ public class Genre extends AggregateRoot<GenreID> {
 
     public Instant getDeletedAt() {
         return deletedAt;
+    }
+
+    public Genre activate() {
+        this.deletedAt = null;
+        this.active = true;
+        this.updatedAt = InstantUtils.now();
+
+        return this;
+    }
+
+    public Genre inactivate() {
+        if (getDeletedAt() == null)
+            this.deletedAt = InstantUtils.now();
+
+        this.active = false;
+        this.updatedAt = InstantUtils.now();
+
+        return this;
+    }
+
+    @Override
+    public void validate(final ValidationHandler handler) {
+        new GenreValidator(this, handler).validate();
     }
 
 }
