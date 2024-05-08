@@ -2,7 +2,7 @@ package com.studies.catalog.admin.application.retrieve.list;
 
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
-import com.studies.catalog.admin.domain.category.CategorySearchQuery;
+import com.studies.catalog.admin.domain.pagination.SearchQuery;
 import com.studies.catalog.admin.domain.pagination.Pagination;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ class ListCategoriesUseCaseTest {
         final var expectedDirection = "asc";
 
         final var aQuery =
-                new CategorySearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
         final var expectedPagination =
                 new Pagination<>(expectedPage, expectedPerPage, categories.size(), categories);
@@ -70,7 +70,7 @@ class ListCategoriesUseCaseTest {
         final var expectedDirection = "asc";
 
         final var aQuery =
-                new CategorySearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
         final var expectedPagination =
                 new Pagination<>(expectedPage, expectedPerPage, categories.size(), categories);
@@ -100,7 +100,7 @@ class ListCategoriesUseCaseTest {
         final var expectedErrorMessage = "Gateway error";
 
         final var aQuery =
-                new CategorySearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
         when(categoryGateway.findAll(eq(aQuery)))
                 .thenThrow(new IllegalStateException(expectedErrorMessage));
