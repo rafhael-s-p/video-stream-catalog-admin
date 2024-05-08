@@ -1,12 +1,13 @@
 package com.studies.catalog.admin.domain.category;
 
 import com.studies.catalog.admin.domain.pagination.Pagination;
+import com.studies.catalog.admin.domain.pagination.SearchQuery;
 
 import java.util.Optional;
 
 public interface CategoryGateway {
 
-    Pagination<Category> findAll(CategorySearchQuery aQuery);
+    Pagination<Category> findAll(SearchQuery aQuery);
     Optional<Category> findById(CategoryID anId);
     Category create(Category aCategory);
     Category update(Category aCategory);
