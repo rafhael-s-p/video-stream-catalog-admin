@@ -1,6 +1,7 @@
 package com.studies.catalog.admin.domain.category;
 
 import com.studies.catalog.admin.domain.AggregateRoot;
+import com.studies.catalog.admin.domain.utils.InstantUtils;
 import com.studies.catalog.admin.domain.validation.ValidationHandler;
 
 import java.time.Instant;
@@ -33,7 +34,7 @@ public class Category extends AggregateRoot<CategoryID> {
 
     public static Category newCategory(final String aName, final String aDescription, final boolean isActive) {
         final var id = CategoryID.unique();
-        final var now = Instant.now();
+        final var now = InstantUtils.now();
         final var deletedAt = isActive ? null : now;
 
         return new Category(id, aName, aDescription, isActive, now, now, deletedAt);
@@ -102,17 +103,17 @@ public class Category extends AggregateRoot<CategoryID> {
     public Category activate() {
         this.deletedAt = null;
         this.active = true;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.now();
 
         return this;
     }
 
     public Category inactivate() {
         if (getDeletedAt() == null)
-            this.deletedAt = Instant.now();
+            this.deletedAt = InstantUtils.now();
 
         this.active = false;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.now();
 
         return this;
     }
@@ -125,7 +126,7 @@ public class Category extends AggregateRoot<CategoryID> {
 
         this.name = anUpdatedName;
         this.description = anUpdatedDescription;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.now();
 
         return this;
     }
