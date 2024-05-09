@@ -1,28 +1,32 @@
 package com.studies.catalog.admin.application.category.delete;
 
-import com.studies.catalog.admin.application.category.delete.DeleteCategoryUseCaseImpl;
+import com.studies.catalog.admin.application.UseCaseTest;
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-class DeleteCategoryUseCaseTest {
+class DeleteCategoryUseCaseTest extends UseCaseTest {
 
     @InjectMocks
     private DeleteCategoryUseCaseImpl useCase;
 
     @Mock
     private CategoryGateway categoryGateway;
+
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(categoryGateway);
+    }
 
     @Test
     void givenAValidId_whenCallsDeleteCategory_shouldBeOK() {

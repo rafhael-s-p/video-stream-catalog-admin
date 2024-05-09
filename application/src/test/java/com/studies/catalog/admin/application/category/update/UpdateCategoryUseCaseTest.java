@@ -1,17 +1,17 @@
 package com.studies.catalog.admin.application.category.update;
 
+import com.studies.catalog.admin.application.UseCaseTest;
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.exceptions.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -20,14 +20,18 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class UpdateCategoryUseCaseTest {
+class UpdateCategoryUseCaseTest extends UseCaseTest {
 
     @InjectMocks
     private UpdateCategoryUseCaseImpl useCase;
 
     @Mock
     private CategoryGateway categoryGateway;
+
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(categoryGateway);
+    }
 
     @Test
     void givenAValidInput_whenCallsUpdateCategory_shouldReturnCategoryId() {

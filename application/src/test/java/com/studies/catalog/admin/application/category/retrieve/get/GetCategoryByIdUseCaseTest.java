@@ -1,30 +1,33 @@
 package com.studies.catalog.admin.application.category.retrieve.get;
 
-import com.studies.catalog.admin.application.category.retrieve.get.GetCategoryByIdUseCaseImpl;
+import com.studies.catalog.admin.application.UseCaseTest;
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.exceptions.DomainException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class GetCategoryByIdUseCaseTest {
+class GetCategoryByIdUseCaseTest extends UseCaseTest {
 
     @InjectMocks
     private GetCategoryByIdUseCaseImpl useCase;
 
     @Mock
     private CategoryGateway categoryGateway;
+
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(categoryGateway);
+    }
 
     @Test
     void givenAValidId_whenCallsGetCategory_shouldReturnCategory() {

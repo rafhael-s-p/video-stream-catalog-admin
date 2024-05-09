@@ -1,5 +1,6 @@
 package com.studies.catalog.admin.application.category.retrieve.list;
 
+import com.studies.catalog.admin.application.UseCaseTest;
 import com.studies.catalog.admin.application.category.retrieve.list.CategoryListOutput;
 import com.studies.catalog.admin.application.category.retrieve.list.ListCategoriesUseCaseImpl;
 import com.studies.catalog.admin.domain.category.Category;
@@ -18,14 +19,18 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class ListCategoriesUseCaseTest {
+class ListCategoriesUseCaseTest extends UseCaseTest {
 
     @InjectMocks
     private ListCategoriesUseCaseImpl useCase;
 
     @Mock
     private CategoryGateway categoryGateway;
+
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(categoryGateway);
+    }
 
     @Test
     void givenAValidQuery_whenCallsListCategories_thenShouldReturnCategories() {

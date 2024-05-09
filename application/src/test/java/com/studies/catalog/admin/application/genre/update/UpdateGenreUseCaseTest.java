@@ -1,5 +1,6 @@
 package com.studies.catalog.admin.application.genre.update;
 
+import com.studies.catalog.admin.application.UseCaseTest;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.exceptions.NotificationException;
@@ -7,11 +8,9 @@ import com.studies.catalog.admin.domain.genre.Genre;
 import com.studies.catalog.admin.domain.genre.GenreGateway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,8 +21,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class UpdateGenreUseCaseTest {
+class UpdateGenreUseCaseTest extends UseCaseTest {
 
     @InjectMocks
     private UpdateGenreUseCaseImpl useCase;
@@ -33,6 +31,11 @@ class UpdateGenreUseCaseTest {
 
     @Mock
     private GenreGateway genreGateway;
+
+    @Override
+    protected List<Object> getMocks() {
+        return List.of(categoryGateway, genreGateway);
+    }
 
     @Test
     void givenAValidInput_whenCallsUpdateGenre_shouldReturnGenreId() {
