@@ -1,4 +1,4 @@
-package com.studies.catalog.admin.application.delete;
+package com.studies.catalog.admin.application.category.delete;
 
 import com.studies.catalog.admin.application.UnitUseCase;
 

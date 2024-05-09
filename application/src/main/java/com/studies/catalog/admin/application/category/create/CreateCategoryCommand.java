@@ -1,4 +1,4 @@
-package com.studies.catalog.admin.application.create;
+package com.studies.catalog.admin.application.category.create;
 
 public record CreateCategoryCommand(String name, String description, boolean isActive) {
 

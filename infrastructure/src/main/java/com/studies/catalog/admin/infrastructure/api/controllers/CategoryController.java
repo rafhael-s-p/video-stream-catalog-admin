@@ -1,15 +1,15 @@
 package com.studies.catalog.admin.infrastructure.api.controllers;
 
-import com.studies.catalog.admin.application.create.CreateCategoryCommand;
-import com.studies.catalog.admin.application.create.CreateCategoryOutput;
-import com.studies.catalog.admin.application.create.CreateCategoryUseCase;
-import com.studies.catalog.admin.application.delete.DeleteCategoryUseCase;
-import com.studies.catalog.admin.application.retrieve.get.GetCategoryByIdUseCase;
-import com.studies.catalog.admin.application.retrieve.list.ListCategoriesUseCase;
-import com.studies.catalog.admin.application.update.UpdateCategoryCommand;
-import com.studies.catalog.admin.application.update.UpdateCategoryOutput;
-import com.studies.catalog.admin.application.update.UpdateCategoryUseCase;
-import com.studies.catalog.admin.domain.pagination.SearchQuery;
+import com.studies.catalog.admin.application.category.create.CreateCategoryCommand;
+import com.studies.catalog.admin.application.category.create.CreateCategoryOutput;
+import com.studies.catalog.admin.application.category.create.CreateCategoryUseCase;
+import com.studies.catalog.admin.application.category.delete.DeleteCategoryUseCase;
+import com.studies.catalog.admin.application.category.retrieve.get.GetCategoryByIdUseCase;
+import com.studies.catalog.admin.application.category.retrieve.list.ListCategoriesUseCase;
+import com.studies.catalog.admin.application.category.update.UpdateCategoryCommand;
+import com.studies.catalog.admin.application.category.update.UpdateCategoryOutput;
+import com.studies.catalog.admin.application.category.update.UpdateCategoryUseCase;
+import com.studies.catalog.admin.domain.category.CategorySearchQuery;
 import com.studies.catalog.admin.domain.pagination.Pagination;
 import com.studies.catalog.admin.domain.validation.handler.Notification;
 import com.studies.catalog.admin.infrastructure.api.CategoryAPI;
@@ -56,7 +56,7 @@ public class CategoryController implements CategoryAPI {
             final String sort,
             final String direction
     ) {
-        return listCategoriesUseCase.execute(new SearchQuery(page, perPage, search, sort, direction))
+        return listCategoriesUseCase.execute(new CategorySearchQuery(page, perPage, search, sort, direction))
                 .map(CategoryApiPresenter::present);
     }
 

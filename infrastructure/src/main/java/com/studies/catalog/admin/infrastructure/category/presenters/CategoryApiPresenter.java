@@ -1,7 +1,7 @@
 package com.studies.catalog.admin.infrastructure.category.presenters;
 
-import com.studies.catalog.admin.application.retrieve.get.CategoryOutput;
-import com.studies.catalog.admin.application.retrieve.list.CategoryListOutput;
+import com.studies.catalog.admin.application.category.retrieve.get.CategoryOutput;
+import com.studies.catalog.admin.application.category.retrieve.list.CategoryListOutput;
 import com.studies.catalog.admin.infrastructure.category.models.CategoryApiResponse;
 import com.studies.catalog.admin.infrastructure.category.models.CategoryListApiResponse;
 

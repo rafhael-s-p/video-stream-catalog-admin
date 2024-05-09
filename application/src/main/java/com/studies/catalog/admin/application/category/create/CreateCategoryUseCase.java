@@ -1,4 +1,4 @@
-package com.studies.catalog.admin.application.create;
+package com.studies.catalog.admin.application.category.create;
 
 import com.studies.catalog.admin.application.UseCase;
 import com.studies.catalog.admin.domain.validation.handler.Notification;

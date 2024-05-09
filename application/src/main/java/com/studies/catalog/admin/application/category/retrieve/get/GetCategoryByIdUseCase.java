@@ -1,4 +1,4 @@
-package com.studies.catalog.admin.application.retrieve.get;
+package com.studies.catalog.admin.application.category.retrieve.get;
 
 import com.studies.catalog.admin.application.UseCase;
 

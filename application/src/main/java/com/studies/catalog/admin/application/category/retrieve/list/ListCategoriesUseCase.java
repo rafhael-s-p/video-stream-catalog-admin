@@ -1,4 +1,4 @@
-package com.studies.catalog.admin.application.retrieve.list;
+package com.studies.catalog.admin.application.category.retrieve.list;
 
 import com.studies.catalog.admin.application.UseCase;
 import com.studies.catalog.admin.domain.pagination.SearchQuery;

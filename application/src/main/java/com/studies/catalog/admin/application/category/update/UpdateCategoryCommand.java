@@ -1,4 +1,4 @@
-package com.studies.catalog.admin.application.update;
+package com.studies.catalog.admin.application.category.update;
 
 public record UpdateCategoryCommand(String id, String name, String description, boolean isActive) {
 
