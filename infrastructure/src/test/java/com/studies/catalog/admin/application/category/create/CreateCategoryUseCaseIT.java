@@ -1,8 +1,6 @@
 package com.studies.catalog.admin.application.category.create;
 
 import com.studies.catalog.admin.IntegrationTest;
-import com.studies.catalog.admin.application.create.CreateCategoryCommand;
-import com.studies.catalog.admin.application.create.CreateCategoryUseCase;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;

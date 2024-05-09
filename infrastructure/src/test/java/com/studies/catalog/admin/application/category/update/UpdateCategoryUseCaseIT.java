@@ -1,8 +1,6 @@
 package com.studies.catalog.admin.application.category.update;
 
 import com.studies.catalog.admin.IntegrationTest;
-import com.studies.catalog.admin.application.update.UpdateCategoryCommand;
-import com.studies.catalog.admin.application.update.UpdateCategoryUseCase;
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.exceptions.NotFoundException;

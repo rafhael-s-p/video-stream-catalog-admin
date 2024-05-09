@@ -1,7 +1,6 @@
 package com.studies.catalog.admin.application.category.delete;
 
 import com.studies.catalog.admin.IntegrationTest;
-import com.studies.catalog.admin.application.delete.DeleteCategoryUseCase;
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.category.CategoryID;

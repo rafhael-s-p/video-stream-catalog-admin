@@ -1,7 +1,6 @@
 package com.studies.catalog.admin.application.category.retrieve.list;
 
 import com.studies.catalog.admin.IntegrationTest;
-import com.studies.catalog.admin.application.retrieve.list.ListCategoriesUseCase;
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.pagination.SearchQuery;
 import com.studies.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;

@@ -1,5 +1,7 @@
-package com.studies.catalog.admin.application.retrieve.list;
+package com.studies.catalog.admin.application.category.retrieve.list;
 
+import com.studies.catalog.admin.application.category.retrieve.list.CategoryListOutput;
+import com.studies.catalog.admin.application.category.retrieve.list.ListCategoriesUseCaseImpl;
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.pagination.SearchQuery;

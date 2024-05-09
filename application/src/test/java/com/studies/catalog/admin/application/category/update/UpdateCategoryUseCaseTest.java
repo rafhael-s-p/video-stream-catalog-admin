@@ -1,5 +1,7 @@
-package com.studies.catalog.admin.application.update;
+package com.studies.catalog.admin.application.category.update;
 
+import com.studies.catalog.admin.application.category.update.UpdateCategoryCommand;
+import com.studies.catalog.admin.application.category.update.UpdateCategoryUseCaseImpl;
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.category.CategoryID;

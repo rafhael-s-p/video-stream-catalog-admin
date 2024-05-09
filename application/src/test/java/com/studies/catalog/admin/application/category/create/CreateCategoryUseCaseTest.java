@@ -1,5 +1,7 @@
-package com.studies.catalog.admin.application.create;
+package com.studies.catalog.admin.application.category.create;
 
+import com.studies.catalog.admin.application.category.create.CreateCategoryCommand;
+import com.studies.catalog.admin.application.category.create.CreateCategoryUseCaseImpl;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
