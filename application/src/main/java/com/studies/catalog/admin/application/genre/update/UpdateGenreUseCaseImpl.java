@@ -33,7 +33,7 @@ public class UpdateGenreUseCaseImpl extends UpdateGenreUseCase {
     }
 
     @Override
-    public UpdateGenreOutput execute(final UpdateGenreCommand aCommand) {
+    public UpdateGenreOutput execute(final UpdateGenreInput aCommand) {
         final var anId = GenreID.from(aCommand.id());
         final var aName = aCommand.name();
         final var isActive = aCommand.isActive();

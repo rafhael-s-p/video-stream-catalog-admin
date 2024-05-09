@@ -23,7 +23,7 @@ public class UpdateCategoryUseCaseImpl extends UpdateCategoryUseCase {
     }
 
     @Override
-    public Either<Notification, UpdateCategoryOutput> execute(final UpdateCategoryCommand aCommand) {
+    public Either<Notification, UpdateCategoryOutput> execute(final UpdateCategoryInput aCommand) {
         final var anId = CategoryID.from(aCommand.id());
         final var aName = aCommand.name();
         final var aDescription = aCommand.description();

@@ -28,7 +28,7 @@ public class CreateGenreUseCaseImpl extends CreateGenreUseCase {
     }
 
     @Override
-    public CreateGenreOutput execute(final CreateGenreCommand aCommand) {
+    public CreateGenreOutput execute(final CreateGenreInput aCommand) {
         final var aName = aCommand.name();
         final var isActive = aCommand.isActive();
         final var categories = toCategoryID(aCommand.categories());

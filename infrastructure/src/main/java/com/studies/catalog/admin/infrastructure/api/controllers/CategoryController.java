@@ -1,12 +1,12 @@
 package com.studies.catalog.admin.infrastructure.api.controllers;
 
-import com.studies.catalog.admin.application.category.create.CreateCategoryCommand;
+import com.studies.catalog.admin.application.category.create.CreateCategoryInput;
 import com.studies.catalog.admin.application.category.create.CreateCategoryOutput;
 import com.studies.catalog.admin.application.category.create.CreateCategoryUseCase;
 import com.studies.catalog.admin.application.category.delete.DeleteCategoryUseCase;
 import com.studies.catalog.admin.application.category.retrieve.get.GetCategoryByIdUseCase;
 import com.studies.catalog.admin.application.category.retrieve.list.ListCategoriesUseCase;
-import com.studies.catalog.admin.application.category.update.UpdateCategoryCommand;
+import com.studies.catalog.admin.application.category.update.UpdateCategoryInput;
 import com.studies.catalog.admin.application.category.update.UpdateCategoryOutput;
 import com.studies.catalog.admin.application.category.update.UpdateCategoryUseCase;
 import com.studies.catalog.admin.domain.pagination.Pagination;
@@ -67,7 +67,7 @@ public class CategoryController implements CategoryAPI {
 
     @Override
     public ResponseEntity<?> createCategory(final CreateCategoryApiRequest input) {
-        final var aCommand = CreateCategoryCommand.with(
+        final var anInput = CreateCategoryInput.with(
                 input.name(),
                 input.description(),
                 input.active() != null ? input.active() : true
@@ -80,13 +80,13 @@ public class CategoryController implements CategoryAPI {
                 ResponseEntity.created(URI.create("/categories/" + output.id())).body(output);
 
         return this.createCategoryUseCase
-                .execute(aCommand)
+                .execute(anInput)
                 .fold(onError, onSuccess);
     }
 
     @Override
     public ResponseEntity<?> updateById(final String id, final UpdateCategoryApiRequest input) {
-        final var aCommand = UpdateCategoryCommand.with(
+        final var anInput = UpdateCategoryInput.with(
                 id,
                 input.name(),
                 input.description(),
@@ -99,7 +99,7 @@ public class CategoryController implements CategoryAPI {
         final Function<UpdateCategoryOutput, ResponseEntity<?>> onSuccess =
                 ResponseEntity::ok;
 
-        return this.updateCategoryUseCase.execute(aCommand)
+        return this.updateCategoryUseCase.execute(anInput)
                 .fold(onError, onSuccess);
     }
 

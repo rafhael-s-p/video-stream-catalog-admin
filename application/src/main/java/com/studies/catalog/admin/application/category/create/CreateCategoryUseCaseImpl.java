@@ -19,7 +19,7 @@ public class CreateCategoryUseCaseImpl extends CreateCategoryUseCase {
     }
 
     @Override
-    public Either<Notification, CreateCategoryOutput> execute(final CreateCategoryCommand aCommand) {
+    public Either<Notification, CreateCategoryOutput> execute(final CreateCategoryInput aCommand) {
         final var aName = aCommand.name();
         final var aDescription = aCommand.description();
         final var isActive = aCommand.isActive();
