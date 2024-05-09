@@ -9,8 +9,8 @@ import com.studies.catalog.admin.application.category.retrieve.list.ListCategori
 import com.studies.catalog.admin.application.category.update.UpdateCategoryCommand;
 import com.studies.catalog.admin.application.category.update.UpdateCategoryOutput;
 import com.studies.catalog.admin.application.category.update.UpdateCategoryUseCase;
-import com.studies.catalog.admin.domain.category.CategorySearchQuery;
 import com.studies.catalog.admin.domain.pagination.Pagination;
+import com.studies.catalog.admin.domain.pagination.SearchQuery;
 import com.studies.catalog.admin.domain.validation.handler.Notification;
 import com.studies.catalog.admin.infrastructure.api.CategoryAPI;
 import com.studies.catalog.admin.infrastructure.category.models.CategoryApiResponse;
@@ -56,7 +56,7 @@ public class CategoryController implements CategoryAPI {
             final String sort,
             final String direction
     ) {
-        return listCategoriesUseCase.execute(new CategorySearchQuery(page, perPage, search, sort, direction))
+        return listCategoriesUseCase.execute(new SearchQuery(page, perPage, search, sort, direction))
                 .map(CategoryApiPresenter::present);
     }
 
