@@ -26,16 +26,16 @@ class CreateCategoryUseCaseIT {
     private CategoryGateway categoryGateway;
 
     @Test
-    void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId() {
+    void givenAValidInput_whenCallsCreateCategory_shouldReturnCategoryId() {
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = true;
 
         Assertions.assertEquals(0, categoryRepository.count());
 
-        final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
+        final var anInput = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
-        final var currentOutput = useCase.execute(aCommand).get();
+        final var currentOutput = useCase.execute(anInput).get();
 
         Assertions.assertNotNull(currentOutput);
         Assertions.assertNotNull(currentOutput.id());
@@ -62,9 +62,9 @@ class CreateCategoryUseCaseIT {
 
         Assertions.assertEquals(0, categoryRepository.count());
 
-        final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
+        final var anInput = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
-        final var notification = useCase.execute(aCommand).getLeft();
+        final var notification = useCase.execute(anInput).getLeft();
 
         Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
@@ -75,16 +75,16 @@ class CreateCategoryUseCaseIT {
     }
 
     @Test
-    void givenAValidCommandWithInactiveCategory_whenCallsCreateCategory_shouldReturnInactiveCategoryId() {
+    void givenAValidInputWithInactiveCategory_whenCallsCreateCategory_shouldReturnInactiveCategoryId() {
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = false;
 
         Assertions.assertEquals(0, categoryRepository.count());
 
-        final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
+        final var anInput = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
-        final var currentOutput = useCase.execute(aCommand).get();
+        final var currentOutput = useCase.execute(anInput).get();
 
         Assertions.assertNotNull(currentOutput);
         Assertions.assertNotNull(currentOutput.id());
@@ -102,19 +102,19 @@ class CreateCategoryUseCaseIT {
     }
 
     @Test
-    void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnAException() {
+    void givenAValidInput_whenGatewayThrowsRandomException_shouldReturnAException() {
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = true;
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "Gateway error";
 
-        final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
+        final var anInput = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
         doThrow(new IllegalStateException(expectedErrorMessage))
-                        .when(categoryGateway).create(any());
+                .when(categoryGateway).create(any());
 
-        final var notification = useCase.execute(aCommand).getLeft();
+        final var notification = useCase.execute(anInput).getLeft();
 
         Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());

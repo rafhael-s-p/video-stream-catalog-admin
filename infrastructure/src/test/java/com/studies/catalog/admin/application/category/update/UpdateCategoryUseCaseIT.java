@@ -29,7 +29,7 @@ class UpdateCategoryUseCaseIT {
     private CategoryGateway categoryGateway;
 
     @Test
-    void givenAValidCommand_whenCallsUpdateCategory_shouldReturnCategoryId() {
+    void givenAValidInput_whenCallsUpdateCategory_shouldReturnCategoryId() {
         final var aCategory = Category.newCategory("Moviies", null, true);
 
         categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
@@ -39,7 +39,7 @@ class UpdateCategoryUseCaseIT {
         final var expectedIsActive = true;
         final var expectedId = aCategory.getId();
 
-        final var aCommand = UpdateCategoryCommand.with(
+        final var anInput = UpdateCategoryInput.with(
                 expectedId.getValue(),
                 expectedName,
                 expectedDescription,
@@ -48,7 +48,7 @@ class UpdateCategoryUseCaseIT {
 
         assertEquals(1, categoryRepository.count());
 
-        final var currentOutput = useCase.execute(aCommand).get();
+        final var currentOutput = useCase.execute(anInput).get();
 
         assertNotNull(currentOutput);
         assertNotNull(currentOutput.id());
@@ -77,9 +77,9 @@ class UpdateCategoryUseCaseIT {
         final var expectedErrorMessage = "'name' should not be null";
         final var expectedErrorCount = 1;
 
-        final var aCommand = UpdateCategoryCommand.with(expectedId.getValue(), expectedName, expectedDescription, expectedIsActive);
+        final var anInput = UpdateCategoryInput.with(expectedId.getValue(), expectedName, expectedDescription, expectedIsActive);
 
-        final var notification = useCase.execute(aCommand).getLeft();
+        final var notification = useCase.execute(anInput).getLeft();
 
         assertEquals(expectedErrorCount, notification.getErrors().size());
         assertEquals(expectedErrorMessage, notification.firstError().message());
@@ -88,7 +88,7 @@ class UpdateCategoryUseCaseIT {
     }
 
     @Test
-    void givenAValidInactivateCommand_whenCallsUpdateCategory_shouldReturnInactiveCategoryId() {
+    void givenAValidInactivateInput_whenCallsUpdateCategory_shouldReturnInactiveCategoryId() {
         final var aCategory = Category.newCategory("Moviies", null, true);
 
         categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
@@ -98,7 +98,7 @@ class UpdateCategoryUseCaseIT {
         final var expectedIsActive = false;
         final var expectedId = aCategory.getId();
 
-        final var aCommand = UpdateCategoryCommand.with(
+        final var anInput = UpdateCategoryInput.with(
                 expectedId.getValue(),
                 expectedName,
                 expectedDescription,
@@ -108,7 +108,7 @@ class UpdateCategoryUseCaseIT {
         assertTrue(aCategory.isActive());
         assertNull(aCategory.getDeletedAt());
 
-        final var currentOutput = useCase.execute(aCommand).get();
+        final var currentOutput = useCase.execute(anInput).get();
 
         assertNotNull(currentOutput);
         assertNotNull(currentOutput.id());
@@ -124,7 +124,7 @@ class UpdateCategoryUseCaseIT {
     }
 
     @Test
-    void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnAnException() {
+    void givenAValidInput_whenGatewayThrowsRandomException_shouldReturnAnException() {
         final var aCategory = Category.newCategory("Movies", null, true);
 
         categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
@@ -136,7 +136,7 @@ class UpdateCategoryUseCaseIT {
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "Gateway error";
 
-        final var aCommand = UpdateCategoryCommand.with(
+        final var anInput = UpdateCategoryInput.with(
                 expectedId.getValue(),
                 expectedName,
                 expectedDescription,
@@ -146,7 +146,7 @@ class UpdateCategoryUseCaseIT {
         doThrow(new IllegalStateException(expectedErrorMessage))
                 .when(categoryGateway).update(any());
 
-        final var notification = useCase.execute(aCommand).getLeft();
+        final var notification = useCase.execute(anInput).getLeft();
 
         assertEquals(expectedErrorCount, notification.getErrors().size());
         assertEquals(expectedErrorMessage, notification.firstError().message());
@@ -162,21 +162,21 @@ class UpdateCategoryUseCaseIT {
     }
 
     @Test
-    void givenACommandWithInvalidId_whenCallsUpdateCategory_shouldReturnNotFoundException() {
+    void givenAnInputWithInvalidId_whenCallsUpdateCategory_shouldReturnNotFoundException() {
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = false;
         final var expectedId = "321";
         final var expectedErrorMessage = "Category with ID 321 was not found";
 
-        final var aCommand = UpdateCategoryCommand.with(
+        final var anInput = UpdateCategoryInput.with(
                 expectedId,
                 expectedName,
                 expectedDescription,
                 expectedIsActive
         );
 
-        final var currentException = assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
+        final var currentException = assertThrows(NotFoundException.class, () -> useCase.execute(anInput));
 
         assertEquals(expectedErrorMessage, currentException.getMessage());
     }

@@ -1,7 +1,5 @@
 package com.studies.catalog.admin.application.category.create;
 
-import com.studies.catalog.admin.application.category.create.CreateCategoryCommand;
-import com.studies.catalog.admin.application.category.create.CreateCategoryUseCaseImpl;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,17 +27,17 @@ class CreateCategoryUseCaseTest {
     private CategoryGateway categoryGateway;
 
     @Test
-    void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId() {
+    void givenAValidInput_whenCallsCreateCategory_shouldReturnCategoryId() {
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = true;
 
-        final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
+        final var anInput = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
         when(categoryGateway.create(any()))
                 .thenAnswer(returnsFirstArg());
 
-        final var currentOutput = useCase.execute(aCommand).get();
+        final var currentOutput = useCase.execute(anInput).get();
 
         Assertions.assertNotNull(currentOutput);
         Assertions.assertNotNull(currentOutput.id());
@@ -56,16 +54,16 @@ class CreateCategoryUseCaseTest {
     }
 
     @Test
-    void givenAInvalidName_whenCallsCreateCategory_thenShouldReturnDomainException() {
+    void givenAnInvalidName_whenCallsCreateCategory_thenShouldReturnDomainException() {
         final String expectedName = null;
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = true;
         final var expectedErrorMessage = "'name' should not be null";
         final var expectedErrorCount = 1;
 
-        final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
+        final var anInput = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
-        final var notification = useCase.execute(aCommand).getLeft();
+        final var notification = useCase.execute(anInput).getLeft();
 
         Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
@@ -74,17 +72,17 @@ class CreateCategoryUseCaseTest {
     }
 
     @Test
-    void givenAValidCommandWithInactiveCategory_whenCallsCreateCategory_shouldReturnInactiveCategoryId() {
+    void givenAValidInputWithInactiveCategory_whenCallsCreateCategory_shouldReturnInactiveCategoryId() {
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = false;
 
-        final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
+        final var anInput = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
         when(categoryGateway.create(any()))
                 .thenAnswer(returnsFirstArg());
 
-        final var currentOutput = useCase.execute(aCommand).get();
+        final var currentOutput = useCase.execute(anInput).get();
 
         Assertions.assertNotNull(currentOutput);
         Assertions.assertNotNull(currentOutput.id());
@@ -101,19 +99,19 @@ class CreateCategoryUseCaseTest {
     }
 
     @Test
-    void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnAException() {
+    void givenAValidInput_whenGatewayThrowsRandomException_shouldReturnAException() {
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = true;
         final var expectedErrorMessage = "Gateway error";
         final var expectedErrorCount = 1;
 
-        final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
+        final var anInput = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
         when(categoryGateway.create(any()))
                 .thenThrow(new IllegalStateException(expectedErrorMessage));
 
-        final var notification = useCase.execute(aCommand).getLeft();
+        final var notification = useCase.execute(anInput).getLeft();
 
         Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());

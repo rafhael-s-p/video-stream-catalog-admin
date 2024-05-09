@@ -52,13 +52,13 @@ class ListCategoriesUseCaseTest {
         when(categoryGateway.findAll(eq(aQuery)))
                 .thenReturn(expectedPagination);
 
-        final var actualResult = useCase.execute(aQuery);
+        final var currentResult = useCase.execute(aQuery);
 
-        Assertions.assertEquals(expectedItemsCount, actualResult.items().size());
-        Assertions.assertEquals(expectedResult, actualResult);
-        Assertions.assertEquals(expectedPage, actualResult.currentPage());
-        Assertions.assertEquals(expectedPerPage, actualResult.perPage());
-        Assertions.assertEquals(categories.size(), actualResult.total());
+        Assertions.assertEquals(expectedItemsCount, currentResult.items().size());
+        Assertions.assertEquals(expectedResult, currentResult);
+        Assertions.assertEquals(expectedPage, currentResult.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentResult.perPage());
+        Assertions.assertEquals(categories.size(), currentResult.total());
     }
 
     @Test
@@ -83,13 +83,13 @@ class ListCategoriesUseCaseTest {
         when(categoryGateway.findAll(eq(aQuery)))
                 .thenReturn(expectedPagination);
 
-        final var actualResult = useCase.execute(aQuery);
+        final var currentResult = useCase.execute(aQuery);
 
-        Assertions.assertEquals(expectedItemsCount, actualResult.items().size());
-        Assertions.assertEquals(expectedResult, actualResult);
-        Assertions.assertEquals(expectedPage, actualResult.currentPage());
-        Assertions.assertEquals(expectedPerPage, actualResult.perPage());
-        Assertions.assertEquals(categories.size(), actualResult.total());
+        Assertions.assertEquals(expectedItemsCount, currentResult.items().size());
+        Assertions.assertEquals(expectedResult, currentResult);
+        Assertions.assertEquals(expectedPage, currentResult.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentResult.perPage());
+        Assertions.assertEquals(categories.size(), currentResult.total());
     }
 
     @Test
@@ -107,10 +107,10 @@ class ListCategoriesUseCaseTest {
         when(categoryGateway.findAll(eq(aQuery)))
                 .thenThrow(new IllegalStateException(expectedErrorMessage));
 
-        final var actualException =
+        final var currentException =
                 Assertions.assertThrows(IllegalStateException.class, () -> useCase.execute(aQuery));
 
-        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
+        Assertions.assertEquals(expectedErrorMessage, currentException.getMessage());
     }
 
 }

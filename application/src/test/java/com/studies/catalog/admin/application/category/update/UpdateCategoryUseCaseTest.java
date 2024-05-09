@@ -1,7 +1,5 @@
 package com.studies.catalog.admin.application.category.update;
 
-import com.studies.catalog.admin.application.category.update.UpdateCategoryCommand;
-import com.studies.catalog.admin.application.category.update.UpdateCategoryUseCaseImpl;
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.category.CategoryID;
@@ -32,14 +30,14 @@ class UpdateCategoryUseCaseTest {
     private CategoryGateway categoryGateway;
 
     @Test
-    void givenAValidCommand_whenCallsUpdateCategory_shouldReturnCategoryId() {
+    void givenAValidInput_whenCallsUpdateCategory_shouldReturnCategoryId() {
         final var aCategory = Category.newCategory("Movvies", null, true);
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = true;
         final var expectedId = aCategory.getId();
 
-        final var aCommand = UpdateCategoryCommand.with(
+        final var anInput = UpdateCategoryInput.with(
                 expectedId.getValue(),
                 expectedName,
                 expectedDescription,
@@ -52,7 +50,7 @@ class UpdateCategoryUseCaseTest {
         when(categoryGateway.update(any()))
                 .thenAnswer(returnsFirstArg());
 
-        final var currentOutput = useCase.execute(aCommand).get();
+        final var currentOutput = useCase.execute(anInput).get();
 
         Assertions.assertNotNull(currentOutput);
         Assertions.assertNotNull(currentOutput.id());
@@ -81,7 +79,7 @@ class UpdateCategoryUseCaseTest {
         final var expectedErrorMessage = "'name' should not be null";
         final var expectedErrorCount = 1;
 
-        final var aCommand = UpdateCategoryCommand.with(
+        final var anInput = UpdateCategoryInput.with(
                 expectedId.getValue(),
                 expectedName,
                 expectedDescription,
@@ -91,7 +89,7 @@ class UpdateCategoryUseCaseTest {
         when(categoryGateway.findById(eq(expectedId)))
                 .thenReturn(Optional.of(Category.with(aCategory)));
 
-        final var notification = useCase.execute(aCommand).getLeft();
+        final var notification = useCase.execute(anInput).getLeft();
 
         Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
@@ -100,14 +98,14 @@ class UpdateCategoryUseCaseTest {
     }
 
     @Test
-    void givenAValidInactivateCommand_whenCallsUpdateCategory_shouldReturnInactiveCategoryId() {
+    void givenAValidInactivateInput_whenCallsUpdateCategory_shouldReturnInactiveCategoryId() {
         final var aCategory = Category.newCategory("Movvies", null, true);
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = false;
         final var expectedId = aCategory.getId();
 
-        final var aCommand = UpdateCategoryCommand.with(
+        final var anInput = UpdateCategoryInput.with(
                 expectedId.getValue(),
                 expectedName,
                 expectedDescription,
@@ -123,7 +121,7 @@ class UpdateCategoryUseCaseTest {
         Assertions.assertTrue(aCategory.isActive());
         Assertions.assertNull(aCategory.getDeletedAt());
 
-        final var currentOutput = useCase.execute(aCommand).get();
+        final var currentOutput = useCase.execute(anInput).get();
 
         Assertions.assertNotNull(currentOutput);
         Assertions.assertNotNull(currentOutput.id());
@@ -143,7 +141,7 @@ class UpdateCategoryUseCaseTest {
     }
 
     @Test
-    void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnAException() {
+    void givenAValidInput_whenGatewayThrowsRandomException_shouldReturnAException() {
         final var aCategory = Category.newCategory("Movvies", null, true);
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
@@ -152,7 +150,7 @@ class UpdateCategoryUseCaseTest {
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "Gateway error";
 
-        final var aCommand = UpdateCategoryCommand.with(
+        final var anInput = UpdateCategoryInput.with(
                 expectedId.getValue(),
                 expectedName,
                 expectedDescription,
@@ -165,7 +163,7 @@ class UpdateCategoryUseCaseTest {
         when(categoryGateway.update(any()))
                 .thenThrow(new IllegalStateException(expectedErrorMessage));
 
-        final var notification = useCase.execute(aCommand).getLeft();
+        final var notification = useCase.execute(anInput).getLeft();
 
         Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
@@ -183,14 +181,14 @@ class UpdateCategoryUseCaseTest {
     }
 
     @Test
-    void givenACommandWithInvalidID_whenCallsUpdateCategory_shouldReturnNotFoundException() {
+    void givenAInputWithInvalidID_whenCallsUpdateCategory_shouldReturnNotFoundException() {
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = false;
         final var expectedId = "321";
         final var expectedErrorMessage = "Category with ID 321 was not found";
 
-        final var aCommand = UpdateCategoryCommand.with(
+        final var anInput = UpdateCategoryInput.with(
                 expectedId,
                 expectedName,
                 expectedDescription,
@@ -200,7 +198,7 @@ class UpdateCategoryUseCaseTest {
         when(categoryGateway.findById(eq(CategoryID.from(expectedId))))
                 .thenReturn(Optional.empty());
 
-        final var currentException = Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
+        final var currentException = Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(anInput));
 
         Assertions.assertEquals(expectedErrorMessage, currentException.getMessage());
 

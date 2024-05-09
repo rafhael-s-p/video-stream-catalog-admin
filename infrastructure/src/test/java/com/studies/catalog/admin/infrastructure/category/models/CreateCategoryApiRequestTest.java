@@ -20,9 +20,9 @@ class CreateCategoryApiRequestTest {
 
         final var request = new CreateCategoryApiRequest(expectedName, expectedDescription, expectedIsActive);
 
-        final var actualJson = this.json.write(request);
+        final var currentJson = this.json.write(request);
 
-        Assertions.assertThat(actualJson)
+        Assertions.assertThat(currentJson)
                 .hasJsonPathValue("$.name", expectedName)
                 .hasJsonPathValue("$.description", expectedDescription)
                 .hasJsonPathValue("$.is_active", expectedIsActive);
@@ -42,9 +42,9 @@ class CreateCategoryApiRequestTest {
                 }    
                 """.formatted(expectedName, expectedDescription, expectedIsActive);
 
-        final var actualJson = this.json.parse(json);
+        final var currentJson = this.json.parse(json);
 
-        Assertions.assertThat(actualJson)
+        Assertions.assertThat(currentJson)
                 .hasFieldOrPropertyWithValue("name", expectedName)
                 .hasFieldOrPropertyWithValue("description", expectedDescription)
                 .hasFieldOrPropertyWithValue("active", expectedIsActive);

@@ -35,7 +35,7 @@ class UpdateGenreUseCaseTest {
     private GenreGateway genreGateway;
 
     @Test
-    void givenAValidCommand_whenCallsUpdateGenre_shouldReturnGenreId() {
+    void givenAValidInput_whenCallsUpdateGenre_shouldReturnGenreId() {
         // given
         final var aGenre = Genre.newGenre("Nrror", true);
 
@@ -44,7 +44,7 @@ class UpdateGenreUseCaseTest {
         final var expectedIsActive = true;
         final var expectedCategories = List.<CategoryID>of();
 
-        final var aCommand = UpdateGenreCommand.with(
+        final var anInput = UpdateGenreInput.with(
                 expectedId.getValue(),
                 expectedName,
                 expectedIsActive,
@@ -57,7 +57,7 @@ class UpdateGenreUseCaseTest {
         when(genreGateway.update(any()))
                 .thenAnswer(returnsFirstArg());
         // when
-        final var currentOutput = useCase.execute(aCommand);
+        final var currentOutput = useCase.execute(anInput);
 
         // then
         Assertions.assertNotNull(currentOutput);
@@ -77,7 +77,7 @@ class UpdateGenreUseCaseTest {
     }
 
     @Test
-    void givenAValidCommandWithCategories_whenCallsUpdateGenre_shouldReturnGenreId() {
+    void givenAValidInputWithCategories_whenCallsUpdateGenre_shouldReturnGenreId() {
         // given
         final var aGenre = Genre.newGenre("Nrror", true);
 
@@ -89,7 +89,7 @@ class UpdateGenreUseCaseTest {
                 CategoryID.from("456")
         );
 
-        final var aCommand = UpdateGenreCommand.with(
+        final var anInput = UpdateGenreInput.with(
                 expectedId.getValue(),
                 expectedName,
                 expectedIsActive,
@@ -106,7 +106,7 @@ class UpdateGenreUseCaseTest {
                 .thenAnswer(returnsFirstArg());
 
         // when
-        final var currentOutput = useCase.execute(aCommand);
+        final var currentOutput = useCase.execute(anInput);
 
         // then
         Assertions.assertNotNull(currentOutput);
@@ -128,7 +128,7 @@ class UpdateGenreUseCaseTest {
     }
 
     @Test
-    void givenAValidCommandWithInactiveGenre_whenCallsUpdateGenre_shouldReturnGenreId() {
+    void givenAValidInputWithInactiveGenre_whenCallsUpdateGenre_shouldReturnGenreId() {
         // given
         final var aGenre = Genre.newGenre("Nrror", true);
 
@@ -137,7 +137,7 @@ class UpdateGenreUseCaseTest {
         final var expectedIsActive = false;
         final var expectedCategories = List.<CategoryID>of();
 
-        final var aCommand = UpdateGenreCommand.with(
+        final var anInput = UpdateGenreInput.with(
                 expectedId.getValue(),
                 expectedName,
                 expectedIsActive,
@@ -154,7 +154,7 @@ class UpdateGenreUseCaseTest {
         Assertions.assertNull(aGenre.getDeletedAt());
 
         // when
-        final var currentOutput = useCase.execute(aCommand);
+        final var currentOutput = useCase.execute(anInput);
 
         // then
         Assertions.assertNotNull(currentOutput);
@@ -186,7 +186,7 @@ class UpdateGenreUseCaseTest {
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'name' should not be null";
 
-        final var aCommand = UpdateGenreCommand.with(
+        final var anInput = UpdateGenreInput.with(
                 expectedId.getValue(),
                 expectedName,
                 expectedIsActive,
@@ -198,7 +198,7 @@ class UpdateGenreUseCaseTest {
 
         // when
         final var currentException =
-                Assertions.assertThrows(NotificationException.class, () -> useCase.execute(aCommand));
+                Assertions.assertThrows(NotificationException.class, () -> useCase.execute(anInput));
 
         // then
         Assertions.assertEquals(expectedErrorCount, currentException.getErrors().size());
@@ -229,7 +229,7 @@ class UpdateGenreUseCaseTest {
         final var expectedErrorMessageOne = "Some categories could not be found: 456, 789";
         final var expectedErrorMessageTwo = "'name' should not be null";
 
-        final var aCommand = UpdateGenreCommand.with(
+        final var anInput = UpdateGenreInput.with(
                 expectedId.getValue(),
                 expectedName,
                 expectedIsActive,
@@ -244,7 +244,7 @@ class UpdateGenreUseCaseTest {
 
         // when
         final var currentException = Assertions.assertThrows(NotificationException.class, () -> {
-            useCase.execute(aCommand);
+            useCase.execute(anInput);
         });
 
         // then
