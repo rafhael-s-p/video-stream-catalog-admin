@@ -12,6 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.studies.catalog.admin.infrastructure.utils.SpecificationUtils.like;
@@ -76,6 +78,11 @@ public class CategoryMySQLGateway implements CategoryGateway {
         final String anIdValue = anId.getValue();
         if (this.repository.existsById(anIdValue))
             this.repository.deleteById(anIdValue);
+    }
+
+    @Override
+    public List<CategoryID> existsByIds(final Iterable<CategoryID> ids) {
+        return Collections.emptyList();
     }
 
     private Category save(Category aCategory) {
