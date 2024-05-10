@@ -1,15 +1,15 @@
 package com.studies.catalog.admin.infrastructure.configuration.usecases;
 
-import com.studies.catalog.admin.application.create.CreateCategoryUseCase;
-import com.studies.catalog.admin.application.create.CreateCategoryUseCaseImpl;
-import com.studies.catalog.admin.application.delete.DeleteCategoryUseCase;
-import com.studies.catalog.admin.application.delete.DeleteCategoryUseCaseImpl;
-import com.studies.catalog.admin.application.retrieve.get.GetCategoryByIdUseCase;
-import com.studies.catalog.admin.application.retrieve.get.GetCategoryByIdUseCaseImpl;
-import com.studies.catalog.admin.application.retrieve.list.ListCategoriesUseCase;
-import com.studies.catalog.admin.application.retrieve.list.ListCategoriesUseCaseImpl;
-import com.studies.catalog.admin.application.update.UpdateCategoryUseCase;
-import com.studies.catalog.admin.application.update.UpdateCategoryUseCaseImpl;
+import com.studies.catalog.admin.application.category.create.CreateCategoryUseCase;
+import com.studies.catalog.admin.application.category.create.CreateCategoryUseCaseImpl;
+import com.studies.catalog.admin.application.category.delete.DeleteCategoryUseCase;
+import com.studies.catalog.admin.application.category.delete.DeleteCategoryUseCaseImpl;
+import com.studies.catalog.admin.application.category.retrieve.get.GetCategoryByIdUseCase;
+import com.studies.catalog.admin.application.category.retrieve.get.GetCategoryByIdUseCaseImpl;
+import com.studies.catalog.admin.application.category.retrieve.list.ListCategoriesUseCase;
+import com.studies.catalog.admin.application.category.retrieve.list.ListCategoriesUseCaseImpl;
+import com.studies.catalog.admin.application.category.update.UpdateCategoryUseCase;
+import com.studies.catalog.admin.application.category.update.UpdateCategoryUseCaseImpl;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
