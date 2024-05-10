@@ -25,7 +25,7 @@ fileV="V${timestamp}__${migration}.sql"
 fileU="U${timestamp}__${migration}.sql"
 
 fullPathV="infrastructure/src/main/resources/db/migration/${fileV}"
-fullPathU="infrastructure/src/main/resources/db/migration/${fileU}"
+fullPathU="infrastructure/src/main/resources/db/migration/rollback/${fileU}"
 
 if test -f "$fullPathV" || test -f "$fullPathU"
 then
