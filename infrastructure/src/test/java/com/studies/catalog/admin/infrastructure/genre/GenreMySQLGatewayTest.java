@@ -5,11 +5,14 @@ import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.genre.Genre;
 import com.studies.catalog.admin.domain.genre.GenreID;
+import com.studies.catalog.admin.domain.pagination.SearchQuery;
 import com.studies.catalog.admin.infrastructure.category.CategoryMySQLGateway;
 import com.studies.catalog.admin.infrastructure.genre.persistence.GenreJpaEntity;
 import com.studies.catalog.admin.infrastructure.genre.persistence.GenreRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Comparator;
@@ -361,6 +364,147 @@ class GenreMySQLGatewayTest {
 
         // then
         Assertions.assertTrue(currentGenre.isEmpty());
+    }
+
+    @Test
+    void givenEmptyGenres_whenCallFindAll_shouldReturnEmptyList() {
+        // given
+        final var expectedPage = 0;
+        final var expectedPerPage = 1;
+        final var expectedTerms = "";
+        final var expectedSort = "name";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 0;
+
+        final var aQuery =
+                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+
+        // when
+        final var currentPage = genreGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, currentPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentPage.perPage());
+        Assertions.assertEquals(expectedTotal, currentPage.total());
+        Assertions.assertEquals(expectedTotal, currentPage.items().size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "ac,0,10,1,1,Action",
+            "dr,0,10,1,1,Drama",
+            "com,0,10,1,1,Comedy",
+            "sci,0,10,1,1,Science",
+            "terr,0,10,1,1,Terror",
+    })
+    void givenAValidTerm_whenCallsFindAll_shouldReturnFiltered(
+            final String expectedTerms,
+            final int expectedPage,
+            final int expectedPerPage,
+            final int expectedItemsCount,
+            final long expectedTotal,
+            final String expectedGenreName
+    ) {
+        // given
+        mockGenres();
+        final var expectedSort = "name";
+        final var expectedDirection = "asc";
+
+        final var aQuery =
+                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+
+        // when
+        final var currentPage = genreGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, currentPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentPage.perPage());
+        Assertions.assertEquals(expectedTotal, currentPage.total());
+        Assertions.assertEquals(expectedItemsCount, currentPage.items().size());
+        Assertions.assertEquals(expectedGenreName, currentPage.items().get(0).getName());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "name,asc,0,10,5,5,Action",
+            "name,desc,0,10,5,5,Terror",
+            "createdAt,asc,0,10,5,5,Comedy",
+            "createdAt,desc,0,10,5,5,Science",
+    })
+    void givenAValidSortAndDirection_whenCallsFindAll_shouldReturnFiltered(
+            final String expectedSort,
+            final String expectedDirection,
+            final int expectedPage,
+            final int expectedPerPage,
+            final int expectedItemsCount,
+            final long expectedTotal,
+            final String expectedGenreName
+    ) {
+        // given
+        mockGenres();
+        final var expectedTerms = "";
+
+        final var aQuery =
+                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+
+        // when
+        final var currentPage = genreGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, currentPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentPage.perPage());
+        Assertions.assertEquals(expectedTotal, currentPage.total());
+        Assertions.assertEquals(expectedItemsCount, currentPage.items().size());
+        Assertions.assertEquals(expectedGenreName, currentPage.items().get(0).getName());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0,2,2,5,Action;Comedy",
+            "1,2,2,5,Drama;Science",
+            "2,2,1,5,Terror",
+    })
+    void givenAValidSortAndDirection_whenCallsFindAll_shouldReturnFiltered(
+            final int expectedPage,
+            final int expectedPerPage,
+            final int expectedItemsCount,
+            final long expectedTotal,
+            final String expectedGenres
+    ) {
+        // given
+        mockGenres();
+        final var expectedTerms = "";
+        final var expectedSort = "name";
+        final var expectedDirection = "asc";
+
+        final var aQuery =
+                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+
+        // when
+        final var currentPage = genreGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, currentPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentPage.perPage());
+        Assertions.assertEquals(expectedTotal, currentPage.total());
+        Assertions.assertEquals(expectedItemsCount, currentPage.items().size());
+
+        int index = 0;
+        for (final var expectedName : expectedGenres.split(";")) {
+            final var currentName = currentPage.items().get(index).getName();
+            Assertions.assertEquals(expectedName, currentName);
+            index++;
+        }
+    }
+
+    private void mockGenres() {
+        genreRepository.saveAllAndFlush(List.of(
+                GenreJpaEntity.from(Genre.newGenre("Comedy", true)),
+                GenreJpaEntity.from(Genre.newGenre("Action", true)),
+                GenreJpaEntity.from(Genre.newGenre("Drama", true)),
+                GenreJpaEntity.from(Genre.newGenre("Terror", true)),
+                GenreJpaEntity.from(Genre.newGenre("Science", true))
+        ));
     }
 
     private List<CategoryID> sorted(final List<CategoryID> expectedCategories) {
