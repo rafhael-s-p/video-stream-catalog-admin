@@ -39,11 +39,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
         // Dynamic search by terms criteria (name ou description)
         final var specifications = Optional.ofNullable(aQuery.terms())
                 .filter(str -> !str.isBlank())
-                .map(str -> {
-                    final Specification<CategoryJpaEntity> nameLike = like("name", str);
-                    final Specification<CategoryJpaEntity> descriptionLike = like("description", str);
-                    return nameLike.or(descriptionLike);
-                })
+                .map(this::assembleSpecification)
                 .orElse(null);
 
         final var pageResult =
@@ -83,6 +79,12 @@ public class CategoryMySQLGateway implements CategoryGateway {
     @Override
     public List<CategoryID> existsByIds(final Iterable<CategoryID> ids) {
         return Collections.emptyList();
+    }
+
+    private Specification<CategoryJpaEntity> assembleSpecification(final String str) {
+        final Specification<CategoryJpaEntity> nameLike = like("name", str);
+        final Specification<CategoryJpaEntity> descriptionLike = like("description", str);
+        return nameLike.or(descriptionLike);
     }
 
     private Category save(Category aCategory) {
