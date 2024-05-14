@@ -314,6 +314,55 @@ class GenreMySQLGatewayTest {
         Assertions.assertEquals(0, genreRepository.count());
     }
 
+    @Test
+    void givenAPrePersistedGenre_whenCallsFindById_shouldReturnGenre() {
+        // given
+        final var movies =
+                categoryGateway.create(Category.newCategory("Movies", null, true));
+
+        final var series =
+                categoryGateway.create(Category.newCategory("Series", null, true));
+
+        final var expectedName = "Action";
+        final var expectedIsActive = true;
+        final var expectedCategories = List.of(movies.getId(), series.getId());
+
+        final var aGenre = Genre.newGenre(expectedName, expectedIsActive);
+        aGenre.addCategories(expectedCategories);
+
+        final var expectedId = aGenre.getId();
+
+        genreRepository.saveAndFlush(GenreJpaEntity.from(aGenre));
+
+        Assertions.assertEquals(1, genreRepository.count());
+
+        // when
+        final var currentGenre = genreGateway.findById(expectedId).get();
+
+        // then
+        Assertions.assertEquals(expectedId, currentGenre.getId());
+        Assertions.assertEquals(expectedName, currentGenre.getName());
+        Assertions.assertEquals(expectedIsActive, currentGenre.isActive());
+        Assertions.assertEquals(sorted(expectedCategories), sorted(currentGenre.getCategories()));
+        Assertions.assertEquals(aGenre.getCreatedAt(), currentGenre.getCreatedAt());
+        Assertions.assertEquals(aGenre.getUpdatedAt(), currentGenre.getUpdatedAt());
+        Assertions.assertNull(currentGenre.getDeletedAt());
+    }
+
+    @Test
+    void givenAnInvalidGenreId_whenCallsFindById_shouldReturnEmpty() {
+        // given
+        final var expectedId = GenreID.from("321");
+
+        Assertions.assertEquals(0, genreRepository.count());
+
+        // when
+        final var currentGenre = genreGateway.findById(expectedId);
+
+        // then
+        Assertions.assertTrue(currentGenre.isEmpty());
+    }
+
     private List<CategoryID> sorted(final List<CategoryID> expectedCategories) {
         return expectedCategories.stream()
                 .sorted(Comparator.comparing(CategoryID::getValue))
