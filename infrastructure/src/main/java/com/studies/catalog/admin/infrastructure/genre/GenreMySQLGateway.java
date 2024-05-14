@@ -42,13 +42,15 @@ public class GenreMySQLGateway implements GenreGateway {
     }
 
     @Override
-    public void deleteById(GenreID anId) {
-
+    public void deleteById(final GenreID anId) {
+        final var aGenreId = anId.getValue();
+        if (this.genreRepository.existsById(aGenreId))
+            this.genreRepository.deleteById(aGenreId);
     }
 
     private Genre save(final Genre aGenre) {
         return this.genreRepository.save(GenreJpaEntity.from(aGenre))
                 .toAggregate();
     }
-    
+
 }
