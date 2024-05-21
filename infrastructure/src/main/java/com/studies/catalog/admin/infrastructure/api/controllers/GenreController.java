@@ -2,12 +2,14 @@ package com.studies.catalog.admin.infrastructure.api.controllers;
 
 import com.studies.catalog.admin.application.genre.create.CreateGenreInput;
 import com.studies.catalog.admin.application.genre.create.CreateGenreUseCase;
+import com.studies.catalog.admin.application.genre.retrieve.get.GetGenreByIdUseCase;
 import com.studies.catalog.admin.domain.pagination.Pagination;
 import com.studies.catalog.admin.infrastructure.api.GenreAPI;
 import com.studies.catalog.admin.infrastructure.genre.models.CreateGenreApiRequest;
 import com.studies.catalog.admin.infrastructure.genre.models.GenreApiResponse;
 import com.studies.catalog.admin.infrastructure.genre.models.GenreListApiResponse;
 import com.studies.catalog.admin.infrastructure.genre.models.UpdateGenreApiRequest;
+import com.studies.catalog.admin.infrastructure.genre.presenters.GenreApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,9 +18,12 @@ import java.net.URI;
 @RestController
 public class GenreController implements GenreAPI {
 
+    private final GetGenreByIdUseCase getGenreByIdUseCase;
     private final CreateGenreUseCase createGenreUseCase;
 
-    public GenreController(final CreateGenreUseCase createGenreUseCase) {
+    public GenreController(final GetGenreByIdUseCase getGenreByIdUseCase,
+                           final CreateGenreUseCase createGenreUseCase) {
+        this.getGenreByIdUseCase = getGenreByIdUseCase;
         this.createGenreUseCase = createGenreUseCase;
     }
 
@@ -35,7 +40,7 @@ public class GenreController implements GenreAPI {
 
     @Override
     public GenreApiResponse getById(final String id) {
-        return null;
+        return GenreApiPresenter.present(this.getGenreByIdUseCase.execute(id));
     }
 
     @Override
