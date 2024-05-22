@@ -2,6 +2,7 @@ package com.studies.catalog.admin.infrastructure.api.controllers;
 
 import com.studies.catalog.admin.application.genre.create.CreateGenreInput;
 import com.studies.catalog.admin.application.genre.create.CreateGenreUseCase;
+import com.studies.catalog.admin.application.genre.delete.DeleteGenreUseCase;
 import com.studies.catalog.admin.application.genre.retrieve.get.GetGenreByIdUseCase;
 import com.studies.catalog.admin.application.genre.update.UpdateGenreInput;
 import com.studies.catalog.admin.application.genre.update.UpdateGenreUseCase;
@@ -23,13 +24,16 @@ public class GenreController implements GenreAPI {
     private final GetGenreByIdUseCase getGenreByIdUseCase;
     private final CreateGenreUseCase createGenreUseCase;
     private final UpdateGenreUseCase updateGenreUseCase;
+    private final DeleteGenreUseCase deleteGenreUseCase;
 
     public GenreController(final GetGenreByIdUseCase getGenreByIdUseCase,
                            final CreateGenreUseCase createGenreUseCase,
-                           final UpdateGenreUseCase updateGenreUseCase) {
+                           final UpdateGenreUseCase updateGenreUseCase,
+                           final DeleteGenreUseCase deleteGenreUseCase) {
         this.getGenreByIdUseCase = getGenreByIdUseCase;
         this.createGenreUseCase = createGenreUseCase;
         this.updateGenreUseCase = updateGenreUseCase;
+        this.deleteGenreUseCase = deleteGenreUseCase;
     }
 
     @Override
@@ -77,7 +81,7 @@ public class GenreController implements GenreAPI {
 
     @Override
     public void deleteById(final String id) {
-
+        this.deleteGenreUseCase.execute(id);
     }
 
 }
