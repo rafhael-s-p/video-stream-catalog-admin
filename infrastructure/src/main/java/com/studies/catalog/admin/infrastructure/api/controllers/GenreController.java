@@ -3,6 +3,8 @@ package com.studies.catalog.admin.infrastructure.api.controllers;
 import com.studies.catalog.admin.application.genre.create.CreateGenreInput;
 import com.studies.catalog.admin.application.genre.create.CreateGenreUseCase;
 import com.studies.catalog.admin.application.genre.retrieve.get.GetGenreByIdUseCase;
+import com.studies.catalog.admin.application.genre.update.UpdateGenreInput;
+import com.studies.catalog.admin.application.genre.update.UpdateGenreUseCase;
 import com.studies.catalog.admin.domain.pagination.Pagination;
 import com.studies.catalog.admin.infrastructure.api.GenreAPI;
 import com.studies.catalog.admin.infrastructure.genre.models.CreateGenreApiRequest;
@@ -20,11 +22,14 @@ public class GenreController implements GenreAPI {
 
     private final GetGenreByIdUseCase getGenreByIdUseCase;
     private final CreateGenreUseCase createGenreUseCase;
+    private final UpdateGenreUseCase updateGenreUseCase;
 
     public GenreController(final GetGenreByIdUseCase getGenreByIdUseCase,
-                           final CreateGenreUseCase createGenreUseCase) {
+                           final CreateGenreUseCase createGenreUseCase,
+                           final UpdateGenreUseCase updateGenreUseCase) {
         this.getGenreByIdUseCase = getGenreByIdUseCase;
         this.createGenreUseCase = createGenreUseCase;
+        this.updateGenreUseCase = updateGenreUseCase;
     }
 
     @Override
@@ -58,7 +63,16 @@ public class GenreController implements GenreAPI {
 
     @Override
     public ResponseEntity<?> updateById(final String id, final UpdateGenreApiRequest input) {
-        return null;
+        final var anInput = UpdateGenreInput.with(
+                id,
+                input.name(),
+                input.isActive(),
+                input.categories()
+        );
+
+        final var output = this.updateGenreUseCase.execute(anInput);
+
+        return ResponseEntity.ok(output);
     }
 
     @Override
