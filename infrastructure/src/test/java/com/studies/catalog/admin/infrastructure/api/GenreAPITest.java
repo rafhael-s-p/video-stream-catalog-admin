@@ -7,6 +7,8 @@ import com.studies.catalog.admin.application.genre.create.CreateGenreUseCase;
 import com.studies.catalog.admin.application.genre.delete.DeleteGenreUseCase;
 import com.studies.catalog.admin.application.genre.retrieve.get.GenreOutput;
 import com.studies.catalog.admin.application.genre.retrieve.get.GetGenreByIdUseCase;
+import com.studies.catalog.admin.application.genre.retrieve.list.GenreListOutput;
+import com.studies.catalog.admin.application.genre.retrieve.list.ListGenreUseCase;
 import com.studies.catalog.admin.application.genre.update.UpdateGenreOutput;
 import com.studies.catalog.admin.application.genre.update.UpdateGenreUseCase;
 import com.studies.catalog.admin.domain.category.CategoryID;
@@ -14,6 +16,7 @@ import com.studies.catalog.admin.domain.exceptions.NotFoundException;
 import com.studies.catalog.admin.domain.exceptions.NotificationException;
 import com.studies.catalog.admin.domain.genre.Genre;
 import com.studies.catalog.admin.domain.genre.GenreID;
+import com.studies.catalog.admin.domain.pagination.Pagination;
 import com.studies.catalog.admin.domain.validation.Error;
 import com.studies.catalog.admin.domain.validation.handler.Notification;
 import com.studies.catalog.admin.infrastructure.genre.models.CreateGenreApiRequest;
@@ -44,6 +47,9 @@ class GenreAPITest {
 
     @Autowired
     private ObjectMapper mapper;
+
+    @MockBean
+    private ListGenreUseCase listGenreUseCase;
 
     @MockBean
     private GetGenreByIdUseCase getGenreByIdUseCase;
@@ -284,6 +290,57 @@ class GenreAPITest {
         result.andExpect(status().isNoContent());
 
         verify(deleteGenreUseCase).execute(eq(expectedId));
+    }
+
+    @Test
+    void givenValidParams_whenCallsListGenres_shouldReturnGenres() throws Exception {
+        // given
+        final var aGenre = Genre.newGenre("Action", false);
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "ac";
+        final var expectedSort = "name";
+        final var expectedDirection = "asc";
+
+        final var expectedItemsCount = 1;
+        final var expectedTotal = 1;
+
+        final var expectedItems = List.of(GenreListOutput.from(aGenre));
+
+        when(listGenreUseCase.execute(any()))
+                .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
+
+        // when
+        final var aRequest = get("/genres")
+                .queryParam("page", String.valueOf(expectedPage))
+                .queryParam("perPage", String.valueOf(expectedPerPage))
+                .queryParam("sort", expectedSort)
+                .queryParam("dir", expectedDirection)
+                .queryParam("search", expectedTerms)
+                .accept(MediaType.APPLICATION_JSON);
+
+        final var response = this.mvc.perform(aRequest);
+
+        // then
+        response.andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", equalTo(expectedPage)))
+                .andExpect(jsonPath("$.per_page", equalTo(expectedPerPage)))
+                .andExpect(jsonPath("$.total", equalTo(expectedTotal)))
+                .andExpect(jsonPath("$.items", hasSize(expectedItemsCount)))
+                .andExpect(jsonPath("$.items[0].id", equalTo(aGenre.getId().getValue())))
+                .andExpect(jsonPath("$.items[0].name", equalTo(aGenre.getName())))
+                .andExpect(jsonPath("$.items[0].is_active", equalTo(aGenre.isActive())))
+                .andExpect(jsonPath("$.items[0].created_at", equalTo(aGenre.getCreatedAt().toString())))
+                .andExpect(jsonPath("$.items[0].deleted_at", equalTo(aGenre.getDeletedAt().toString())));
+
+        verify(listGenreUseCase).execute(argThat(query ->
+                Objects.equals(expectedPage, query.page())
+                        && Objects.equals(expectedPerPage, query.perPage())
+                        && Objects.equals(expectedDirection, query.direction())
+                        && Objects.equals(expectedSort, query.sort())
+                        && Objects.equals(expectedTerms, query.terms())
+        ));
     }
 
 }
