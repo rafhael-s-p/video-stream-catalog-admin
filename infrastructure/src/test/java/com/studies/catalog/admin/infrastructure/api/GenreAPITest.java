@@ -6,6 +6,8 @@ import com.studies.catalog.admin.application.genre.create.CreateGenreOutput;
 import com.studies.catalog.admin.application.genre.create.CreateGenreUseCase;
 import com.studies.catalog.admin.application.genre.retrieve.get.GenreOutput;
 import com.studies.catalog.admin.application.genre.retrieve.get.GetGenreByIdUseCase;
+import com.studies.catalog.admin.application.genre.update.UpdateGenreOutput;
+import com.studies.catalog.admin.application.genre.update.UpdateGenreUseCase;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.exceptions.NotFoundException;
 import com.studies.catalog.admin.domain.exceptions.NotificationException;
@@ -14,6 +16,7 @@ import com.studies.catalog.admin.domain.genre.GenreID;
 import com.studies.catalog.admin.domain.validation.Error;
 import com.studies.catalog.admin.domain.validation.handler.Notification;
 import com.studies.catalog.admin.infrastructure.genre.models.CreateGenreApiRequest;
+import com.studies.catalog.admin.infrastructure.genre.models.UpdateGenreApiRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,8 +31,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -47,6 +50,9 @@ class GenreAPITest {
 
     @MockBean
     private CreateGenreUseCase createGenreUseCase;
+
+    @MockBean
+    private UpdateGenreUseCase updateGenreUseCase;
 
     @Test
     void givenAValidInput_whenCallsCreateGenre_shouldReturnGenreId() throws Exception {
@@ -181,6 +187,80 @@ class GenreAPITest {
                 .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
 
         verify(getGenreByIdUseCase).execute(eq(expectedId.getValue()));
+    }
+
+    @Test
+    void givenAValidInput_whenCallsUpdateGenre_shouldReturnGenreId() throws Exception {
+        // given
+        final var expectedName = "Action";
+        final var expectedCategories = List.of("123", "456");
+        final var expectedIsActive = true;
+
+        final var aGenre = Genre.newGenre(expectedName, expectedIsActive);
+        final var expectedId = aGenre.getId().getValue();
+
+        final var anInput =
+                new UpdateGenreApiRequest(expectedName, expectedCategories, expectedIsActive);
+
+        when(updateGenreUseCase.execute(any()))
+                .thenReturn(UpdateGenreOutput.from(aGenre));
+
+        // when
+        final var aRequest = put("/genres/{id}", expectedId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(anInput));
+
+        final var response = this.mvc.perform(aRequest)
+                .andDo(print());
+
+        // then
+        response.andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.id", equalTo(expectedId)));
+
+        verify(updateGenreUseCase).execute(argThat(input ->
+                Objects.equals(expectedName, input.name())
+                        && Objects.equals(expectedCategories, input.categories())
+                        && Objects.equals(expectedIsActive, input.isActive())
+        ));
+    }
+
+    @Test
+    void givenAnInvalidName_whenCallsUpdateGenre_shouldReturnNotification() throws Exception {
+        // given
+        final String expectedName = null;
+        final var expectedCategories = List.of("123", "456");
+        final var expectedIsActive = true;
+        final var expectedErrorMessage = "'name' should not be null";
+
+        final var aGenre = Genre.newGenre("Action", expectedIsActive);
+        final var expectedId = aGenre.getId().getValue();
+
+        final var anInput =
+                new UpdateGenreApiRequest(expectedName, expectedCategories, expectedIsActive);
+
+        when(updateGenreUseCase.execute(any()))
+                .thenThrow(new NotificationException("Error", Notification.create(new Error(expectedErrorMessage))));
+
+        // when
+        final var aRequest = put("/genres/{id}", expectedId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(anInput));
+
+        final var response = this.mvc.perform(aRequest)
+                .andDo(print());
+
+        // then
+        response.andExpect(status().isUnprocessableEntity())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        verify(updateGenreUseCase).execute(argThat(input ->
+                Objects.equals(expectedName, input.name())
+                        && Objects.equals(expectedCategories, input.categories())
+                        && Objects.equals(expectedIsActive, input.isActive())
+        ));
     }
 
 }
