@@ -84,10 +84,10 @@ class CategoryAPITest {
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.id", equalTo("321")));
 
-        verify(createCategoryUseCase, times(1)).execute(argThat(cmd ->
-                Objects.equals(expectedName, cmd.name())
-                        && Objects.equals(expectedDescription, cmd.description())
-                        && Objects.equals(expectedIsActive, cmd.isActive())
+        verify(createCategoryUseCase, times(1)).execute(argThat(input ->
+                Objects.equals(expectedName, input.name())
+                        && Objects.equals(expectedDescription, input.description())
+                        && Objects.equals(expectedIsActive, input.isActive())
         ));
     }
 
@@ -115,10 +115,10 @@ class CategoryAPITest {
                 .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.errors[0].message", equalTo(expectedMessage)));
 
-        verify(createCategoryUseCase, times(1)).execute(argThat(cmd ->
-                Objects.equals(expectedName, cmd.name())
-                        && Objects.equals(expectedDescription, cmd.description())
-                        && Objects.equals(expectedIsActive, cmd.isActive())
+        verify(createCategoryUseCase, times(1)).execute(argThat(input ->
+                Objects.equals(expectedName, input.name())
+                        && Objects.equals(expectedDescription, input.description())
+                        && Objects.equals(expectedIsActive, input.isActive())
         ));
     }
 
@@ -147,10 +147,10 @@ class CategoryAPITest {
                 .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.errors[0].message", equalTo(expectedMessage)));
 
-        verify(createCategoryUseCase, times(1)).execute(argThat(cmd ->
-                Objects.equals(expectedName, cmd.name())
-                        && Objects.equals(expectedDescription, cmd.description())
-                        && Objects.equals(expectedIsActive, cmd.isActive())
+        verify(createCategoryUseCase, times(1)).execute(argThat(input ->
+                Objects.equals(expectedName, input.name())
+                        && Objects.equals(expectedDescription, input.description())
+                        && Objects.equals(expectedIsActive, input.isActive())
         ));
     }
 
@@ -239,10 +239,10 @@ class CategoryAPITest {
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.id", equalTo(expectedId)));
 
-        verify(updateCategoryUseCase, times(1)).execute(argThat(cmd ->
-                Objects.equals(expectedName, cmd.name())
-                        && Objects.equals(expectedDescription, cmd.description())
-                        && Objects.equals(expectedIsActive, cmd.isActive())
+        verify(updateCategoryUseCase, times(1)).execute(argThat(input ->
+                Objects.equals(expectedName, input.name())
+                        && Objects.equals(expectedDescription, input.description())
+                        && Objects.equals(expectedIsActive, input.isActive())
         ));
     }
 
@@ -277,10 +277,10 @@ class CategoryAPITest {
                 .andExpect(jsonPath("$.errors", hasSize(expectedErrorCount)))
                 .andExpect(jsonPath("$.errors[0].message", equalTo(expectedMessage)));
 
-        verify(updateCategoryUseCase, times(1)).execute(argThat(cmd ->
-                Objects.equals(expectedName, cmd.name())
-                        && Objects.equals(expectedDescription, cmd.description())
-                        && Objects.equals(expectedIsActive, cmd.isActive())
+        verify(updateCategoryUseCase, times(1)).execute(argThat(input ->
+                Objects.equals(expectedName, input.name())
+                        && Objects.equals(expectedDescription, input.description())
+                        && Objects.equals(expectedIsActive, input.isActive())
         ));
     }
 
@@ -313,10 +313,10 @@ class CategoryAPITest {
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
 
-        verify(updateCategoryUseCase, times(1)).execute(argThat(cmd ->
-                Objects.equals(expectedName, cmd.name())
-                        && Objects.equals(expectedDescription, cmd.description())
-                        && Objects.equals(expectedIsActive, cmd.isActive())
+        verify(updateCategoryUseCase, times(1)).execute(argThat(input ->
+                Objects.equals(expectedName, input.name())
+                        && Objects.equals(expectedDescription, input.description())
+                        && Objects.equals(expectedIsActive, input.isActive())
         ));
     }
 
