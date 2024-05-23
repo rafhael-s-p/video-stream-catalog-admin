@@ -8,6 +8,7 @@ import com.studies.catalog.admin.infrastructure.category.models.CreateCategoryAp
 import com.studies.catalog.admin.infrastructure.category.models.UpdateCategoryApiRequest;
 import com.studies.catalog.admin.infrastructure.configuration.json.Json;
 import com.studies.catalog.admin.infrastructure.genre.models.CreateGenreApiRequest;
+import com.studies.catalog.admin.infrastructure.genre.models.GenreApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -29,6 +30,10 @@ public interface MockDsl {
 
     default ResultActions listGenres(final int page, final int perPage, final String search) throws Exception {
         return listGenres(page, perPage, search, "", "");
+    }
+
+    default GenreApiResponse retrieveAGenre(final Identifier anId) throws Exception {
+        return this.retrieve("/genres/", anId, GenreApiResponse.class);
     }
 
     default ResultActions listGenres(final int page, final int perPage, final String search, final String sort, final String direction) throws Exception {
