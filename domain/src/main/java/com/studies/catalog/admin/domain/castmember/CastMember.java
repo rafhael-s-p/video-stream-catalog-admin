@@ -20,14 +20,34 @@ public class CastMember extends AggregateRoot<CastMemberID> {
             final String aName,
             final CastMemberType aType,
             final Instant aCreationDate,
-            final Instant aUpdateDate
+            final Instant anUpdateDate
     ) {
         super(anId);
         this.name = aName;
         this.type = aType;
         this.createdAt = aCreationDate;
-        this.updatedAt = aUpdateDate;
+        this.updatedAt = anUpdateDate;
         selfValidate();
+    }
+
+    public static CastMember with(
+            final CastMemberID anId,
+            final String aName,
+            final CastMemberType aType,
+            final Instant aCreationDate,
+            final Instant anUpdateDate
+    ) {
+        return new CastMember(anId, aName, aType, aCreationDate, anUpdateDate);
+    }
+
+    public static CastMember with(final CastMember aMember) {
+        return new CastMember(
+                aMember.id,
+                aMember.name,
+                aMember.type,
+                aMember.createdAt,
+                aMember.updatedAt
+        );
     }
 
     public static CastMember newMember(final String aName, final CastMemberType aType) {
