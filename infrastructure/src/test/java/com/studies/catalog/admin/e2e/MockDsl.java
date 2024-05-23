@@ -9,6 +9,7 @@ import com.studies.catalog.admin.infrastructure.category.models.UpdateCategoryAp
 import com.studies.catalog.admin.infrastructure.configuration.json.Json;
 import com.studies.catalog.admin.infrastructure.genre.models.CreateGenreApiRequest;
 import com.studies.catalog.admin.infrastructure.genre.models.GenreApiResponse;
+import com.studies.catalog.admin.infrastructure.genre.models.UpdateGenreApiRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -36,20 +37,24 @@ public interface MockDsl {
         return this.retrieve("/genres/", anId, GenreApiResponse.class);
     }
 
-    default ResultActions listGenres(final int page, final int perPage, final String search, final String sort, final String direction) throws Exception {
-        return this.list("/genres", page, perPage, search, sort, direction);
+    default ResultActions updateAGenre(final Identifier anId, final UpdateGenreApiRequest aRequest) throws Exception {
+        return this.update("/genres/", anId, aRequest);
     }
 
-    default CategoryID givenACategory(final String aName, final String aDescription, final boolean isActive) throws Exception {
-        final var aRequestBody = new CreateCategoryApiRequest(aName, aDescription, isActive);
-        final var currentId = this.given("/categories", aRequestBody);
-        return CategoryID.from(currentId);
+    default ResultActions listGenres(final int page, final int perPage, final String search, final String sort, final String direction) throws Exception {
+        return this.list("/genres", page, perPage, search, sort, direction);
     }
 
     default GenreID givenAGenre(final String aName, final boolean isActive, final List<CategoryID> categories) throws Exception {
         final var aRequestBody = new CreateGenreApiRequest(aName, mapTo(categories, CategoryID::getValue), isActive);
         final var currentId = this.given("/genres", aRequestBody);
         return GenreID.from(currentId);
+    }
+
+    default CategoryID givenACategory(final String aName, final String aDescription, final boolean isActive) throws Exception {
+        final var aRequestBody = new CreateCategoryApiRequest(aName, aDescription, isActive);
+        final var currentId = this.given("/categories", aRequestBody);
+        return CategoryID.from(currentId);
     }
 
     default ResultActions deleteACategory(final Identifier anId) throws Exception {
