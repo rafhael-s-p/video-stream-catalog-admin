@@ -37,6 +37,15 @@ public class CastMember extends AggregateRoot<CastMemberID> {
         return new CastMember(anId, aName, aType, now, now);
     }
 
+    public CastMember update(final String aName, final CastMemberType aType) {
+        this.name = aName;
+        this.type = aType;
+        this.updatedAt = InstantUtils.now();
+        selfValidate();
+
+        return this;
+    }
+
     public String getName() {
         return name;
     }
