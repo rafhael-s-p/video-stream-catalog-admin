@@ -41,6 +41,10 @@ public interface MockDsl {
         return this.update("/genres/", anId, aRequest);
     }
 
+    default ResultActions deleteAGenre(final Identifier anId) throws Exception {
+        return this.delete("/genres/", anId);
+    }
+
     default ResultActions listGenres(final int page, final int perPage, final String search, final String sort, final String direction) throws Exception {
         return this.list("/genres", page, perPage, search, sort, direction);
     }

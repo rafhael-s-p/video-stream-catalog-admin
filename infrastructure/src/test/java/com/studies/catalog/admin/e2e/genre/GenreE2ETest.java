@@ -2,6 +2,7 @@ package com.studies.catalog.admin.e2e.genre;
 
 import com.studies.catalog.admin.E2ETest;
 import com.studies.catalog.admin.domain.category.CategoryID;
+import com.studies.catalog.admin.domain.genre.GenreID;
 import com.studies.catalog.admin.e2e.MockDsl;
 import com.studies.catalog.admin.infrastructure.genre.models.UpdateGenreApiRequest;
 import com.studies.catalog.admin.infrastructure.genre.persistence.GenreRepository;
@@ -307,6 +308,33 @@ public class GenreE2ETest implements MockDsl {
         Assertions.assertNotNull(currentGenre.getCreatedAt());
         Assertions.assertNotNull(currentGenre.getUpdatedAt());
         Assertions.assertNull(currentGenre.getDeletedAt());
+    }
+
+    @Test
+    void asACatalogAdminItShouldBeAbleToDeleteAGenreByItsIdentifier() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, genreRepository.count());
+
+        final var movies = givenACategory("Filmes", null, true);
+
+        final var currentId = givenAGenre("Action", true, List.of(movies));
+
+        deleteAGenre(currentId)
+                .andExpect(status().isNoContent());
+
+        Assertions.assertFalse(this.genreRepository.existsById(currentId.getValue()));
+        Assertions.assertEquals(0, genreRepository.count());
+    }
+
+    @Test
+    void asACatalogAdminItShouldNotSeeAnErrorByDeletingANotExistentGenre() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, genreRepository.count());
+
+        deleteAGenre(GenreID.from("12313"))
+                .andExpect(status().isNoContent());
+
+        Assertions.assertEquals(0, genreRepository.count());
     }
 
 }
