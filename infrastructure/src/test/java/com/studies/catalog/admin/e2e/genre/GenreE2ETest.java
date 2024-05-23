@@ -3,6 +3,7 @@ package com.studies.catalog.admin.e2e.genre;
 import com.studies.catalog.admin.E2ETest;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.genre.GenreID;
+import com.studies.catalog.admin.e2e.MockDsl;
 import com.studies.catalog.admin.infrastructure.category.models.CreateCategoryApiRequest;
 import com.studies.catalog.admin.infrastructure.configuration.json.Json;
 import com.studies.catalog.admin.infrastructure.genre.models.CreateGenreApiRequest;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @E2ETest
 @Testcontainers
-public class GenreE2ETest {
+public class GenreE2ETest implements MockDsl {
 
     @Autowired
     private MockMvc mvc;
@@ -43,6 +44,11 @@ public class GenreE2ETest {
     @DynamicPropertySource
     public static void setDatasourceProperties(final DynamicPropertyRegistry registry) {
         registry.add("mysql.port", () -> MYSQL_CONTAINER.getMappedPort(3306));
+    }
+
+    @Override
+    public MockMvc mvc() {
+        return this.mvc;
     }
 
     @Test
@@ -89,44 +95,6 @@ public class GenreE2ETest {
         Assertions.assertNotNull(currentGenre.getCreatedAt());
         Assertions.assertNotNull(currentGenre.getUpdatedAt());
         Assertions.assertNull(currentGenre.getDeletedAt());
-    }
-
-    private GenreID givenAGenre(final String aName, final boolean isActive, final List<CategoryID> categories) throws Exception {
-        final var aRequestBody = new CreateGenreApiRequest(aName, mapTo(categories, CategoryID::getValue), isActive);
-
-        final var aRequest = post("/genres")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(Json.writeValueAsString(aRequestBody));
-
-        final var currentId = this.mvc.perform(aRequest)
-                .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse().getHeader("Location")
-                .replace("/genres/", "");
-
-        return GenreID.from(currentId);
-    }
-
-    private CategoryID givenACategory(final String aName, final String aDescription, final boolean isActive) throws Exception {
-        final var aRequestBody = new CreateCategoryApiRequest(aName, aDescription, isActive);
-
-        final var aRequest = post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(Json.writeValueAsString(aRequestBody));
-
-        final var currentId = this.mvc.perform(aRequest)
-                .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse().getHeader("Location")
-                .replace("/categories/", "");
-
-        return CategoryID.from(currentId);
-    }
-
-    private <A, D> List<D> mapTo(final List<A> current, final Function<A, D> mapper) {
-        return current.stream()
-                .map(mapper)
-                .toList();
     }
 
 }
