@@ -12,6 +12,7 @@ repositories {
 dependencies {
     implementation(project(":domain"))
 
+    implementation 'com.github.javafaker:javafaker:1.0.2'
     implementation 'io.vavr:vavr:0.10.4'
 
     testImplementation 'org.mockito:mockito-junit-jupiter:4.5.1'
