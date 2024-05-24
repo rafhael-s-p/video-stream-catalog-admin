@@ -14,8 +14,8 @@ public final class DeleteCastMemberUseCaseImpl extends DeleteCastMemberUseCase {
     }
 
     @Override
-    public void execute(final String anIn) {
-        this.castMemberGateway.deleteById(CastMemberID.from(anIn));
+    public void execute(final String anId) {
+        this.castMemberGateway.deleteById(CastMemberID.from(anId));
     }
 
 }
