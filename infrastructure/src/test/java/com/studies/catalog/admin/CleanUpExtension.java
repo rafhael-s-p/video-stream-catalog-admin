@@ -1,5 +1,6 @@
 package com.studies.catalog.admin;
 
+import com.studies.catalog.admin.infrastructure.castmember.persistence.CastMemberRepository;
 import com.studies.catalog.admin.infrastructure.category.persistence.CategoryRepository;
 import com.studies.catalog.admin.infrastructure.genre.persistence.GenreRepository;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -17,6 +18,7 @@ public class CleanUpExtension implements BeforeEachCallback {
         final var appContext = SpringExtension.getApplicationContext(context);
 
         cleanUp(List.of(
+                appContext.getBean(CastMemberRepository.class),
                 appContext.getBean(GenreRepository.class),
                 appContext.getBean(CategoryRepository.class)
         ));
