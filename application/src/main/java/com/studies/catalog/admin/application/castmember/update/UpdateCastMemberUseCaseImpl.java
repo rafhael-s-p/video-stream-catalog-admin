@@ -11,7 +11,7 @@ import com.studies.catalog.admin.domain.validation.handler.Notification;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public final class UpdateCastMemberUseCaseImpl extends UpdateCastMemberUseCase {
+public non-sealed class UpdateCastMemberUseCaseImpl extends UpdateCastMemberUseCase {
 
     private final CastMemberGateway castMemberGateway;
 

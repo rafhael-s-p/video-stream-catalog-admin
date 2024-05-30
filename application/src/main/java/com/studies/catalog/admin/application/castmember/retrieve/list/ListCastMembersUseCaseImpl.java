@@ -6,7 +6,7 @@ import com.studies.catalog.admin.domain.pagination.SearchQuery;
 
 import java.util.Objects;
 
-public final class ListCastMembersUseCaseImpl extends ListCastMembersUseCase {
+public non-sealed class ListCastMembersUseCaseImpl extends ListCastMembersUseCase {
 
     private final CastMemberGateway castMemberGateway;
 
