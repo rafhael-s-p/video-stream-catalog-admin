@@ -2,8 +2,11 @@ package com.studies.catalog.admin.infrastructure.api.controllers;
 
 import com.studies.catalog.admin.application.castmember.create.CreateCastMemberInput;
 import com.studies.catalog.admin.application.castmember.create.CreateCastMemberUseCase;
+import com.studies.catalog.admin.application.castmember.retrieve.get.GetCastMemberByIdUseCase;
 import com.studies.catalog.admin.infrastructure.api.CastMemberAPI;
+import com.studies.catalog.admin.infrastructure.castmember.models.CastMemberApiResponse;
 import com.studies.catalog.admin.infrastructure.castmember.models.CreateCastMemberApiRequest;
+import com.studies.catalog.admin.infrastructure.castmember.presenter.CastMemberPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,9 +17,17 @@ import java.util.Objects;
 public class CastMemberController implements CastMemberAPI {
 
     private final CreateCastMemberUseCase createCastMemberUseCase;
+    private final GetCastMemberByIdUseCase getCastMemberByIdUseCase;
 
-    public CastMemberController(final CreateCastMemberUseCase createCastMemberUseCase) {
+    public CastMemberController(final GetCastMemberByIdUseCase getCastMemberByIdUseCase,
+                                final CreateCastMemberUseCase createCastMemberUseCase) {
+        this.getCastMemberByIdUseCase = Objects.requireNonNull(getCastMemberByIdUseCase);
         this.createCastMemberUseCase = Objects.requireNonNull(createCastMemberUseCase);
+    }
+
+    @Override
+    public CastMemberApiResponse getById(final String id) {
+        return CastMemberPresenter.present(this.getCastMemberByIdUseCase.execute(id));
     }
 
     @Override
