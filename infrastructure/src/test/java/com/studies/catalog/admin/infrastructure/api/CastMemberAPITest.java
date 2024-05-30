@@ -6,10 +6,13 @@ import com.studies.catalog.admin.Fixture;
 import com.studies.catalog.admin.application.castmember.create.CreateCastMemberOutput;
 import com.studies.catalog.admin.application.castmember.create.CreateCastMemberUseCaseImpl;
 import com.studies.catalog.admin.application.castmember.delete.DeleteCastMemberUseCaseImpl;
+import com.studies.catalog.admin.application.castmember.retrieve.get.CastMemberOutput;
 import com.studies.catalog.admin.application.castmember.retrieve.get.GetCastMemberByIdUseCaseImpl;
 import com.studies.catalog.admin.application.castmember.retrieve.list.ListCastMembersUseCaseImpl;
 import com.studies.catalog.admin.application.castmember.update.UpdateCastMemberUseCaseImpl;
+import com.studies.catalog.admin.domain.castmember.CastMember;
 import com.studies.catalog.admin.domain.castmember.CastMemberID;
+import com.studies.catalog.admin.domain.exceptions.NotFoundException;
 import com.studies.catalog.admin.domain.exceptions.NotificationException;
 import com.studies.catalog.admin.domain.validation.Error;
 import com.studies.catalog.admin.infrastructure.castmember.models.CreateCastMemberApiRequest;
@@ -23,9 +26,10 @@ import java.util.Objects;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,6 +57,59 @@ class CastMemberAPITest {
 
     @MockBean
     private UpdateCastMemberUseCaseImpl updateCastMemberUseCase;
+
+    @Test
+    void givenAValidId_whenCallsGetById_shouldReturnIt() throws Exception {
+        // given
+        final var expectedName = Fixture.name();
+        final var expectedType = Fixture.CastMember.type();
+
+        final var aMember = CastMember.newMember(expectedName, expectedType);
+        final var expectedId = aMember.getId().getValue();
+
+        when(getCastMemberByIdUseCase.execute(any()))
+                .thenReturn(CastMemberOutput.from(aMember));
+
+        // when
+        final var aRequest = get("/cast_members/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON);
+
+        final var response = this.mvc.perform(aRequest);
+
+        // then
+        response.andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.id", equalTo(expectedId)))
+                .andExpect(jsonPath("$.name", equalTo(expectedName)))
+                .andExpect(jsonPath("$.type", equalTo(expectedType.name())))
+                .andExpect(jsonPath("$.created_at", equalTo(aMember.getCreatedAt().toString())))
+                .andExpect(jsonPath("$.updated_at", equalTo(aMember.getUpdatedAt().toString())));
+
+        verify(getCastMemberByIdUseCase).execute(eq(expectedId));
+    }
+
+    @Test
+    void givennAInvalidId_whenCallsGetByIdAndCastMemberDoesntExists_shouldReturnNotFound() throws Exception {
+        // given
+        final var expectedErrorMessage = "CastMember with ID 123 was not found";
+        final var expectedId = CastMemberID.from("123");
+
+        when(getCastMemberByIdUseCase.execute(any()))
+                .thenThrow(NotFoundException.with(CastMember.class, expectedId));
+
+        // when
+        final var aRequest = get("/cast_members/{id}", expectedId.getValue())
+                .accept(MediaType.APPLICATION_JSON);
+
+        final var response = this.mvc.perform(aRequest);
+
+        // then
+        response.andExpect(status().isNotFound())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
+
+        verify(getCastMemberByIdUseCase).execute(eq(expectedId.getValue()));
+    }
 
     @Test
     void givenAValidInput_whenCallsCreateCastMember_shouldReturnItsIdentifier() throws Exception {
