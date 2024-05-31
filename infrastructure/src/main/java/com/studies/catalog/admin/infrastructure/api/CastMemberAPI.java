@@ -1,6 +1,8 @@
 package com.studies.catalog.admin.infrastructure.api;
 
+import com.studies.catalog.admin.domain.pagination.Pagination;
 import com.studies.catalog.admin.infrastructure.castmember.models.CastMemberApiResponse;
+import com.studies.catalog.admin.infrastructure.castmember.models.CastMemberListApiResponse;
 import com.studies.catalog.admin.infrastructure.castmember.models.CreateCastMemberApiRequest;
 import com.studies.catalog.admin.infrastructure.castmember.models.UpdateCastMemberApiRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +17,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "cast_members")
 @Tag(name = "Cast Members")
 public interface CastMemberAPI {
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "List all cast members")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cast members retrieved"),
+            @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
+    })
+    Pagination<CastMemberListApiResponse> list(
+            @RequestParam(name = "search", required = false, defaultValue = "") final String search,
+            @RequestParam(name = "page", required = false, defaultValue = "0") final int page,
+            @RequestParam(name = "perPage", required = false, defaultValue = "10") final int perPage,
+            @RequestParam(name = "sort", required = false, defaultValue = "name") final String sort,
+            @RequestParam(name = "dir", required = false, defaultValue = "asc") final String direction
+    );
 
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get a cast member by its identifier")
