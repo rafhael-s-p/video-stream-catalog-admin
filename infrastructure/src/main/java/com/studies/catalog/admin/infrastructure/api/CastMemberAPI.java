@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public interface CastMemberAPI {
 
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Get a cast member by it's identifier")
+    @Operation(summary = "Get a cast member by its identifier")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cast member retrieved"),
             @ApiResponse(responseCode = "404", description = "Cast member was not found"),
@@ -41,7 +42,7 @@ public interface CastMemberAPI {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @Operation(summary = "Update a cast member by it's identifier")
+    @Operation(summary = "Update a cast member by its identifier")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cast member updated"),
             @ApiResponse(responseCode = "404", description = "Cast member was not found"),
@@ -49,4 +50,14 @@ public interface CastMemberAPI {
             @ApiResponse(responseCode = "500", description = "An internal server error has occurred"),
     })
     ResponseEntity<?> updateById(@PathVariable String id, @RequestBody UpdateCastMemberApiRequest aBody);
+
+    @DeleteMapping(value = "{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete a cast member by its identifier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Cast member deleted"),
+            @ApiResponse(responseCode = "500", description = "An internal server error has occurred"),
+    })
+    void deleteById(@PathVariable String id);
+
 }

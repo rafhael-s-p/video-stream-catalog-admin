@@ -2,6 +2,7 @@ package com.studies.catalog.admin.infrastructure.api.controllers;
 
 import com.studies.catalog.admin.application.castmember.create.CreateCastMemberInput;
 import com.studies.catalog.admin.application.castmember.create.CreateCastMemberUseCase;
+import com.studies.catalog.admin.application.castmember.delete.DeleteCastMemberUseCase;
 import com.studies.catalog.admin.application.castmember.retrieve.get.GetCastMemberByIdUseCase;
 import com.studies.catalog.admin.application.castmember.update.UpdateCastMemberInput;
 import com.studies.catalog.admin.application.castmember.update.UpdateCastMemberUseCase;
@@ -22,13 +23,16 @@ public class CastMemberController implements CastMemberAPI {
     private final GetCastMemberByIdUseCase getCastMemberByIdUseCase;
     private final CreateCastMemberUseCase createCastMemberUseCase;
     private final UpdateCastMemberUseCase updateCastMemberUseCase;
+    private final DeleteCastMemberUseCase deleteCastMemberUseCase;
 
     public CastMemberController(final GetCastMemberByIdUseCase getCastMemberByIdUseCase,
                                 final CreateCastMemberUseCase createCastMemberUseCase,
-                                final UpdateCastMemberUseCase updateCastMemberUseCase) {
+                                final UpdateCastMemberUseCase updateCastMemberUseCase,
+                                final DeleteCastMemberUseCase deleteCastMemberUseCase) {
         this.getCastMemberByIdUseCase = Objects.requireNonNull(getCastMemberByIdUseCase);
         this.createCastMemberUseCase = Objects.requireNonNull(createCastMemberUseCase);
         this.updateCastMemberUseCase = Objects.requireNonNull(updateCastMemberUseCase);
+        this.deleteCastMemberUseCase = Objects.requireNonNull(deleteCastMemberUseCase);
     }
 
     @Override
@@ -54,6 +58,11 @@ public class CastMemberController implements CastMemberAPI {
         final var output = this.updateCastMemberUseCase.execute(anInput);
 
         return ResponseEntity.ok(output);
+    }
+
+    @Override
+    public void deleteById(final String id) {
+        this.deleteCastMemberUseCase.execute(id);
     }
 
 }
