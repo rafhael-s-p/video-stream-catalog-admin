@@ -5,7 +5,7 @@ import com.studies.catalog.admin.domain.castmember.CastMemberID;
 
 import java.util.Objects;
 
-public final class DeleteCastMemberUseCaseImpl extends DeleteCastMemberUseCase {
+public non-sealed class DeleteCastMemberUseCaseImpl extends DeleteCastMemberUseCase {
 
     private final CastMemberGateway castMemberGateway;
 

@@ -1,10 +1,10 @@
 package com.studies.catalog.admin.infrastructure.api;
 
 import com.studies.catalog.admin.domain.pagination.Pagination;
-import com.studies.catalog.admin.infrastructure.genre.models.CreateGenreApiRequest;
-import com.studies.catalog.admin.infrastructure.genre.models.GenreApiResponse;
-import com.studies.catalog.admin.infrastructure.genre.models.GenreListApiResponse;
-import com.studies.catalog.admin.infrastructure.genre.models.UpdateGenreApiRequest;
+import com.studies.catalog.admin.infrastructure.castmember.models.CastMemberApiResponse;
+import com.studies.catalog.admin.infrastructure.castmember.models.CastMemberListApiResponse;
+import com.studies.catalog.admin.infrastructure.castmember.models.CreateCastMemberApiRequest;
+import com.studies.catalog.admin.infrastructure.castmember.models.UpdateCastMemberApiRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -14,18 +14,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping(value = "genres")
-@Tag(name = "Genre")
-public interface GenreAPI {
+@RequestMapping(value = "cast_members")
+@Tag(name = "Cast Members")
+public interface CastMemberAPI {
 
-    @GetMapping
-    @Operation(summary = "List all genres paginated")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "List all cast members")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Listed successfully"),
-            @ApiResponse(responseCode = "422", description = "An invalid parameter was received"),
-            @ApiResponse(responseCode = "500", description = "An internal server error has occurred"),
+            @ApiResponse(responseCode = "200", description = "Cast members retrieved"),
+            @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
     })
-    Pagination<GenreListApiResponse> list(
+    Pagination<CastMemberListApiResponse> list(
             @RequestParam(name = "search", required = false, defaultValue = "") final String search,
             @RequestParam(name = "page", required = false, defaultValue = "0") final int page,
             @RequestParam(name = "perPage", required = false, defaultValue = "10") final int perPage,
@@ -33,51 +32,48 @@ public interface GenreAPI {
             @RequestParam(name = "dir", required = false, defaultValue = "asc") final String direction
     );
 
-    @GetMapping(
-            value = "{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    @Operation(summary = "Get a genre by it's identifier")
+    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get a cast member by its identifier")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Genre retrieved successfully"),
-            @ApiResponse(responseCode = "404", description = "Genre was not found"),
+            @ApiResponse(responseCode = "200", description = "Cast member retrieved"),
+            @ApiResponse(responseCode = "404", description = "Cast member was not found"),
             @ApiResponse(responseCode = "500", description = "An internal server error has occurred"),
     })
-    GenreApiResponse getById(@PathVariable(name = "id") String id);
+    CastMemberApiResponse getById(@PathVariable String id);
 
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @Operation(summary = "Create a new genre")
+    @Operation(summary = "Create a new cast member")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created successfully"),
             @ApiResponse(responseCode = "422", description = "A validation error has occurred"),
             @ApiResponse(responseCode = "500", description = "An internal server error has occurred"),
     })
-    ResponseEntity<?> create(@RequestBody CreateGenreApiRequest input);
+    ResponseEntity<?> create(@RequestBody CreateCastMemberApiRequest input);
 
     @PutMapping(
             value = "{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @Operation(summary = "Update a genre by it's identifier")
+    @Operation(summary = "Update a cast member by its identifier")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Genre updated successfully"),
-            @ApiResponse(responseCode = "404", description = "Genre was not found"),
+            @ApiResponse(responseCode = "200", description = "Cast member updated"),
+            @ApiResponse(responseCode = "404", description = "Cast member was not found"),
+            @ApiResponse(responseCode = "422", description = "A validation error has occurred"),
             @ApiResponse(responseCode = "500", description = "An internal server error has occurred"),
     })
-    ResponseEntity<?> updateById(@PathVariable(name = "id") String id, @RequestBody UpdateGenreApiRequest input);
+    ResponseEntity<?> updateById(@PathVariable String id, @RequestBody UpdateCastMemberApiRequest aBody);
 
     @DeleteMapping(value = "{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Delete a genre by it's identifier")
+    @Operation(summary = "Delete a cast member by its identifier")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Genre deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Genre was not found"),
+            @ApiResponse(responseCode = "204", description = "Cast member deleted"),
             @ApiResponse(responseCode = "500", description = "An internal server error has occurred"),
     })
-    void deleteById(@PathVariable(name = "id") String id);
+    void deleteById(@PathVariable String id);
 
 }

@@ -7,7 +7,7 @@ import com.studies.catalog.admin.domain.validation.handler.Notification;
 
 import java.util.Objects;
 
-public final class CreateCastMemberUseCaseImpl extends CreateCastMemberUseCase {
+public non-sealed class CreateCastMemberUseCaseImpl extends CreateCastMemberUseCase {
 
     private final CastMemberGateway castMemberGateway;
 

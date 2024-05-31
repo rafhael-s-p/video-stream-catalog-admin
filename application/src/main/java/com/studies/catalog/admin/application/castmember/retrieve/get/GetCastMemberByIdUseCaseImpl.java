@@ -7,7 +7,7 @@ import com.studies.catalog.admin.domain.exceptions.NotFoundException;
 
 import java.util.Objects;
 
-public final class GetCastMemberByIdUseCaseImpl extends GetCastMemberByIdUseCase {
+public non-sealed class GetCastMemberByIdUseCaseImpl extends GetCastMemberByIdUseCase {
 
     private final CastMemberGateway castMemberGateway;
 
