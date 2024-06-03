@@ -5,6 +5,7 @@ import com.studies.catalog.admin.domain.castmember.CastMemberID;
 import com.studies.catalog.admin.domain.castmember.CastMemberType;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.genre.GenreID;
+import com.studies.catalog.admin.infrastructure.castmember.models.CastMemberApiResponse;
 import com.studies.catalog.admin.infrastructure.castmember.models.CreateCastMemberApiRequest;
 import com.studies.catalog.admin.infrastructure.category.models.CategoryApiResponse;
 import com.studies.catalog.admin.infrastructure.category.models.CreateCategoryApiRequest;
@@ -31,6 +32,14 @@ public interface MockDsl {
     /**
      * Cast Member
      */
+
+    default CastMemberApiResponse retrieveACastMember(final CastMemberID anId) throws Exception {
+        return this.retrieve("/cast_members/", anId, CastMemberApiResponse.class);
+    }
+
+    default ResultActions retrieveACastMemberResult(final CastMemberID anId) throws Exception {
+        return this.retrieveResult("/cast_members/", anId);
+    }
 
     default ResultActions listCastMembers(final int page, final int perPage) throws Exception {
         return listCastMembers(page, perPage, "", "", "");
@@ -103,7 +112,7 @@ public interface MockDsl {
         return CategoryID.from(currentId);
     }
 
-    default ResultActions deleteACategory(final Identifier anId) throws Exception {
+    default ResultActions deleteACategory(final CategoryID anId) throws Exception {
         return this.delete("/categories/", anId);
     }
 
@@ -177,6 +186,14 @@ public interface MockDsl {
                 .getResponse().getContentAsString();
 
         return Json.readValue(json, clazz);
+    }
+
+    private ResultActions retrieveResult(final String url, final Identifier anId) throws Exception {
+        final var aRequest = get(url + anId.getValue())
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8);
+
+        return this.mvc().perform(aRequest);
     }
 
     private ResultActions delete(final String url, final Identifier anId) throws Exception {
