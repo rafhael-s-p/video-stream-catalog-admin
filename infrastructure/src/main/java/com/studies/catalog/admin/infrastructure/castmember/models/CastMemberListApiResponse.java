@@ -1,9 +1,11 @@
 package com.studies.catalog.admin.infrastructure.castmember.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public record CastMemberListApiResponse(
-        String id,
-        String name,
-        String type,
-        String createdAt
+        @JsonProperty("id") String id,
+        @JsonProperty("name") String name,
+        @JsonProperty("type") String type,
+        @JsonProperty("created_at") String createdAt
 ) {
 }
