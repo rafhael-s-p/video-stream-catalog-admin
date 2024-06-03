@@ -7,6 +7,7 @@ import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.genre.GenreID;
 import com.studies.catalog.admin.infrastructure.castmember.models.CastMemberApiResponse;
 import com.studies.catalog.admin.infrastructure.castmember.models.CreateCastMemberApiRequest;
+import com.studies.catalog.admin.infrastructure.castmember.models.UpdateCastMemberApiRequest;
 import com.studies.catalog.admin.infrastructure.category.models.CategoryApiResponse;
 import com.studies.catalog.admin.infrastructure.category.models.CreateCategoryApiRequest;
 import com.studies.catalog.admin.infrastructure.category.models.UpdateCategoryApiRequest;
@@ -32,6 +33,10 @@ public interface MockDsl {
     /**
      * Cast Member
      */
+
+    default ResultActions updateACastMember(final CastMemberID anId, final String aName, final CastMemberType aType) throws Exception {
+        return this.update("/cast_members/", anId, new UpdateCastMemberApiRequest(aName, aType));
+    }
 
     default CastMemberApiResponse retrieveACastMember(final CastMemberID anId) throws Exception {
         return this.retrieve("/cast_members/", anId, CastMemberApiResponse.class);

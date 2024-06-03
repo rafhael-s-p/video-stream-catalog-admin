@@ -196,4 +196,45 @@ public class CastMemberE2ETest implements MockDsl {
                 .andExpect(jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
     }
 
+    @Test
+    void asACatalogAdminItShouldBeAbleToUpdateACastMemberByItsIdentifier() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, castMemberRepository.count());
+
+        final var expectedName = "Vin Diesel";
+        final var expectedType = CastMemberType.ACTOR;
+
+        givenACastMember(Fixture.name(), Fixture.CastMember.type());
+        final var currentId = givenACastMember("vin d", CastMemberType.DIRECTOR);
+
+        updateACastMember(currentId, expectedName, expectedType)
+                .andExpect(status().isOk());
+
+        final var currentMember = retrieveACastMember(currentId);
+
+        Assertions.assertEquals(expectedName, currentMember.name());
+        Assertions.assertEquals(expectedType.name(), currentMember.type());
+        Assertions.assertNotNull(currentMember.createdAt());
+        Assertions.assertNotNull(currentMember.updatedAt());
+        Assertions.assertNotEquals(currentMember.createdAt(), currentMember.updatedAt());
+    }
+
+    @Test
+    void asACatalogAdminItShouldBeAbleToSeeATreatedErrorByUpdatingACastMemberWithInvalidValue() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, castMemberRepository.count());
+
+        final var expectedName = "";
+        final var expectedType = CastMemberType.ACTOR;
+        final var expectedErrorMessage = "'name' should not be empty";
+
+        givenACastMember(Fixture.name(), Fixture.CastMember.type());
+        final var currentId = givenACastMember("vin d", CastMemberType.DIRECTOR);
+
+        updateACastMember(currentId, expectedName, expectedType)
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+    }
+
 }
