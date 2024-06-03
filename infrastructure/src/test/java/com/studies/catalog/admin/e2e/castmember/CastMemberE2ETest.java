@@ -237,4 +237,37 @@ public class CastMemberE2ETest implements MockDsl {
                 .andExpect(jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
     }
 
+    @Test
+    void asACatalogAdminItShouldBeAbleToDeleteACastMemberByItsIdentifier() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, castMemberRepository.count());
+
+        givenACastMember(Fixture.name(), Fixture.CastMember.type());
+        final var currentId = givenACastMember(Fixture.name(), Fixture.CastMember.type());
+
+        Assertions.assertEquals(2, castMemberRepository.count());
+
+        deleteACastMember(currentId)
+                .andExpect(status().isNoContent());
+
+        Assertions.assertEquals(1, castMemberRepository.count());
+        Assertions.assertFalse(castMemberRepository.existsById(currentId.getValue()));
+    }
+
+    @Test
+    void asACatalogAdminItShouldNotBeAbleToDeleteACastMemberWithInvalidIdentifier() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, castMemberRepository.count());
+
+        givenACastMember(Fixture.name(), Fixture.CastMember.type());
+        givenACastMember(Fixture.name(), Fixture.CastMember.type());
+
+        Assertions.assertEquals(2, castMemberRepository.count());
+
+        deleteACastMember(CastMemberID.from("123"))
+                .andExpect(status().isNoContent());
+
+        Assertions.assertEquals(2, castMemberRepository.count());
+    }
+
 }

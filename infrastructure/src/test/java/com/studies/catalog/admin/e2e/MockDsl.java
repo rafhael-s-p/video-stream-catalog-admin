@@ -34,6 +34,10 @@ public interface MockDsl {
      * Cast Member
      */
 
+    default ResultActions deleteACastMember(final CastMemberID anId) throws Exception {
+        return this.delete("/cast_members/", anId);
+    }
+
     default ResultActions updateACastMember(final CastMemberID anId, final String aName, final CastMemberType aType) throws Exception {
         return this.update("/cast_members/", anId, new UpdateCastMemberApiRequest(aName, aType));
     }
