@@ -1,8 +1,11 @@
 package com.studies.catalog.admin.e2e;
 
 import com.studies.catalog.admin.domain.Identifier;
+import com.studies.catalog.admin.domain.castmember.CastMemberID;
+import com.studies.catalog.admin.domain.castmember.CastMemberType;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.genre.GenreID;
+import com.studies.catalog.admin.infrastructure.castmember.models.CreateCastMemberApiRequest;
 import com.studies.catalog.admin.infrastructure.category.models.CategoryApiResponse;
 import com.studies.catalog.admin.infrastructure.category.models.CreateCategoryApiRequest;
 import com.studies.catalog.admin.infrastructure.category.models.UpdateCategoryApiRequest;
@@ -24,6 +27,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public interface MockDsl {
 
     MockMvc mvc();
+
+    /**
+     * Cast Member
+     */
+
+    default ResultActions givenACastMemberResult(final String aName, final CastMemberType aType) throws Exception {
+        final var aRequestBody = new CreateCastMemberApiRequest(aName, aType);
+
+        return this.givenResult("/cast_members", aRequestBody);
+    }
+
+    default CastMemberID givenACastMember(final String aName, final CastMemberType aType) throws Exception {
+        final var aRequestBody = new CreateCastMemberApiRequest(aName, aType);
+        final var currentId = this.given("/cast_members", aRequestBody);
+
+        return CastMemberID.from(currentId);
+    }
+
+    /**
+     * Genre
+     */
 
     default ResultActions listGenres(final int page, final int perPage) throws Exception {
         return listGenres(page, perPage, "", "", "");
@@ -52,12 +76,18 @@ public interface MockDsl {
     default GenreID givenAGenre(final String aName, final boolean isActive, final List<CategoryID> categories) throws Exception {
         final var aRequestBody = new CreateGenreApiRequest(aName, mapTo(categories, CategoryID::getValue), isActive);
         final var currentId = this.given("/genres", aRequestBody);
+
         return GenreID.from(currentId);
     }
+
+    /**
+     * Category
+     */
 
     default CategoryID givenACategory(final String aName, final String aDescription, final boolean isActive) throws Exception {
         final var aRequestBody = new CreateCategoryApiRequest(aName, aDescription, isActive);
         final var currentId = this.given("/categories", aRequestBody);
+
         return CategoryID.from(currentId);
     }
 
@@ -101,6 +131,14 @@ public interface MockDsl {
                 .andReturn()
                 .getResponse().getHeader("Location")
                 .replace("%s/".formatted(url), "");
+    }
+
+    private ResultActions givenResult(final String url, final Object body) throws Exception {
+        final var aRequest = post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(body));
+
+        return this.mvc().perform(aRequest);
     }
 
     private ResultActions list(final String url, final int page, final int perPage, final String search, final String sort, final String direction) throws Exception {
