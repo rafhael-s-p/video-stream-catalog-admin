@@ -1,67 +1,69 @@
-package com.studies.catalog.admin.application.castmember.retrieve.list;
+package com.studies.catalog.admin.application.video.retrieve.list;
 
 import com.studies.catalog.admin.application.Fixture;
 import com.studies.catalog.admin.application.UseCaseTest;
-import com.studies.catalog.admin.domain.castmember.CastMember;
-import com.studies.catalog.admin.domain.castmember.CastMemberGateway;
+import com.studies.catalog.admin.application.genre.retrieve.list.GenreListOutput;
 import com.studies.catalog.admin.domain.pagination.Pagination;
-import com.studies.catalog.admin.domain.pagination.SearchQuery;
+import com.studies.catalog.admin.domain.video.Video;
+import com.studies.catalog.admin.domain.video.VideoGateway;
+import com.studies.catalog.admin.domain.video.VideoSearchQuery;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-class ListCastMembersUseCaseTest extends UseCaseTest {
+class ListVideoUseCaseTest extends UseCaseTest {
 
     @InjectMocks
-    private ListCastMembersUseCaseImpl useCase;
+    private ListVideosUseCaseImpl useCase;
 
     @Mock
-    private CastMemberGateway castMemberGateway;
+    private VideoGateway videoGateway;
 
     @Override
     protected List<Object> getMocks() {
-        return List.of(castMemberGateway);
+        return List.of(videoGateway);
     }
 
     @Test
-    void givenAValidQuery_whenCallsListCastMembers_shouldReturnAll() {
+    void givenAValidQuery_whenCallsListVideos_shouldReturnVideos() {
         // given
-        final var members = List.of(
-                CastMember.newMember(Fixture.name(), Fixture.CastMember.type()),
-                CastMember.newMember(Fixture.name(), Fixture.CastMember.type())
+        final var videos = List.of(
+                Fixture.video(),
+                Fixture.video()
         );
 
         final var expectedPage = 0;
         final var expectedPerPage = 10;
-        final var expectedTerms = "Any term";
+        final var expectedTerms = "A";
         final var expectedSort = "createdAt";
         final var expectedDirection = "asc";
         final var expectedTotal = 2;
 
-        final var expectedItems = members.stream()
-                .map(CastMemberListOutput::from)
+        final var expectedItems = videos.stream()
+                .map(VideoListOutput::from)
                 .toList();
 
         final var expectedPagination = new Pagination<>(
                 expectedPage,
                 expectedPerPage,
                 expectedTotal,
-                members
+                videos
         );
 
-        when(castMemberGateway.findAll(any()))
+        when(videoGateway.findAll(any()))
                 .thenReturn(expectedPagination);
 
         final var aQuery =
-                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new VideoSearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
         // when
         final var currentOutput = useCase.execute(aQuery);
@@ -72,34 +74,35 @@ class ListCastMembersUseCaseTest extends UseCaseTest {
         Assertions.assertEquals(expectedTotal, currentOutput.total());
         Assertions.assertEquals(expectedItems, currentOutput.items());
 
-        verify(castMemberGateway).findAll(eq(aQuery));
+        Mockito.verify(videoGateway, times(1)).findAll(eq(aQuery));
     }
 
     @Test
-    void givenAValidQuery_whenCallsListCastMembersAndIsEmpty_shouldReturn() {
+    void givenAValidQuery_whenCallsListVideosAndResultIsEmpty_shouldReturnGenres() {
         // given
+        final var videos = List.<Video>of();
+
         final var expectedPage = 0;
         final var expectedPerPage = 10;
-        final var expectedTerms = "Any term";
+        final var expectedTerms = "A";
         final var expectedSort = "createdAt";
         final var expectedDirection = "asc";
         final var expectedTotal = 0;
 
-        final var members = List.<CastMember>of();
-        final var expectedItems = List.<CastMemberListOutput>of();
+        final var expectedItems = List.<GenreListOutput>of();
 
         final var expectedPagination = new Pagination<>(
                 expectedPage,
                 expectedPerPage,
                 expectedTotal,
-                members
+                videos
         );
 
-        when(castMemberGateway.findAll(any()))
+        when(videoGateway.findAll(any()))
                 .thenReturn(expectedPagination);
 
         final var aQuery =
-                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new VideoSearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
         // when
         final var currentOutput = useCase.execute(aQuery);
@@ -110,35 +113,36 @@ class ListCastMembersUseCaseTest extends UseCaseTest {
         Assertions.assertEquals(expectedTotal, currentOutput.total());
         Assertions.assertEquals(expectedItems, currentOutput.items());
 
-        verify(castMemberGateway).findAll(eq(aQuery));
+        Mockito.verify(videoGateway, times(1)).findAll(eq(aQuery));
     }
 
     @Test
-    void givenAValidQuery_whenCallsListCastMembersAndGatewayThrowsRandomException_shouldException() {
+    void givenAValidQuery_whenCallsListVideosAndGatewayThrowsRandomError_shouldReturnException() {
         // given
         final var expectedPage = 0;
         final var expectedPerPage = 10;
-        final var expectedTerms = "Any term";
+        final var expectedTerms = "A";
         final var expectedSort = "createdAt";
         final var expectedDirection = "asc";
 
         final var expectedErrorMessage = "Gateway error";
 
-        when(castMemberGateway.findAll(any()))
+        when(videoGateway.findAll(any()))
                 .thenThrow(new IllegalStateException(expectedErrorMessage));
 
         final var aQuery =
-                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new VideoSearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
         // when
-        final var currentException = Assertions.assertThrows(IllegalStateException.class, () -> {
-            useCase.execute(aQuery);
-        });
+        final var currentOutput = Assertions.assertThrows(
+                IllegalStateException.class,
+                () -> useCase.execute(aQuery)
+        );
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, currentException.getMessage());
+        Assertions.assertEquals(expectedErrorMessage, currentOutput.getMessage());
 
-        verify(castMemberGateway).findAll(eq(aQuery));
+        Mockito.verify(videoGateway, times(1)).findAll(eq(aQuery));
     }
 
 }

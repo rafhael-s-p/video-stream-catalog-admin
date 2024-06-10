@@ -3,6 +3,7 @@ package com.studies.catalog.admin.domain.castmember;
 import com.studies.catalog.admin.domain.pagination.Pagination;
 import com.studies.catalog.admin.domain.pagination.SearchQuery;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CastMemberGateway {
@@ -16,5 +17,7 @@ public interface CastMemberGateway {
     CastMember update(CastMember aCastMember);
 
     void deleteById(CastMemberID anId);
+
+    List<CastMemberID> existsByIds(Iterable<CastMemberID> ids);
 
 }

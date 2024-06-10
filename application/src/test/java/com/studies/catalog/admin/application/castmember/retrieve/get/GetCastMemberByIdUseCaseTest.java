@@ -2,7 +2,6 @@ package com.studies.catalog.admin.application.castmember.retrieve.get;
 
 import com.studies.catalog.admin.application.Fixture;
 import com.studies.catalog.admin.application.UseCaseTest;
-import com.studies.catalog.admin.application.castmember.retrieve.get.GetCastMemberByIdUseCaseImpl;
 import com.studies.catalog.admin.domain.castmember.CastMember;
 import com.studies.catalog.admin.domain.castmember.CastMemberGateway;
 import com.studies.catalog.admin.domain.castmember.CastMemberID;
@@ -37,7 +36,7 @@ class GetCastMemberByIdUseCaseTest extends UseCaseTest {
     void givenAValidId_whenCallsGetCastMember_shouldReturnIt() {
         // given
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var aMember = CastMember.newMember(expectedName, expectedType);
 

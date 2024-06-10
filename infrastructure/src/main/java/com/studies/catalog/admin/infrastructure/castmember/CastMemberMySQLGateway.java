@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -70,6 +71,11 @@ public class CastMemberMySQLGateway implements CastMemberGateway {
         final var anId = aMemberId.getValue();
         if (this.castMemberRepository.existsById(anId))
             this.castMemberRepository.deleteById(anId);
+    }
+
+    @Override
+    public List<CastMemberID> existsByIds(final Iterable<CastMemberID> ids) {
+        throw new UnsupportedOperationException();
     }
 
     private CastMember save(final CastMember aCastMember) {
