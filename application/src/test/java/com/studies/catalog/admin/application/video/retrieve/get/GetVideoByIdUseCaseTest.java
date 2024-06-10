@@ -42,7 +42,7 @@ class GetVideoByIdUseCaseTest extends UseCaseTest {
         final var expectedPublished = Fixture.bool();
         final var expectedRating = Fixture.Videos.rating();
         final var expectedCategories = Set.of(Fixture.Categories.movies().getId());
-        final var expectedGenres = Set.of(Fixture.Genres.tech().getId());
+        final var expectedGenres = Set.of(Fixture.Genres.crime().getId());
         final var expectedMembers = Set.of(
                 Fixture.CastMembers.marlonBrando().getId(),
                 Fixture.CastMembers.alPacino().getId()
