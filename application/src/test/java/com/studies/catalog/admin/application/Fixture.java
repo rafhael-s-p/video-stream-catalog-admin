@@ -7,6 +7,10 @@ import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.genre.Genre;
 import com.studies.catalog.admin.domain.video.Rating;
 import com.studies.catalog.admin.domain.video.Resource;
+import com.studies.catalog.admin.domain.video.Video;
+
+import java.time.Year;
+import java.util.Set;
 
 import static io.vavr.API.*;
 
@@ -35,6 +39,21 @@ public final class Fixture {
                 "The Godfather",
                 "The Godfather Part II",
                 "The Dark Knight"
+        );
+    }
+
+    public static Video video() {
+        return Video.newVideo(
+                Fixture.title(),
+                Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Videos.rating(),
+                Set.of(Categories.movies().getId()),
+                Set.of(Genres.crime().getId()),
+                Set.of(CastMembers.marlonBrando().getId(), CastMembers.alPacino().getId())
         );
     }
 
@@ -74,12 +93,29 @@ public final class Fixture {
         private static final Genre CRIME =
                 Genre.newGenre("Crime", true);
 
-        public static Genre tech() {
+        public static Genre crime() {
             return Genre.with(CRIME);
         }
     }
 
     public static final class Videos {
+
+        private static final Video THE_GODFATHER = Video.newVideo(
+                "The Godfather",
+                description(),
+                Year.of(1972),
+                Fixture.duration(),
+                Fixture.bool(),
+                Fixture.bool(),
+                rating(),
+                Set.of(Categories.movies().getId()),
+                Set.of(Genres.crime().getId()),
+                Set.of(CastMembers.marlonBrando().getId(), CastMembers.alPacino().getId())
+        );
+
+        public static Video theGodfather() {
+            return Video.with(THE_GODFATHER);
+        }
 
         public static Rating rating() {
             return FAKER.options().option(Rating.values());
