@@ -5,7 +5,6 @@ import com.studies.catalog.admin.domain.castmember.CastMemberGateway;
 import com.studies.catalog.admin.domain.castmember.CastMemberID;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.category.CategoryID;
-import com.studies.catalog.admin.domain.exceptions.DomainException;
 import com.studies.catalog.admin.domain.exceptions.InternalErrorException;
 import com.studies.catalog.admin.domain.exceptions.NotificationException;
 import com.studies.catalog.admin.domain.genre.GenreGateway;
@@ -24,7 +23,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class CreateVideoUseCaseImpl extends CreateVideoUseCase {
@@ -161,10 +159,6 @@ public class CreateVideoUseCaseImpl extends CreateVideoUseCase {
         }
 
         return notification;
-    }
-
-    private Supplier<DomainException> invalidRating(final String rating) {
-        return () -> DomainException.with(new Error("Rating not found %s".formatted(rating)));
     }
 
     private <T> Set<T> toIdentifier(final Set<String> ids, final Function<String, T> mapper) {
