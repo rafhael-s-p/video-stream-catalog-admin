@@ -28,7 +28,7 @@ public class VideoMediaJpaEntity {
     public VideoMediaJpaEntity() {
     }
 
-    public VideoMediaJpaEntity(
+    private VideoMediaJpaEntity(
             final String id,
             final String name,
             final String filePath,
