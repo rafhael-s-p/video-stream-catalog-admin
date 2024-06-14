@@ -27,7 +27,7 @@ public class VideoGenreJpaEntity {
 
     public static VideoGenreJpaEntity from(final VideoJpaEntity video, final GenreID genre) {
         return new VideoGenreJpaEntity(
-                VideoGenreID.from(video.getId(), UUID.fromString(genre.getValue())),
+                VideoGenreID.from(video.getId(), genre.getValue()),
                 video
         );
     }
