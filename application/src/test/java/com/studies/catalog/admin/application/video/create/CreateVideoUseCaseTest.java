@@ -10,6 +10,7 @@ import com.studies.catalog.admin.domain.exceptions.InternalErrorException;
 import com.studies.catalog.admin.domain.exceptions.NotificationException;
 import com.studies.catalog.admin.domain.genre.GenreGateway;
 import com.studies.catalog.admin.domain.genre.GenreID;
+import com.studies.catalog.admin.domain.utils.IdUtils;
 import com.studies.catalog.admin.domain.video.*;
 import com.studies.catalog.admin.domain.video.Resource.Type;
 import org.junit.jupiter.api.Assertions;
@@ -995,7 +996,7 @@ class CreateVideoUseCaseTest extends UseCaseTest {
             final var resource = t.getArgument(1, Resource.class);
 
             return VideoMedia.with(
-                    UUID.randomUUID().toString(),
+                    IdUtils.uuid(),
                     resource.name(),
                     "/img",
                     "",

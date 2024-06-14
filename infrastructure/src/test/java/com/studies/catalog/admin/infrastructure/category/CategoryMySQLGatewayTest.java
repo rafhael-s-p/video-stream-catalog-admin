@@ -183,6 +183,34 @@ class CategoryMySQLGatewayTest {
     }
 
     @Test
+    void givenPrePersistedCategories_whenCallsExistsByIds_shouldReturnIds() {
+        // given
+        final var movies = Category.newCategory("Movies", "The most watched category", true);
+        final var series = Category.newCategory("Séries", "A Category", true);
+        final var documentaries = Category.newCategory("Documentaries", "The less watched category", true);
+
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        categoryRepository.saveAll(List.of(
+                CategoryJpaEntity.from(movies),
+                CategoryJpaEntity.from(series),
+                CategoryJpaEntity.from(documentaries)
+        ));
+
+        Assertions.assertEquals(3, categoryRepository.count());
+
+        final var expectedIds = List.of(movies.getId(), series.getId());
+
+        final var ids = List.of(movies.getId(), series.getId(), CategoryID.from("123"));
+
+        // when
+        final var currentResult = categoryGateway.existsByIds(ids);
+
+        Assertions.assertTrue(expectedIds.size() == currentResult.size());
+        Assertions.assertTrue(expectedIds.containsAll(currentResult));
+    }
+
+    @Test
     void givenAPrePersistedCategoryAndValidCategoryId_whenCallsFindById_shouldReturnCategory() {
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
