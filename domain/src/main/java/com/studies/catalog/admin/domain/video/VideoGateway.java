@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface VideoGateway {
 
-    Pagination<Video> findAll(VideoSearchQuery aQuery);
+    Pagination<VideoPreview> findAll(VideoSearchQuery aQuery);
 
     Optional<Video> findById(VideoID anId);
 
