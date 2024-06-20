@@ -1,11 +1,12 @@
 package com.studies.catalog.admin.application.video.retrieve.list;
 
-import com.studies.catalog.admin.application.Fixture;
 import com.studies.catalog.admin.application.UseCaseTest;
 import com.studies.catalog.admin.application.genre.retrieve.list.GenreListOutput;
+import com.studies.catalog.admin.domain.Fixture;
 import com.studies.catalog.admin.domain.pagination.Pagination;
 import com.studies.catalog.admin.domain.video.Video;
 import com.studies.catalog.admin.domain.video.VideoGateway;
+import com.studies.catalog.admin.domain.video.VideoPreview;
 import com.studies.catalog.admin.domain.video.VideoSearchQuery;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -37,8 +39,8 @@ class ListVideoUseCaseTest extends UseCaseTest {
     void givenAValidQuery_whenCallsListVideos_shouldReturnVideos() {
         // given
         final var videos = List.of(
-                Fixture.video(),
-                Fixture.video()
+                new VideoPreview(Fixture.video()),
+                new VideoPreview(Fixture.video())
         );
 
         final var expectedPage = 0;
@@ -63,7 +65,16 @@ class ListVideoUseCaseTest extends UseCaseTest {
                 .thenReturn(expectedPagination);
 
         final var aQuery =
-                new VideoSearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new VideoSearchQuery(
+                        expectedPage,
+                        expectedPerPage,
+                        expectedTerms,
+                        expectedSort,
+                        expectedDirection,
+                        Set.of(),
+                        Set.of(),
+                        Set.of()
+                );
 
         // when
         final var currentOutput = useCase.execute(aQuery);
@@ -80,7 +91,7 @@ class ListVideoUseCaseTest extends UseCaseTest {
     @Test
     void givenAValidQuery_whenCallsListVideosAndResultIsEmpty_shouldReturnGenres() {
         // given
-        final var videos = List.<Video>of();
+        final var videos = List.<VideoPreview>of();
 
         final var expectedPage = 0;
         final var expectedPerPage = 10;
@@ -102,7 +113,17 @@ class ListVideoUseCaseTest extends UseCaseTest {
                 .thenReturn(expectedPagination);
 
         final var aQuery =
-                new VideoSearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new VideoSearchQuery(
+                        expectedPage,
+                        expectedPerPage,
+                        expectedTerms,
+                        expectedSort,
+                        expectedDirection,
+                        Set.of(),
+                        Set.of(),
+                        Set.of()
+                );
+        ;
 
         // when
         final var currentOutput = useCase.execute(aQuery);
@@ -131,7 +152,16 @@ class ListVideoUseCaseTest extends UseCaseTest {
                 .thenThrow(new IllegalStateException(expectedErrorMessage));
 
         final var aQuery =
-                new VideoSearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new VideoSearchQuery(
+                        expectedPage,
+                        expectedPerPage,
+                        expectedTerms,
+                        expectedSort,
+                        expectedDirection,
+                        Set.of(),
+                        Set.of(),
+                        Set.of()
+                );;
 
         // when
         final var currentOutput = Assertions.assertThrows(

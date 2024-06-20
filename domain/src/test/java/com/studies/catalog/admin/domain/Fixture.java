@@ -1,4 +1,4 @@
-package com.studies.catalog.admin.application;
+package com.studies.catalog.admin.domain;
 
 import com.github.javafaker.Faker;
 import com.studies.catalog.admin.domain.castmember.CastMember;

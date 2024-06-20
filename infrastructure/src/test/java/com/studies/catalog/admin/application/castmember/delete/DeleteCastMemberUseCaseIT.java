@@ -1,6 +1,6 @@
 package com.studies.catalog.admin.application.castmember.delete;
 
-import com.studies.catalog.admin.Fixture;
+import com.studies.catalog.admin.domain.Fixture;
 import com.studies.catalog.admin.IntegrationTest;
 import com.studies.catalog.admin.domain.castmember.CastMember;
 import com.studies.catalog.admin.domain.castmember.CastMemberGateway;
@@ -32,8 +32,8 @@ class DeleteCastMemberUseCaseIT {
     @Test
     void givenAValidId_whenCallsDeleteCastMember_shouldDeleteIt() {
         // given
-        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
-        final var aMemberTwo = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
+        final var aMemberTwo = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
 
         final var expectedId = aMember.getId();
 
@@ -58,7 +58,7 @@ class DeleteCastMemberUseCaseIT {
         // given
         this.castMemberRepository.saveAndFlush(
                 CastMemberJpaEntity.from(
-                        CastMember.newMember(Fixture.name(), Fixture.CastMember.type())
+                        CastMember.newMember(Fixture.name(), Fixture.CastMembers.type())
                 )
         );
 
@@ -78,7 +78,7 @@ class DeleteCastMemberUseCaseIT {
     @Test
     void givenAValidId_whenCallsDeleteCastMemberAndGatewayThrowsException_shouldReceiveException() {
         // given
-        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
 
         this.castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
 
