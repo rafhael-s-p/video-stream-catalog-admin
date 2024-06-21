@@ -3,6 +3,7 @@ package com.studies.catalog.admin.infrastructure.video.persistence;
 import com.studies.catalog.admin.domain.castmember.CastMemberID;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.genre.GenreID;
+import com.studies.catalog.admin.domain.utils.CollectionUtils;
 import com.studies.catalog.admin.domain.video.Rating;
 import com.studies.catalog.admin.domain.video.Video;
 import com.studies.catalog.admin.domain.video.VideoID;
@@ -13,7 +14,6 @@ import java.time.Year;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Entity(name = "Video")
@@ -373,6 +373,18 @@ public class VideoJpaEntity {
     public VideoJpaEntity setCastMembers(Set<VideoCastMemberJpaEntity> castMembers) {
         this.castMembers = castMembers;
         return this;
+    }
+
+    public Set<CategoryID> getCategoriesID() {
+        return CollectionUtils.mapTo(getCategories(), it -> CategoryID.from(it.getId().getCategoryId()));
+    }
+
+    public Set<GenreID> getGenresID() {
+        return CollectionUtils.mapTo(getGenres(), it -> GenreID.from(it.getId().getGenreId()));
+    }
+
+    public Set<CastMemberID> getCastMembersID() {
+        return CollectionUtils.mapTo(getCastMembers(), it -> CastMemberID.from(it.getId().getCastMemberId()));
     }
 
 }

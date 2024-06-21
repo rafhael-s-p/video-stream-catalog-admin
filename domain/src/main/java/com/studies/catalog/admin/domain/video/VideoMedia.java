@@ -1,11 +1,13 @@
 package com.studies.catalog.admin.domain.video;
 
 import com.studies.catalog.admin.domain.ValueObject;
+import com.studies.catalog.admin.domain.utils.IdUtils;
 
 import java.util.Objects;
 
 public class VideoMedia extends ValueObject {
 
+    private final String id;
     private final String checksum;
     private final String name;
     private final String rawLocation;
@@ -13,12 +15,14 @@ public class VideoMedia extends ValueObject {
     private final MediaStatus status;
 
     private VideoMedia(
+            final String id,
             final String checksum,
             final String name,
             final String rawLocation,
             final String encodedLocation,
             final MediaStatus status
     ) {
+        this.id = Objects.requireNonNull(id);
         this.checksum = Objects.requireNonNull(checksum);
         this.name = Objects.requireNonNull(name);
         this.rawLocation = Objects.requireNonNull(rawLocation);
@@ -29,11 +33,24 @@ public class VideoMedia extends ValueObject {
     public static VideoMedia with(
             final String checksum,
             final String name,
+            final String rawLocation
+    ) {
+        return new VideoMedia(IdUtils.uuid(), checksum, name, rawLocation, "", MediaStatus.PENDING);
+    }
+
+    public static VideoMedia with(
+            final String id,
+            final String checksum,
+            final String name,
             final String rawLocation,
             final String encodedLocation,
             final MediaStatus status
     ) {
-        return new VideoMedia(checksum, name, rawLocation, encodedLocation, status);
+        return new VideoMedia(id, checksum, name, rawLocation, encodedLocation, status);
+    }
+
+    public String id() {
+        return id;
     }
 
     public String checksum() {
