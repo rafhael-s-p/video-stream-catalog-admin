@@ -106,7 +106,7 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
                 .thenReturn(new ArrayList<>(expectedGenres));
 
         mockImageMedia();
-        mockAudioVideoMedia();
+        mockVideoMedia();
 
         when(videoGateway.update(any()))
                 .thenAnswer(returnsFirstArg());
@@ -194,7 +194,7 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
                 .thenReturn(new ArrayList<>(expectedGenres));
 
         mockImageMedia();
-        mockAudioVideoMedia();
+        mockVideoMedia();
 
         when(videoGateway.update(any()))
                 .thenAnswer(returnsFirstArg());
@@ -282,7 +282,7 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
                 .thenReturn(new ArrayList<>(expectedMembers));
 
         mockImageMedia();
-        mockAudioVideoMedia();
+        mockVideoMedia();
 
         when(videoGateway.update(any()))
                 .thenAnswer(returnsFirstArg());
@@ -367,7 +367,7 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
                 .thenReturn(new ArrayList<>(expectedGenres));
 
         mockImageMedia();
-        mockAudioVideoMedia();
+        mockVideoMedia();
 
         when(videoGateway.update(any()))
                 .thenAnswer(returnsFirstArg());
@@ -1075,7 +1075,7 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
                 .thenReturn(new ArrayList<>(expectedGenres));
 
         mockImageMedia();
-        mockAudioVideoMedia();
+        mockVideoMedia();
 
         when(videoGateway.update(any()))
                 .thenThrow(new RuntimeException("Internal Server Error"));
@@ -1097,10 +1097,11 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
         });
     }
 
-    private void mockAudioVideoMedia() {
+    private void mockVideoMedia() {
         when(mediaResourceGateway.storeVideo(any(), any())).thenAnswer(t -> {
             final var resource = t.getArgument(1, Resource.class);
             return VideoMedia.with(
+                    IdUtils.uuid(),
                     IdUtils.uuid(),
                     resource.name(),
                     "/img",

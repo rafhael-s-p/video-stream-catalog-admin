@@ -997,6 +997,7 @@ class CreateVideoUseCaseTest extends UseCaseTest {
 
             return VideoMedia.with(
                     IdUtils.uuid(),
+                    IdUtils.uuid(),
                     resource.name(),
                     "/img",
                     "",

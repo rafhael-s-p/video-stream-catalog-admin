@@ -159,7 +159,7 @@ class VideoTest extends TestHelper {
         );
 
         final var aVideoMedia =
-                VideoMedia.with("abc", "Video.mp4", "/123/videos", "", MediaStatus.PENDING);
+                VideoMedia.with("abc", "Video.mp4", "/123/videos");
 
         // when
         final var currentVideo = Video.with(aVideo).setVideo(aVideoMedia);
@@ -216,7 +216,7 @@ class VideoTest extends TestHelper {
         );
 
         final var aTrailerMedia =
-                VideoMedia.with("abc", "Trailer.mp4", "/123/videos", "", MediaStatus.PENDING);
+                VideoMedia.with("abc", "Trailer.mp4", "/123/videos");
 
         // when
         final var currentVideo = Video.with(aVideo).setTrailer(aTrailerMedia);
