@@ -10,6 +10,7 @@ import com.studies.catalog.admin.domain.genre.GenreGateway;
 import com.studies.catalog.admin.domain.genre.GenreID;
 import com.studies.catalog.admin.domain.video.ImageMedia;
 import com.studies.catalog.admin.domain.video.Video;
+import com.studies.catalog.admin.domain.video.VideoID;
 import com.studies.catalog.admin.domain.video.VideoMedia;
 import com.studies.catalog.admin.infrastructure.video.persistence.VideoRepository;
 import org.junit.jupiter.api.Assertions;
@@ -321,6 +322,60 @@ class DefaultVideoGatewayTest {
         Assertions.assertEquals(expectedThumbHalf.name(), persistedVideo.getThumbnailHalf().getName());
         Assertions.assertNotNull(persistedVideo.getCreatedAt());
         Assertions.assertTrue(persistedVideo.getUpdatedAt().isAfter(aVideo.getUpdatedAt()));
+    }
+
+    @Test
+    void givenAValidVideoId_whenCallsDeleteById_shouldDeleteIt() {
+        // given
+        final var aVideo = videoGateway.create(Video.newVideo(
+                Fixture.title(),
+                Fixture.Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Fixture.Videos.rating(),
+                Set.of(),
+                Set.of(),
+                Set.of()
+        ));
+
+        Assertions.assertEquals(1, videoRepository.count());
+
+        final var anId = aVideo.getId();
+
+        // when
+        videoGateway.deleteById(anId);
+
+        // then
+        Assertions.assertEquals(0, videoRepository.count());
+    }
+
+    @Test
+    void givenAnInvalidVideoId_whenCallsDeleteById_shouldDeleteIt() {
+        // given
+        videoGateway.create(Video.newVideo(
+                Fixture.title(),
+                Fixture.Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Fixture.Videos.rating(),
+                Set.of(),
+                Set.of(),
+                Set.of()
+        ));
+
+        Assertions.assertEquals(1, videoRepository.count());
+
+        final var anId = VideoID.unique();
+
+        // when
+        videoGateway.deleteById(anId);
+
+        // then
+        Assertions.assertEquals(1, videoRepository.count());
     }
 
 }
