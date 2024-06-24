@@ -18,7 +18,7 @@ CREATE TABLE image_medias (
 CREATE TABLE videos (
     id CHAR(32) NOT NULL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    description VARCHAR(1000) NOT NULL,
+    description VARCHAR(4000) NOT NULL,
     year_launched SMALLINT NOT NULL,
     opened BOOLEAN NOT NULL DEFAULT FALSE,
     published BOOLEAN NOT NULL DEFAULT FALSE,
