@@ -2,19 +2,22 @@ package com.studies.catalog.admin.infrastructure.video;
 
 import com.studies.catalog.admin.IntegrationTest;
 import com.studies.catalog.admin.domain.Fixture;
+import com.studies.catalog.admin.domain.castmember.CastMember;
 import com.studies.catalog.admin.domain.castmember.CastMemberGateway;
 import com.studies.catalog.admin.domain.castmember.CastMemberID;
+import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
 import com.studies.catalog.admin.domain.category.CategoryID;
+import com.studies.catalog.admin.domain.genre.Genre;
 import com.studies.catalog.admin.domain.genre.GenreGateway;
 import com.studies.catalog.admin.domain.genre.GenreID;
-import com.studies.catalog.admin.domain.video.ImageMedia;
-import com.studies.catalog.admin.domain.video.Video;
-import com.studies.catalog.admin.domain.video.VideoID;
-import com.studies.catalog.admin.domain.video.VideoMedia;
+import com.studies.catalog.admin.domain.video.*;
 import com.studies.catalog.admin.infrastructure.video.persistence.VideoRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +42,27 @@ class DefaultVideoGatewayTest {
     @Autowired
     private VideoRepository videoRepository;
 
+    private CastMember marlonBrando;
+    private CastMember alPacino;
+
+    private Category movies;
+    private Category trailers;
+
+    private Genre crime;
+    private Genre drama;
+
+    @BeforeEach
+    public void setUp() {
+        marlonBrando = castMemberGateway.create(Fixture.CastMembers.marlonBrando());
+        alPacino = castMemberGateway.create(Fixture.CastMembers.alPacino());
+
+        movies = categoryGateway.create(Fixture.Categories.movies());
+        trailers = categoryGateway.create(Fixture.Categories.trailers());
+
+        crime = genreGateway.create(Fixture.Genres.crime());
+        drama = genreGateway.create(Fixture.Genres.drama());
+    }
+
     @Test
     void testInjection() {
         Assertions.assertNotNull(videoGateway);
@@ -46,6 +70,345 @@ class DefaultVideoGatewayTest {
         Assertions.assertNotNull(categoryGateway);
         Assertions.assertNotNull(genreGateway);
         Assertions.assertNotNull(videoRepository);
+    }
+
+    @Test
+    void givenEmptyParams_whenCallFindAll_shouldReturnAllList() {
+        // given
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 4;
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(),
+                Set.of()
+        );
+
+        // when
+        final var currentPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, currentPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentPage.perPage());
+        Assertions.assertEquals(expectedTotal, currentPage.total());
+        Assertions.assertEquals(expectedTotal, currentPage.items().size());
+    }
+
+    @Test
+    void givenEmptyVideos_whenCallFindAll_shouldReturnEmptyList() {
+        // given
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 0;
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(),
+                Set.of()
+        );
+
+        // when
+        final var currentPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, currentPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentPage.perPage());
+        Assertions.assertEquals(expectedTotal, currentPage.total());
+        Assertions.assertEquals(expectedTotal, currentPage.items().size());
+    }
+
+    @Test
+    void givenAValidCategory_whenCallFindAll_shouldReturnFilteredList() {
+        // given
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 2;
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(movies.getId()),
+                Set.of()
+        );
+
+        // when
+        final var currentPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, currentPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentPage.perPage());
+        Assertions.assertEquals(expectedTotal, currentPage.total());
+        Assertions.assertEquals(expectedTotal, currentPage.items().size());
+
+        Assertions.assertEquals("The Movie", currentPage.items().get(0).title());
+        Assertions.assertEquals("The Panic in Needle Park", currentPage.items().get(1).title());
+    }
+
+    @Test
+    void givenAValidCastMember_whenCallFindAll_shouldReturnFilteredList() {
+        // given
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 2;
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(marlonBrando.getId()),
+                Set.of(),
+                Set.of()
+        );
+
+        // when
+        final var currentPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, currentPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentPage.perPage());
+        Assertions.assertEquals(expectedTotal, currentPage.total());
+        Assertions.assertEquals(expectedTotal, currentPage.items().size());
+
+        Assertions.assertEquals("The Godfather", currentPage.items().get(0).title());
+        Assertions.assertEquals("The Movie", currentPage.items().get(1).title());
+    }
+
+    @Test
+    void givenAValidGenre_whenCallFindAll_shouldReturnFilteredList() {
+        // given
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 2;
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(),
+                Set.of(drama.getId())
+        );
+
+        // when
+        final var currentPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, currentPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentPage.perPage());
+        Assertions.assertEquals(expectedTotal, currentPage.total());
+        Assertions.assertEquals(expectedTotal, currentPage.items().size());
+
+        Assertions.assertEquals("The Godfather", currentPage.items().get(0).title());
+    }
+
+    @Test
+    void givenAllParameters_whenCallFindAll_shouldReturnFilteredList() {
+        // given
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "panic";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 1;
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(alPacino.getId()),
+                Set.of(movies.getId()),
+                Set.of(drama.getId())
+        );
+
+        // when
+        final var currentPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, currentPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentPage.perPage());
+        Assertions.assertEquals(expectedTotal, currentPage.total());
+        Assertions.assertEquals(expectedTotal, currentPage.items().size());
+
+        Assertions.assertEquals("The Panic in Needle Park", currentPage.items().get(0).title());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0,2,2,4,Driving Miss Daisy;The Godfather",
+            "1,2,2,4,The Movie;The Panic in Needle Park",
+    })
+    void givenAValidPaging_whenCallsFindAll_shouldReturnPaged(
+            final int expectedPage,
+            final int expectedPerPage,
+            final int expectedItemsCount,
+            final long expectedTotal,
+            final String expectedVideos
+    ) {
+        // given
+        mockVideos();
+
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(),
+                Set.of()
+        );
+
+        // when
+        final var currentPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, currentPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentPage.perPage());
+        Assertions.assertEquals(expectedTotal, currentPage.total());
+        Assertions.assertEquals(expectedItemsCount, currentPage.items().size());
+
+        int index = 0;
+        for (final var expectedTitle : expectedVideos.split(";")) {
+            final var currentTitle = currentPage.items().get(index).title();
+            Assertions.assertEquals(expectedTitle, currentTitle);
+            index++;
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "panic,0,10,1,1,The Panic in Needle Park",
+            "Movie,0,10,1,1,The Movie",
+            "Godfather,0,10,1,1,The Godfather",
+            "miss,0,10,1,1,Driving Miss Daisy",
+    })
+    void givenAValidTerm_whenCallsFindAll_shouldReturnFiltered(
+            final String expectedTerms,
+            final int expectedPage,
+            final int expectedPerPage,
+            final int expectedItemsCount,
+            final long expectedTotal,
+            final String expectedVideo
+    ) {
+        // given
+        mockVideos();
+
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(),
+                Set.of()
+        );
+
+        // when
+        final var currentPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, currentPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentPage.perPage());
+        Assertions.assertEquals(expectedTotal, currentPage.total());
+        Assertions.assertEquals(expectedItemsCount, currentPage.items().size());
+        Assertions.assertEquals(expectedVideo, currentPage.items().get(0).title());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "title,asc,0,10,4,4,Driving Miss Daisy",
+            "title,desc,0,10,4,4,The Panic in Needle Park",
+            "createdAt,asc,0,10,4,4,Driving Miss Daisy",
+            "createdAt,desc,0,10,4,4,The Panic in Needle Park",
+    })
+    void givenAValidSortAndDirection_whenCallsFindAll_shouldReturnOrdered(
+            final String expectedSort,
+            final String expectedDirection,
+            final int expectedPage,
+            final int expectedPerPage,
+            final int expectedItemsCount,
+            final long expectedTotal,
+            final String expectedVideo
+    ) {
+        // given
+        mockVideos();
+
+        final var expectedTerms = "";
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(),
+                Set.of()
+        );
+
+        // when
+        final var currentPage = videoGateway.findAll(aQuery);
+
+        // then
+        Assertions.assertEquals(expectedPage, currentPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, currentPage.perPage());
+        Assertions.assertEquals(expectedTotal, currentPage.total());
+        Assertions.assertEquals(expectedItemsCount, currentPage.items().size());
+        Assertions.assertEquals(expectedVideo, currentPage.items().get(0).title());
     }
 
     @Test
@@ -478,6 +841,61 @@ class DefaultVideoGatewayTest {
 
         // then
         Assertions.assertEquals(1, videoRepository.count());
+    }
+
+    private void mockVideos() {
+
+        videoGateway.create(Video.newVideo(
+                "Driving Miss Daisy",
+                Fixture.Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Fixture.Videos.rating(),
+                Set.of(),
+                Set.of(),
+                Set.of()
+        ));
+
+        videoGateway.create(Video.newVideo(
+                "The Godfather",
+                Fixture.Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Fixture.Videos.rating(),
+                Set.of(trailers.getId()),
+                Set.of(drama.getId()),
+                Set.of(marlonBrando.getId(), alPacino.getId())
+        ));
+
+        videoGateway.create(Video.newVideo(
+                "The Movie",
+                Fixture.Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Fixture.Videos.rating(),
+                Set.of(movies.getId()),
+                Set.of(crime.getId()),
+                Set.of(marlonBrando.getId())
+        ));
+
+        videoGateway.create(Video.newVideo(
+                "The Panic in Needle Park",
+                Fixture.Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Fixture.Videos.rating(),
+                Set.of(movies.getId()),
+                Set.of(drama.getId()),
+                Set.of(alPacino.getId())
+        ));
     }
 
 }

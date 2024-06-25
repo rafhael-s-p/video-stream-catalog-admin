@@ -62,8 +62,15 @@ public final class Fixture {
         private static final Category MOVIES =
                 Category.newCategory("Movies", "Some description", true);
 
+        private static final Category TRAILERS =
+                Category.newCategory("Trailers", "Some description", true);
+
         public static Category movies() {
             return MOVIES.clone();
+        }
+
+        public static Category trailers() {
+            return TRAILERS.clone();
         }
     }
 
@@ -93,8 +100,15 @@ public final class Fixture {
         private static final Genre CRIME =
                 Genre.newGenre("Crime", true);
 
+        private static final Genre DRAMA =
+                Genre.newGenre("drama", true);
+
         public static Genre crime() {
             return Genre.with(CRIME);
+        }
+
+        public static Genre drama() {
+            return Genre.with(DRAMA);
         }
     }
 
