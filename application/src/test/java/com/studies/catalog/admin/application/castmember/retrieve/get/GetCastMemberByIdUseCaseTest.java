@@ -1,6 +1,6 @@
 package com.studies.catalog.admin.application.castmember.retrieve.get;
 
-import com.studies.catalog.admin.application.Fixture;
+import com.studies.catalog.admin.domain.Fixture;
 import com.studies.catalog.admin.application.UseCaseTest;
 import com.studies.catalog.admin.domain.castmember.CastMember;
 import com.studies.catalog.admin.domain.castmember.CastMemberGateway;

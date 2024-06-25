@@ -1,6 +1,6 @@
 package com.studies.catalog.admin.application.video.update;
 
-import com.studies.catalog.admin.application.Fixture;
+import com.studies.catalog.admin.domain.Fixture;
 import com.studies.catalog.admin.application.UseCaseTest;
 import com.studies.catalog.admin.domain.castmember.CastMemberGateway;
 import com.studies.catalog.admin.domain.castmember.CastMemberID;
@@ -11,6 +11,7 @@ import com.studies.catalog.admin.domain.exceptions.InternalErrorException;
 import com.studies.catalog.admin.domain.exceptions.NotificationException;
 import com.studies.catalog.admin.domain.genre.GenreGateway;
 import com.studies.catalog.admin.domain.genre.GenreID;
+import com.studies.catalog.admin.domain.utils.IdUtils;
 import com.studies.catalog.admin.domain.video.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -105,7 +106,7 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
                 .thenReturn(new ArrayList<>(expectedGenres));
 
         mockImageMedia();
-        mockAudioVideoMedia();
+        mockVideoMedia();
 
         when(videoGateway.update(any()))
                 .thenAnswer(returnsFirstArg());
@@ -193,7 +194,7 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
                 .thenReturn(new ArrayList<>(expectedGenres));
 
         mockImageMedia();
-        mockAudioVideoMedia();
+        mockVideoMedia();
 
         when(videoGateway.update(any()))
                 .thenAnswer(returnsFirstArg());
@@ -281,7 +282,7 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
                 .thenReturn(new ArrayList<>(expectedMembers));
 
         mockImageMedia();
-        mockAudioVideoMedia();
+        mockVideoMedia();
 
         when(videoGateway.update(any()))
                 .thenAnswer(returnsFirstArg());
@@ -366,7 +367,7 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
                 .thenReturn(new ArrayList<>(expectedGenres));
 
         mockImageMedia();
-        mockAudioVideoMedia();
+        mockVideoMedia();
 
         when(videoGateway.update(any()))
                 .thenAnswer(returnsFirstArg());
@@ -1074,7 +1075,7 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
                 .thenReturn(new ArrayList<>(expectedGenres));
 
         mockImageMedia();
-        mockAudioVideoMedia();
+        mockVideoMedia();
 
         when(videoGateway.update(any()))
                 .thenThrow(new RuntimeException("Internal Server Error"));
@@ -1096,11 +1097,12 @@ class UpdateVideoUseCaseTest extends UseCaseTest {
         });
     }
 
-    private void mockAudioVideoMedia() {
+    private void mockVideoMedia() {
         when(mediaResourceGateway.storeVideo(any(), any())).thenAnswer(t -> {
             final var resource = t.getArgument(1, Resource.class);
             return VideoMedia.with(
-                    UUID.randomUUID().toString(),
+                    IdUtils.uuid(),
+                    IdUtils.uuid(),
                     resource.name(),
                     "/img",
                     "",
