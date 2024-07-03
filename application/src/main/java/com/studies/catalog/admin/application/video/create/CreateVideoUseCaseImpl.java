@@ -12,10 +12,7 @@ import com.studies.catalog.admin.domain.genre.GenreID;
 import com.studies.catalog.admin.domain.validation.Error;
 import com.studies.catalog.admin.domain.validation.ValidationHandler;
 import com.studies.catalog.admin.domain.validation.handler.Notification;
-import com.studies.catalog.admin.domain.video.MediaResourceGateway;
-import com.studies.catalog.admin.domain.video.Rating;
-import com.studies.catalog.admin.domain.video.Video;
-import com.studies.catalog.admin.domain.video.VideoGateway;
+import com.studies.catalog.admin.domain.video.*;
 
 import java.time.Year;
 import java.util.ArrayList;
@@ -24,6 +21,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.studies.catalog.admin.domain.video.VideoMediaType.*;
 
 public class CreateVideoUseCaseImpl extends CreateVideoUseCase {
 
@@ -87,23 +86,23 @@ public class CreateVideoUseCaseImpl extends CreateVideoUseCase {
 
         try {
             final var aVideoMedia = anInput.getVideo()
-                    .map(it -> this.mediaResourceGateway.storeVideo(anId, it))
+                    .map(it -> this.mediaResourceGateway.storeVideo(anId, VideoResource.with(VIDEO, it)))
                     .orElse(null);
 
             final var aTrailerMedia = anInput.getTrailer()
-                    .map(it -> this.mediaResourceGateway.storeVideo(anId, it))
+                    .map(it -> this.mediaResourceGateway.storeVideo(anId, VideoResource.with(TRAILER, it)))
                     .orElse(null);
 
             final var aBannerMedia = anInput.getBanner()
-                    .map(it -> this.mediaResourceGateway.storeImage(anId, it))
+                    .map(it -> this.mediaResourceGateway.storeImage(anId, VideoResource.with(BANNER, it)))
                     .orElse(null);
 
             final var aThumbnailMedia = anInput.getThumbnail()
-                    .map(it -> this.mediaResourceGateway.storeImage(anId, it))
+                    .map(it -> this.mediaResourceGateway.storeImage(anId, VideoResource.with(THUMBNAIL, it)))
                     .orElse(null);
 
             final var aThumbHalfMedia = anInput.getThumbnailHalf()
-                    .map(it -> this.mediaResourceGateway.storeImage(anId, it))
+                    .map(it -> this.mediaResourceGateway.storeImage(anId, VideoResource.with(THUMBNAIL_HALF, it)))
                     .orElse(null);
 
             return this.videoGateway.create(
