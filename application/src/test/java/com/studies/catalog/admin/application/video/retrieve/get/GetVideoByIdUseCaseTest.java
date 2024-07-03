@@ -1,10 +1,11 @@
 package com.studies.catalog.admin.application.video.retrieve.get;
 
-import com.studies.catalog.admin.domain.Fixture;
 import com.studies.catalog.admin.application.UseCaseTest;
+import com.studies.catalog.admin.domain.Fixture;
 import com.studies.catalog.admin.domain.exceptions.NotFoundException;
-import com.studies.catalog.admin.domain.utils.IdUtils;
-import com.studies.catalog.admin.domain.video.*;
+import com.studies.catalog.admin.domain.video.Video;
+import com.studies.catalog.admin.domain.video.VideoGateway;
+import com.studies.catalog.admin.domain.video.VideoID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +16,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.studies.catalog.admin.domain.Fixture.Videos.image;
+import static com.studies.catalog.admin.domain.Fixture.Videos.video;
+import static com.studies.catalog.admin.domain.video.VideoMediaType.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -47,11 +51,11 @@ class GetVideoByIdUseCaseTest extends UseCaseTest {
                 Fixture.CastMembers.marlonBrando().getId(),
                 Fixture.CastMembers.alPacino().getId()
         );
-        final var expectedVideo = video(Resource.Type.VIDEO);
-        final var expectedTrailer = video(Resource.Type.TRAILER);
-        final var expectedBanner = image(Resource.Type.BANNER);
-        final var expectedThumb = image(Resource.Type.THUMBNAIL);
-        final var expectedThumbHalf = image(Resource.Type.THUMBNAIL_HALF);
+        final var expectedVideo = video(VIDEO);
+        final var expectedTrailer = video(VIDEO);
+        final var expectedBanner = image(BANNER);
+        final var expectedThumb = image(THUMBNAIL);
+        final var expectedThumbHalf = image(THUMBNAIL_HALF);
 
         final var aVideo = Video.newVideo(
                         expectedTitle,
@@ -118,27 +122,6 @@ class GetVideoByIdUseCaseTest extends UseCaseTest {
 
         // then
         Assertions.assertEquals(expectedErrorMessage, currentError.getMessage());
-    }
-
-    private VideoMedia video(final Resource.Type type) {
-        final var checksum = IdUtils.uuid();
-        return VideoMedia.with(
-                checksum,
-                checksum,
-                type.name().toLowerCase(),
-                "/videos/" + checksum,
-                "",
-                MediaStatus.PENDING
-        );
-    }
-
-    private ImageMedia image(final Resource.Type type) {
-        final var checksum = IdUtils.uuid();
-        return ImageMedia.with(
-                checksum,
-                type.name().toLowerCase(),
-                "/images/" + checksum
-        );
     }
 
 }

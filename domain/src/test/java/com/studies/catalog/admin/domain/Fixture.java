@@ -5,9 +5,8 @@ import com.studies.catalog.admin.domain.castmember.CastMember;
 import com.studies.catalog.admin.domain.castmember.CastMemberType;
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.genre.Genre;
-import com.studies.catalog.admin.domain.video.Rating;
-import com.studies.catalog.admin.domain.video.Resource;
-import com.studies.catalog.admin.domain.video.Video;
+import com.studies.catalog.admin.domain.utils.IdUtils;
+import com.studies.catalog.admin.domain.video.*;
 
 import java.time.Year;
 import java.util.Set;
@@ -40,6 +39,10 @@ public final class Fixture {
                 "The Godfather Part II",
                 "The Dark Knight"
         );
+    }
+
+    public static String checksum() {
+        return "03fe62de";
     }
 
     public static Video video() {
@@ -135,21 +138,44 @@ public final class Fixture {
             return FAKER.options().option(Rating.values());
         }
 
-        public static Resource resource(final Resource.Type type) {
+        public static VideoMediaType mediaType() {
+            return FAKER.options().option(VideoMediaType.values());
+        }
+
+        public static Resource resource(final VideoMediaType type) {
             final String contentType = Match(type).of(
-                    Case($(List(Resource.Type.VIDEO, Resource.Type.TRAILER)::contains), "video/mp4"),
+                    Case($(List(VideoMediaType.VIDEO, VideoMediaType.TRAILER)::contains), "video/mp4"),
                     Case($(), "image/jpg")
             );
 
+            final String checksum = IdUtils.uuid();
             final byte[] content = "Content".getBytes();
 
-            return Resource.with(content, contentType, type.name().toLowerCase(), type);
+            return Resource.with(content, checksum, contentType, type.name().toLowerCase());
         }
 
         public static String description() {
             return FAKER.options().option(
                     FAKER.lorem().fixedString(1000),
                     FAKER.lorem().fixedString(2000)
+            );
+        }
+
+        public static VideoMedia video(final VideoMediaType type) {
+            final var checksum = Fixture.checksum();
+            return VideoMedia.with(
+                    checksum,
+                    type.name().toLowerCase(),
+                    "/videos/" + checksum
+            );
+        }
+
+        public static ImageMedia image(final VideoMediaType type) {
+            final var checksum = Fixture.checksum();
+            return ImageMedia.with(
+                    checksum,
+                    type.name().toLowerCase(),
+                    "/images/" + checksum
             );
         }
     }

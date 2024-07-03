@@ -1,7 +1,7 @@
 package com.studies.catalog.admin.application.video.create;
 
-import com.studies.catalog.admin.domain.Fixture;
 import com.studies.catalog.admin.application.UseCaseTest;
+import com.studies.catalog.admin.domain.Fixture;
 import com.studies.catalog.admin.domain.castmember.CastMemberGateway;
 import com.studies.catalog.admin.domain.castmember.CastMemberID;
 import com.studies.catalog.admin.domain.category.CategoryGateway;
@@ -10,23 +10,22 @@ import com.studies.catalog.admin.domain.exceptions.InternalErrorException;
 import com.studies.catalog.admin.domain.exceptions.NotificationException;
 import com.studies.catalog.admin.domain.genre.GenreGateway;
 import com.studies.catalog.admin.domain.genre.GenreID;
-import com.studies.catalog.admin.domain.utils.IdUtils;
 import com.studies.catalog.admin.domain.video.*;
-import com.studies.catalog.admin.domain.video.Resource.Type;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.time.Year;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
+import static com.studies.catalog.admin.domain.video.VideoMediaType.*;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 class CreateVideoUseCaseTest extends UseCaseTest {
 
@@ -69,11 +68,11 @@ class CreateVideoUseCaseTest extends UseCaseTest {
                 Fixture.CastMembers.marlonBrando().getId(),
                 Fixture.CastMembers.alPacino().getId()
         );
-        final Resource expectedVideo = Fixture.Videos.resource(Type.VIDEO);
-        final Resource expectedTrailer = Fixture.Videos.resource(Type.TRAILER);
-        final Resource expectedBanner = Fixture.Videos.resource(Type.BANNER);
-        final Resource expectedThumb = Fixture.Videos.resource(Type.THUMBNAIL);
-        final Resource expectedThumbHalf = Fixture.Videos.resource(Type.THUMBNAIL_HALF);
+        final Resource expectedVideo = Fixture.Videos.resource(VIDEO);
+        final Resource expectedTrailer = Fixture.Videos.resource(TRAILER);
+        final Resource expectedBanner = Fixture.Videos.resource(BANNER);
+        final Resource expectedThumb = Fixture.Videos.resource(THUMBNAIL);
+        final Resource expectedThumbHalf = Fixture.Videos.resource(THUMBNAIL_HALF);
 
         final var anInput = CreateVideoInput.with(
                 expectedTitle,
@@ -150,11 +149,11 @@ class CreateVideoUseCaseTest extends UseCaseTest {
                 Fixture.CastMembers.marlonBrando().getId(),
                 Fixture.CastMembers.alPacino().getId()
         );
-        final Resource expectedVideo = Fixture.Videos.resource(Type.VIDEO);
-        final Resource expectedTrailer = Fixture.Videos.resource(Type.TRAILER);
-        final Resource expectedBanner = Fixture.Videos.resource(Type.BANNER);
-        final Resource expectedThumb = Fixture.Videos.resource(Type.THUMBNAIL);
-        final Resource expectedThumbHalf = Fixture.Videos.resource(Type.THUMBNAIL_HALF);
+        final Resource expectedVideo = Fixture.Videos.resource(VIDEO);
+        final Resource expectedTrailer = Fixture.Videos.resource(TRAILER);
+        final Resource expectedBanner = Fixture.Videos.resource(BANNER);
+        final Resource expectedThumb = Fixture.Videos.resource(THUMBNAIL);
+        final Resource expectedThumbHalf = Fixture.Videos.resource(THUMBNAIL_HALF);
 
         final var anInput = CreateVideoInput.with(
                 expectedTitle,
@@ -228,11 +227,11 @@ class CreateVideoUseCaseTest extends UseCaseTest {
                 Fixture.CastMembers.marlonBrando().getId(),
                 Fixture.CastMembers.alPacino().getId()
         );
-        final Resource expectedVideo = Fixture.Videos.resource(Type.VIDEO);
-        final Resource expectedTrailer = Fixture.Videos.resource(Type.TRAILER);
-        final Resource expectedBanner = Fixture.Videos.resource(Type.BANNER);
-        final Resource expectedThumb = Fixture.Videos.resource(Type.THUMBNAIL);
-        final Resource expectedThumbHalf = Fixture.Videos.resource(Type.THUMBNAIL_HALF);
+        final Resource expectedVideo = Fixture.Videos.resource(VIDEO);
+        final Resource expectedTrailer = Fixture.Videos.resource(TRAILER);
+        final Resource expectedBanner = Fixture.Videos.resource(BANNER);
+        final Resource expectedThumb = Fixture.Videos.resource(THUMBNAIL);
+        final Resource expectedThumbHalf = Fixture.Videos.resource(THUMBNAIL_HALF);
 
         final var anInput = CreateVideoInput.with(
                 expectedTitle,
@@ -303,11 +302,11 @@ class CreateVideoUseCaseTest extends UseCaseTest {
         final var expectedCategories = Set.of(Fixture.Categories.movies().getId());
         final var expectedGenres = Set.of(Fixture.Genres.crime().getId());
         final var expectedMembers = Set.<CastMemberID>of();
-        final Resource expectedVideo = Fixture.Videos.resource(Type.VIDEO);
-        final Resource expectedTrailer = Fixture.Videos.resource(Type.TRAILER);
-        final Resource expectedBanner = Fixture.Videos.resource(Type.BANNER);
-        final Resource expectedThumb = Fixture.Videos.resource(Type.THUMBNAIL);
-        final Resource expectedThumbHalf = Fixture.Videos.resource(Type.THUMBNAIL_HALF);
+        final Resource expectedVideo = Fixture.Videos.resource(VIDEO);
+        final Resource expectedTrailer = Fixture.Videos.resource(TRAILER);
+        final Resource expectedBanner = Fixture.Videos.resource(BANNER);
+        final Resource expectedThumb = Fixture.Videos.resource(THUMBNAIL);
+        final Resource expectedThumbHalf = Fixture.Videos.resource(THUMBNAIL_HALF);
 
         final var anInput = CreateVideoInput.with(
                 expectedTitle,
@@ -934,11 +933,11 @@ class CreateVideoUseCaseTest extends UseCaseTest {
                 Fixture.CastMembers.marlonBrando().getId(),
                 Fixture.CastMembers.alPacino().getId()
         );
-        final Resource expectedVideo = Fixture.Videos.resource(Type.VIDEO);
-        final Resource expectedTrailer = Fixture.Videos.resource(Type.TRAILER);
-        final Resource expectedBanner = Fixture.Videos.resource(Type.BANNER);
-        final Resource expectedThumb = Fixture.Videos.resource(Type.THUMBNAIL);
-        final Resource expectedThumbHalf = Fixture.Videos.resource(Type.THUMBNAIL_HALF);
+        final Resource expectedVideo = Fixture.Videos.resource(VIDEO);
+        final Resource expectedTrailer = Fixture.Videos.resource(TRAILER);
+        final Resource expectedBanner = Fixture.Videos.resource(BANNER);
+        final Resource expectedThumb = Fixture.Videos.resource(THUMBNAIL);
+        final Resource expectedThumbHalf = Fixture.Videos.resource(THUMBNAIL_HALF);
 
         final var anInput = CreateVideoInput.with(
                 expectedTitle,
@@ -985,23 +984,20 @@ class CreateVideoUseCaseTest extends UseCaseTest {
 
     private void mockImageMedia() {
         when(mediaResourceGateway.storeImage(any(), any())).thenAnswer(t -> {
-            final var resource = t.getArgument(1, Resource.class);
-
-            return ImageMedia.with(UUID.randomUUID().toString(), resource.name(), "/img");
+            final var videoResource = t.getArgument(1, VideoResource.class);
+            final var resource = videoResource.resource();
+            return ImageMedia.with(resource.checksum(), resource.name(), "/img");
         });
     }
 
     private void mockVideoMedia() {
         when(mediaResourceGateway.storeVideo(any(), any())).thenAnswer(t -> {
-            final var resource = t.getArgument(1, Resource.class);
-
+            final var videoResource = t.getArgument(1, VideoResource.class);
+            final var resource = videoResource.resource();
             return VideoMedia.with(
-                    IdUtils.uuid(),
-                    IdUtils.uuid(),
+                    resource.checksum(),
                     resource.name(),
-                    "/img",
-                    "",
-                    MediaStatus.PENDING
+                    "/img"
             );
         });
     }
