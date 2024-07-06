@@ -42,6 +42,18 @@ class InMemoryStorageAPITest {
     }
 
     @Test
+    void givenInvalidResource_whenCallsGet_shouldRetrieveEmpty() {
+        final var expectedResource = Fixture.Videos.resource(VideoMediaType.THUMBNAIL);
+        final var expectedId = "invalidResourceID";
+
+        this.target.storage().put("item", expectedResource);
+
+        final var currentContent = target.get(expectedId);
+
+        Assertions.assertTrue(currentContent.isEmpty());
+    }
+
+    @Test
     void givenPrefix_whenCallsList_shouldRetrieveAll() {
         final var expectedResource = Fixture.Videos.resource(VideoMediaType.THUMBNAIL);
 
