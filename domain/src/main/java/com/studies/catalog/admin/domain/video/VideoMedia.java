@@ -73,6 +73,28 @@ public class VideoMedia extends ValueObject {
         return status;
     }
 
+    public VideoMedia processing() {
+        return VideoMedia.with(
+                id(),
+                checksum(),
+                name(),
+                rawLocation(),
+                encodedLocation(),
+                MediaStatus.PROCESSING
+        );
+    }
+
+    public VideoMedia completed(final String encodedPath) {
+        return VideoMedia.with(
+                id(),
+                checksum(),
+                name(),
+                rawLocation(),
+                encodedPath,
+                MediaStatus.COMPLETED
+        );
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -71,6 +71,18 @@ class GCStorageAPITest {
     }
 
     @Test
+    void givenInvalidResource_whenCallsGet_shouldRetrieveEmpty() {
+        final var expectedResource = Fixture.Videos.resource(VideoMediaType.THUMBNAIL);
+        final var expectedId = expectedResource.name();
+
+        doReturn(null).when(storage).get(eq(bucket), eq(expectedId));
+
+        final var currentContent = target.get(expectedId);
+
+        Assertions.assertTrue(currentContent.isEmpty());
+    }
+
+    @Test
     void givenPrefix_whenCallsList_shouldRetrieveAll() {
         final var video = Fixture.Videos.resource(VideoMediaType.VIDEO);
         final var banner = Fixture.Videos.resource(VideoMediaType.BANNER);
