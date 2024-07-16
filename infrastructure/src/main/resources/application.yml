@@ -1,3 +1,16 @@
+amqp:
+  admin:
+    auto-create: false
+  queues:
+    video-created:
+      exchange: video.events
+      routing-key: video.created
+      queue: video.created.queue
+    video-encoded:
+      exchange: video.events
+      routing-key: video.encoded
+      queue: video.encoded.queue
+
 google:
   cloud:
     credentials: ${GOOGLE_CLOUD_CREDENTIALS}
@@ -46,6 +59,12 @@ spring:
       "[hibernate.dialect]": org.hibernate.dialect.MySQL5InnoDBDialect
       "[hibernate.generate_statistics]": false
       "[hibernate.connection.provider_disables_autocommit]": true
+  rabbitmq:
+    dynamic: ${amqp.admin.auto-create}
+    host: ${amqp.host}
+    port: ${amqp.port}
+    username: ${amqp.username}
+    password: ${amqp.password}
 
 storage:
   catalog-videos:
