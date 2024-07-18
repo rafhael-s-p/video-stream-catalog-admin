@@ -95,6 +95,10 @@ public class VideoMedia extends ValueObject {
         );
     }
 
+    public boolean isPendingEncode() {
+        return MediaStatus.PENDING == this.status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
