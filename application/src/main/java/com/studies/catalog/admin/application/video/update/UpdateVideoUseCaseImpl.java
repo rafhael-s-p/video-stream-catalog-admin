@@ -114,11 +114,11 @@ public class UpdateVideoUseCaseImpl extends UpdateVideoUseCase {
 
             return this.videoGateway.update(
                     aVideo
-                            .setVideo(aVideoMedia)
-                            .setTrailer(aTrailerMedia)
-                            .setBanner(aBannerMedia)
-                            .setThumbnail(aThumbnailMedia)
-                            .setThumbnailHalf(aThumbHalfMedia)
+                            .updateVideoMedia(aVideoMedia)
+                            .updateTrailerMedia(aTrailerMedia)
+                            .updateBannerMedia(aBannerMedia)
+                            .updateThumbnailMedia(aThumbnailMedia)
+                            .updateThumbnailHalfMedia(aThumbHalfMedia)
             );
         } catch (final Throwable t) {
             throw InternalErrorException.with(

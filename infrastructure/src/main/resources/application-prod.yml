@@ -1,3 +1,11 @@
+amqp:
+  admin:
+    auto-create: true
+  host: localhost
+  port: 5672
+  username: adm_videos
+  password: 123456
+
 mysql:
   username: ${DATABASE_MYSQL_USERNAME}
   password: ${DATABASE_MYSQL_PASSWORD}
