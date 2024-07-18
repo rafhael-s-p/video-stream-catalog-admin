@@ -3,6 +3,7 @@ package com.studies.catalog.admin.domain.video;
 import com.studies.catalog.admin.domain.castmember.CastMemberID;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.genre.GenreID;
+import com.studies.catalog.admin.domain.utils.InstantUtils;
 import com.studies.catalog.admin.domain.validation.handler.ThrowsValidationHandler;
 import helpers.TestHelper;
 import org.junit.jupiter.api.Assertions;
@@ -62,6 +63,7 @@ class VideoTest extends TestHelper {
         Assertions.assertTrue(currentVideo.getBanner().isEmpty());
         Assertions.assertTrue(currentVideo.getThumbnail().isEmpty());
         Assertions.assertTrue(currentVideo.getThumbnailHalf().isEmpty());
+        Assertions.assertTrue(currentVideo.getDomainEvents().isEmpty());
 
         Assertions.assertDoesNotThrow(() -> currentVideo.validate(new ThrowsValidationHandler()));
     }
@@ -76,6 +78,8 @@ class VideoTest extends TestHelper {
         final var expectedOpened = false;
         final var expectedPublished = false;
         final var expectedRating = Rating.TV_MA;
+        final var expectedEvent = new VideoMediaCreated("ID", "file");
+        final var expectedEventCount = 1;
         final var expectedCategories = Set.of(CategoryID.unique());
         final var expectedGenres = Set.of(GenreID.unique());
         final var expectedMembers = Set.of(CastMemberID.unique());
@@ -92,6 +96,8 @@ class VideoTest extends TestHelper {
                 Set.of(),
                 Set.of()
         );
+
+        aVideo.registerEvent(expectedEvent);
 
         // when
         final var currentVideo = Video.with(aVideo).update(
@@ -127,6 +133,9 @@ class VideoTest extends TestHelper {
         Assertions.assertTrue(currentVideo.getBanner().isEmpty());
         Assertions.assertTrue(currentVideo.getThumbnail().isEmpty());
         Assertions.assertTrue(currentVideo.getThumbnailHalf().isEmpty());
+
+        Assertions.assertEquals(expectedEventCount, currentVideo.getDomainEvents().size());
+        Assertions.assertEquals(expectedEvent, currentVideo.getDomainEvents().get(0));
 
         Assertions.assertDoesNotThrow(() -> currentVideo.validate(new ThrowsValidationHandler()));
     }
@@ -414,6 +423,46 @@ class VideoTest extends TestHelper {
         Assertions.assertEquals(aThumbMedia, currentVideo.getThumbnailHalf().get());
 
         Assertions.assertDoesNotThrow(() -> currentVideo.validate(new ThrowsValidationHandler()));
+    }
+
+    @Test
+    void givenValidVideo_whenCallsWith_shouldCreateWithoutEvents() {
+        // given
+        final var expectedTitle = "The Godfather";
+        final var expectedDescription = faker.lorem().fixedString(4000);
+        final var expectedLaunchedAt = Year.of(2024);
+        final var expectedDuration = 175.0;
+        final var expectedOpened = false;
+        final var expectedPublished = false;
+        final var expectedRating = Rating.TV_MA;
+        final var expectedCategories = Set.of(CategoryID.unique());
+        final var expectedGenres = Set.of(GenreID.unique());
+        final var expectedMembers = Set.of(CastMemberID.unique());
+
+        // when
+        final var currentVideo = Video.with(
+                VideoID.unique(),
+                expectedTitle,
+                expectedDescription,
+                expectedLaunchedAt,
+                expectedDuration,
+                expectedOpened,
+                expectedPublished,
+                expectedRating,
+                InstantUtils.now(),
+                InstantUtils.now(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                expectedCategories,
+                expectedGenres,
+                expectedMembers
+        );
+
+        // then
+        Assertions.assertNotNull(currentVideo.getDomainEvents());
     }
 
 }
