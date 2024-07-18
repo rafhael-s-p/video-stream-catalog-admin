@@ -141,7 +141,7 @@ class VideoTest extends TestHelper {
     }
 
     @Test
-    void givenValidVideo_whenCallsSetVideo_shouldReturnUpdated() {
+    void givenValidVideo_whenCallsUpdateVideo_Media_shouldReturnUpdated() {
         // given
         final var expectedTitle = "The Godfather";
         final var expectedDescription = faker.lorem().fixedString(4000);
@@ -171,7 +171,7 @@ class VideoTest extends TestHelper {
                 VideoMedia.with("abc", "Video.mp4", "/123/videos");
 
         // when
-        final var currentVideo = Video.with(aVideo).setVideo(aVideoMedia);
+        final var currentVideo = Video.with(aVideo).updateVideoMedia(aVideoMedia);
 
         // then
         Assertions.assertNotNull(currentVideo);
@@ -198,7 +198,7 @@ class VideoTest extends TestHelper {
     }
 
     @Test
-    void givenValidVideo_whenCallsSetTrailer_shouldReturnUpdated() {
+    void givenValidVideo_whenCallsUpdateTrailer_Media_shouldReturnUpdated() {
         // given
         final var expectedTitle = "The Godfather";
         final var expectedDescription = faker.lorem().fixedString(4000);
@@ -228,7 +228,7 @@ class VideoTest extends TestHelper {
                 VideoMedia.with("abc", "Trailer.mp4", "/123/videos");
 
         // when
-        final var currentVideo = Video.with(aVideo).setTrailer(aTrailerMedia);
+        final var currentVideo = Video.with(aVideo).updateTrailerMedia(aTrailerMedia);
 
         // then
         Assertions.assertNotNull(currentVideo);
@@ -255,7 +255,7 @@ class VideoTest extends TestHelper {
     }
 
     @Test
-    void givenValidVideo_whenCallsSetBanner_shouldReturnUpdated() {
+    void givenValidVideo_whenCallsUpdateBanner_Media_shouldReturnUpdated() {
         // given
         final var expectedTitle = "The Godfather";
         final var expectedDescription = faker.lorem().fixedString(4000);
@@ -285,7 +285,7 @@ class VideoTest extends TestHelper {
                 ImageMedia.with("abc", "Trailer.mp4", "/123/videos");
 
         // when
-        final var currentVideo = Video.with(aVideo).setBanner(aBannerMedia);
+        final var currentVideo = Video.with(aVideo).updateBannerMedia(aBannerMedia);
 
         // then
         Assertions.assertNotNull(currentVideo);
@@ -312,7 +312,7 @@ class VideoTest extends TestHelper {
     }
 
     @Test
-    void givenValidVideo_whenCallsSetThumbnail_shouldReturnUpdated() {
+    void givenValidVideo_whenCallsUpdateThumbnail_Media_shouldReturnUpdated() {
         // given
         final var expectedTitle = "The Godfather";
         final var expectedDescription = faker.lorem().fixedString(4000);
@@ -342,7 +342,7 @@ class VideoTest extends TestHelper {
                 ImageMedia.with("abc", "Trailer.mp4", "/123/videos");
 
         // when
-        final var currentVideo = Video.with(aVideo).setThumbnail(aThumbMedia);
+        final var currentVideo = Video.with(aVideo).updateThumbnailMedia(aThumbMedia);
 
         // then
         Assertions.assertNotNull(currentVideo);
@@ -369,7 +369,7 @@ class VideoTest extends TestHelper {
     }
 
     @Test
-    void givenValidVideo_whenCallsSetThumbnailHalf_shouldReturnUpdated() {
+    void givenValidVideo_whenCallsUpdateThumbnailMediaHalf_shouldReturnUpdated() {
         // given
         final var expectedTitle = "The Godfather";
         final var expectedDescription = faker.lorem().fixedString(4000);
@@ -399,7 +399,7 @@ class VideoTest extends TestHelper {
                 ImageMedia.with("abc", "Trailer.mp4", "/123/videos");
 
         // when
-        final var currentVideo = Video.with(aVideo).setThumbnailHalf(aThumbMedia);
+        final var currentVideo = Video.with(aVideo).updateThumbnailHalfMedia(aThumbMedia);
 
         // then
         Assertions.assertNotNull(currentVideo);

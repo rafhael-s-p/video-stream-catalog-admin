@@ -42,7 +42,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final var expectedMedia = Fixture.Videos.video(expectedType);
 
         final var aVideo = Fixture.Videos.theGodfather()
-                .setVideo(expectedMedia);
+                .updateVideoMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 
@@ -93,7 +93,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final var expectedMedia = Fixture.Videos.video(expectedType);
 
         final var aVideo = Fixture.Videos.theGodfather()
-                .setVideo(expectedMedia);
+                .updateVideoMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 
@@ -144,7 +144,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final var expectedMedia = Fixture.Videos.video(expectedType);
 
         final var aVideo = Fixture.Videos.theGodfather()
-                .setTrailer(expectedMedia);
+                .updateTrailerMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 
@@ -195,7 +195,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final var expectedMedia = Fixture.Videos.video(expectedType);
 
         final var aVideo = Fixture.Videos.theGodfather()
-                .setTrailer(expectedMedia);
+                .updateTrailerMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 
@@ -246,7 +246,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final var expectedMedia = Fixture.Videos.video(expectedType);
 
         final var aVideo = Fixture.Videos.theGodfather()
-                .setTrailer(expectedMedia);
+                .updateTrailerMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 
