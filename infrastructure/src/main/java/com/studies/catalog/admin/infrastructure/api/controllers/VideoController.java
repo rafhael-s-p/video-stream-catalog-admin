@@ -2,10 +2,13 @@ package com.studies.catalog.admin.infrastructure.api.controllers;
 
 import com.studies.catalog.admin.application.video.create.CreateVideoInput;
 import com.studies.catalog.admin.application.video.create.CreateVideoUseCase;
+import com.studies.catalog.admin.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.studies.catalog.admin.domain.video.Resource;
 import com.studies.catalog.admin.infrastructure.api.VideoAPI;
 import com.studies.catalog.admin.infrastructure.utils.HashingUtils;
 import com.studies.catalog.admin.infrastructure.video.models.CreateVideoApiRequest;
+import com.studies.catalog.admin.infrastructure.video.models.VideoApiResponse;
+import com.studies.catalog.admin.infrastructure.video.presenters.VideoApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,10 +20,18 @@ import java.util.Set;
 @RestController
 public class VideoController implements VideoAPI {
 
+    private final GetVideoByIdUseCase getVideoByIdUseCase;
     private final CreateVideoUseCase createVideoUseCase;
 
-    public VideoController(final CreateVideoUseCase createVideoUseCase) {
+    public VideoController(final GetVideoByIdUseCase getVideoByIdUseCase,
+                           final CreateVideoUseCase createVideoUseCase) {
+        this.getVideoByIdUseCase = Objects.requireNonNull(getVideoByIdUseCase);
         this.createVideoUseCase = Objects.requireNonNull(createVideoUseCase);
+    }
+
+    @Override
+    public VideoApiResponse getById(final String anId) {
+        return VideoApiPresenter.present(this.getVideoByIdUseCase.execute(anId));
     }
 
     @Override
