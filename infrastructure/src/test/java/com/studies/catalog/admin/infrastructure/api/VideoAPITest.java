@@ -5,6 +5,7 @@ import com.studies.catalog.admin.ControllerTest;
 import com.studies.catalog.admin.application.video.create.CreateVideoInput;
 import com.studies.catalog.admin.application.video.create.CreateVideoOutput;
 import com.studies.catalog.admin.application.video.create.CreateVideoUseCase;
+import com.studies.catalog.admin.application.video.delete.DeleteVideoUseCase;
 import com.studies.catalog.admin.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.studies.catalog.admin.application.video.retrieve.get.VideoOutput;
 import com.studies.catalog.admin.application.video.update.UpdateVideoInput;
@@ -39,8 +40,8 @@ import static com.studies.catalog.admin.domain.utils.CollectionUtils.mapTo;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -61,6 +62,9 @@ class VideoAPITest {
 
     @MockBean
     private UpdateVideoUseCase updateVideoUseCase;
+
+    @MockBean
+    private DeleteVideoUseCase deleteVideoUseCase;
 
     @Test
     void givenAValidId_whenCallsGetById_shouldReturnVideo() throws Exception {
@@ -443,6 +447,24 @@ class VideoAPITest {
                 .andExpect(jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
 
         verify(updateVideoUseCase).execute(any());
+    }
+
+    @Test
+    void givenAValidId_whenCallsDeleteById_shouldDeleteIt() throws Exception {
+        // given
+        final var expectedId = VideoID.unique();
+
+        doNothing().when(deleteVideoUseCase).execute(any());
+
+        // when
+        final var aRequest = delete("/videos/{id}", expectedId.getValue());
+
+        final var response = this.mvc.perform(aRequest);
+
+        // then
+        response.andExpect(status().isNoContent());
+
+        verify(deleteVideoUseCase).execute(eq(expectedId.getValue()));
     }
 
 }
