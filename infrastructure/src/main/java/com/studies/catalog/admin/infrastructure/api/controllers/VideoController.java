@@ -3,10 +3,13 @@ package com.studies.catalog.admin.infrastructure.api.controllers;
 import com.studies.catalog.admin.application.video.create.CreateVideoInput;
 import com.studies.catalog.admin.application.video.create.CreateVideoUseCase;
 import com.studies.catalog.admin.application.video.retrieve.get.GetVideoByIdUseCase;
+import com.studies.catalog.admin.application.video.update.UpdateVideoInput;
+import com.studies.catalog.admin.application.video.update.UpdateVideoUseCase;
 import com.studies.catalog.admin.domain.video.Resource;
 import com.studies.catalog.admin.infrastructure.api.VideoAPI;
 import com.studies.catalog.admin.infrastructure.utils.HashingUtils;
 import com.studies.catalog.admin.infrastructure.video.models.CreateVideoApiRequest;
+import com.studies.catalog.admin.infrastructure.video.models.UpdateVideoApiRequest;
 import com.studies.catalog.admin.infrastructure.video.models.VideoApiResponse;
 import com.studies.catalog.admin.infrastructure.video.presenters.VideoApiPresenter;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +25,14 @@ public class VideoController implements VideoAPI {
 
     private final GetVideoByIdUseCase getVideoByIdUseCase;
     private final CreateVideoUseCase createVideoUseCase;
+    private final UpdateVideoUseCase updateVideoUseCase;
 
     public VideoController(final GetVideoByIdUseCase getVideoByIdUseCase,
-                           final CreateVideoUseCase createVideoUseCase) {
+                           final CreateVideoUseCase createVideoUseCase,
+                           final UpdateVideoUseCase updateVideoUseCase) {
         this.getVideoByIdUseCase = Objects.requireNonNull(getVideoByIdUseCase);
         this.createVideoUseCase = Objects.requireNonNull(createVideoUseCase);
+        this.updateVideoUseCase = Objects.requireNonNull(updateVideoUseCase);
     }
 
     @Override
@@ -93,6 +99,29 @@ public class VideoController implements VideoAPI {
         final var output = this.createVideoUseCase.execute(anInput);
 
         return ResponseEntity.created(URI.create("/videos/" + output.id())).body(output);
+    }
+
+    @Override
+    public ResponseEntity<?> update(final String id, final UpdateVideoApiRequest payload) {
+        final var anInput = UpdateVideoInput.with(
+                id,
+                payload.title(),
+                payload.description(),
+                payload.yearLaunched(),
+                payload.duration(),
+                payload.opened(),
+                payload.published(),
+                payload.rating(),
+                payload.categories(),
+                payload.genres(),
+                payload.castMembers()
+        );
+
+        final var output = this.updateVideoUseCase.execute(anInput);
+
+        return ResponseEntity.ok()
+                .location(URI.create("/videos/" + output.id()))
+                .body(VideoApiPresenter.present(output));
     }
 
     private Resource resourceOf(final MultipartFile part) {

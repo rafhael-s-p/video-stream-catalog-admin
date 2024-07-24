@@ -1,9 +1,11 @@
 package com.studies.catalog.admin.infrastructure.video.presenters;
 
 import com.studies.catalog.admin.application.video.retrieve.get.VideoOutput;
+import com.studies.catalog.admin.application.video.update.UpdateVideoOutput;
 import com.studies.catalog.admin.domain.video.ImageMedia;
 import com.studies.catalog.admin.domain.video.VideoMedia;
 import com.studies.catalog.admin.infrastructure.video.models.ImageMediaApiResponse;
+import com.studies.catalog.admin.infrastructure.video.models.UpdateVideoApiResponse;
 import com.studies.catalog.admin.infrastructure.video.models.VideoApiResponse;
 import com.studies.catalog.admin.infrastructure.video.models.VideoMediaApiResponse;
 
@@ -57,5 +59,9 @@ public interface VideoApiPresenter {
                 image.location()
         );
     }
-    
+
+    static UpdateVideoApiResponse present(final UpdateVideoOutput output) {
+        return new UpdateVideoApiResponse(output.id());
+    }
+
 }

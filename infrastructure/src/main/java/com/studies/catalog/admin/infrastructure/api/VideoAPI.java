@@ -1,6 +1,7 @@
 package com.studies.catalog.admin.infrastructure.api;
 
 import com.studies.catalog.admin.infrastructure.video.models.CreateVideoApiRequest;
+import com.studies.catalog.admin.infrastructure.video.models.UpdateVideoApiRequest;
 import com.studies.catalog.admin.infrastructure.video.models.VideoApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,7 +19,7 @@ import java.util.Set;
 public interface VideoAPI {
 
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Get a video by it's identifier")
+    @Operation(summary = "Get a video by its identifier")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Video retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "Video was not found"),
@@ -61,9 +62,25 @@ public interface VideoAPI {
     @Operation(summary = "Create a new video without medias")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created successfully"),
-            @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
-            @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
+            @ApiResponse(responseCode = "422", description = "A validation error has occurred"),
+            @ApiResponse(responseCode = "500", description = "An internal server error has occurred"),
     })
     ResponseEntity<?> createPartial(@RequestBody CreateVideoApiRequest payload);
+
+    @PutMapping(
+            value = "{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(summary = "Update a video by its identifier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Video updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Video was not found"),
+            @ApiResponse(responseCode = "422", description = "A validation error has occurred"),
+            @ApiResponse(responseCode = "500", description = "An internal server error has occurred"),
+    })
+    ResponseEntity<?> update(
+            @PathVariable(name = "id") String id,
+            @RequestBody UpdateVideoApiRequest payload);
 
 }
