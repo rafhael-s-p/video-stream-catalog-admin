@@ -7,14 +7,20 @@ import com.studies.catalog.admin.application.video.create.CreateVideoOutput;
 import com.studies.catalog.admin.application.video.create.CreateVideoUseCase;
 import com.studies.catalog.admin.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.studies.catalog.admin.application.video.retrieve.get.VideoOutput;
+import com.studies.catalog.admin.application.video.update.UpdateVideoInput;
+import com.studies.catalog.admin.application.video.update.UpdateVideoOutput;
+import com.studies.catalog.admin.application.video.update.UpdateVideoUseCase;
 import com.studies.catalog.admin.domain.Fixture;
 import com.studies.catalog.admin.domain.castmember.CastMemberID;
 import com.studies.catalog.admin.domain.category.CategoryID;
+import com.studies.catalog.admin.domain.exceptions.NotificationException;
 import com.studies.catalog.admin.domain.genre.GenreID;
+import com.studies.catalog.admin.domain.validation.Error;
 import com.studies.catalog.admin.domain.video.Video;
 import com.studies.catalog.admin.domain.video.VideoID;
 import com.studies.catalog.admin.domain.video.VideoMediaType;
 import com.studies.catalog.admin.infrastructure.video.models.CreateVideoApiRequest;
+import com.studies.catalog.admin.infrastructure.video.models.UpdateVideoApiRequest;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,6 +37,7 @@ import java.util.Set;
 
 import static com.studies.catalog.admin.domain.utils.CollectionUtils.mapTo;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,6 +58,9 @@ class VideoAPITest {
 
     @MockBean
     private CreateVideoUseCase createVideoUseCase;
+
+    @MockBean
+    private UpdateVideoUseCase updateVideoUseCase;
 
     @Test
     void givenAValidId_whenCallsGetById_shouldReturnVideo() throws Exception {
@@ -304,6 +314,135 @@ class VideoAPITest {
         Assertions.assertTrue(currentInput.getBanner().isEmpty());
         Assertions.assertTrue(currentInput.getThumbnail().isEmpty());
         Assertions.assertTrue(currentInput.getThumbnailHalf().isEmpty());
+    }
+
+    @Test
+    void givenAValidInput_whenCallsUpdateVideo_shouldReturnVideoId() throws Exception {
+        // given
+        final var marlonBrando = Fixture.CastMembers.marlonBrando();
+        final var movies = Fixture.Categories.movies();
+        final var crime = Fixture.Genres.crime();
+
+        final var expectedId = VideoID.unique();
+        final var expectedTitle = Fixture.title();
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Year.of(Fixture.year());
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.of(movies.getId().getValue());
+        final var expectedGenres = Set.of(crime.getId().getValue());
+        final var expectedMembers = Set.of(marlonBrando.getId().getValue());
+
+        final var anInput = new UpdateVideoApiRequest(
+                expectedTitle,
+                expectedDescription,
+                expectedDuration,
+                expectedLaunchYear.getValue(),
+                expectedOpened,
+                expectedPublished,
+                expectedRating.getName(),
+                expectedMembers,
+                expectedCategories,
+                expectedGenres
+        );
+
+        when(updateVideoUseCase.execute(any()))
+                .thenReturn(new UpdateVideoOutput(expectedId.getValue()));
+
+        // when
+
+        final var aRequest = put("/videos/{id}", expectedId.getValue())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(anInput));
+
+        this.mvc.perform(aRequest)
+                .andExpect(status().isOk())
+                .andExpect(header().string("Location", "/videos/" + expectedId.getValue()))
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.id", equalTo(expectedId.getValue())));
+
+        // then
+        final var inputCaptor = ArgumentCaptor.forClass(UpdateVideoInput.class);
+
+        verify(updateVideoUseCase).execute(inputCaptor.capture());
+
+        final var currentInput = inputCaptor.getValue();
+
+        Assertions.assertEquals(expectedTitle, currentInput.title());
+        Assertions.assertEquals(expectedDescription, currentInput.description());
+        Assertions.assertEquals(expectedLaunchYear.getValue(), currentInput.launchedAt());
+        Assertions.assertEquals(expectedDuration, currentInput.duration());
+        Assertions.assertEquals(expectedOpened, currentInput.opened());
+        Assertions.assertEquals(expectedPublished, currentInput.published());
+        Assertions.assertEquals(expectedRating.getName(), currentInput.rating());
+        Assertions.assertEquals(expectedCategories, currentInput.categories());
+        Assertions.assertEquals(expectedGenres, currentInput.genres());
+        Assertions.assertEquals(expectedMembers, currentInput.members());
+        Assertions.assertTrue(currentInput.getVideo().isEmpty());
+        Assertions.assertTrue(currentInput.getTrailer().isEmpty());
+        Assertions.assertTrue(currentInput.getBanner().isEmpty());
+        Assertions.assertTrue(currentInput.getThumbnail().isEmpty());
+        Assertions.assertTrue(currentInput.getThumbnailHalf().isEmpty());
+    }
+
+    @Test
+    void givenAnInvalidInput_whenCallsUpdateVideo_shouldReturnNotification() throws Exception {
+        // given
+        final var marlonBrando = Fixture.CastMembers.marlonBrando();
+        final var movies = Fixture.Categories.movies();
+        final var crime = Fixture.Genres.crime();
+
+        final var expectedId = VideoID.unique();
+        final var expectedErrorMessage = "'title' should not be empty";
+        final var expectedErrorCount = 1;
+
+        final var expectedTitle = "";
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Year.of(Fixture.year());
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.of(movies.getId().getValue());
+        final var expectedGenres = Set.of(crime.getId().getValue());
+        final var expectedMembers = Set.of(marlonBrando.getId().getValue());
+
+        final var anInput = new UpdateVideoApiRequest(
+                expectedTitle,
+                expectedDescription,
+                expectedDuration,
+                expectedLaunchYear.getValue(),
+                expectedOpened,
+                expectedPublished,
+                expectedRating.getName(),
+                expectedMembers,
+                expectedCategories,
+                expectedGenres
+        );
+
+        when(updateVideoUseCase.execute(any()))
+                .thenThrow(NotificationException.with(new Error(expectedErrorMessage)));
+
+        // when
+
+        final var aRequest = put("/videos/{id}", expectedId.getValue())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(anInput));
+
+        final var response = this.mvc.perform(aRequest);
+
+        // then
+        response.andExpect(status().isUnprocessableEntity())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)))
+                .andExpect(jsonPath("$.errors", hasSize(expectedErrorCount)))
+                .andExpect(jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        verify(updateVideoUseCase).execute(any());
     }
 
 }
