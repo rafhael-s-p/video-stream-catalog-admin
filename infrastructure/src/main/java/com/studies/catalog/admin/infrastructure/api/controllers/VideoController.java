@@ -2,6 +2,7 @@ package com.studies.catalog.admin.infrastructure.api.controllers;
 
 import com.studies.catalog.admin.application.video.create.CreateVideoInput;
 import com.studies.catalog.admin.application.video.create.CreateVideoUseCase;
+import com.studies.catalog.admin.application.video.delete.DeleteVideoUseCase;
 import com.studies.catalog.admin.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.studies.catalog.admin.application.video.update.UpdateVideoInput;
 import com.studies.catalog.admin.application.video.update.UpdateVideoUseCase;
@@ -26,13 +27,16 @@ public class VideoController implements VideoAPI {
     private final GetVideoByIdUseCase getVideoByIdUseCase;
     private final CreateVideoUseCase createVideoUseCase;
     private final UpdateVideoUseCase updateVideoUseCase;
+    private final DeleteVideoUseCase deleteVideoUseCase;
 
     public VideoController(final GetVideoByIdUseCase getVideoByIdUseCase,
                            final CreateVideoUseCase createVideoUseCase,
-                           final UpdateVideoUseCase updateVideoUseCase) {
+                           final UpdateVideoUseCase updateVideoUseCase,
+                           final DeleteVideoUseCase deleteVideoUseCase) {
         this.getVideoByIdUseCase = Objects.requireNonNull(getVideoByIdUseCase);
         this.createVideoUseCase = Objects.requireNonNull(createVideoUseCase);
         this.updateVideoUseCase = Objects.requireNonNull(updateVideoUseCase);
+        this.deleteVideoUseCase = Objects.requireNonNull(deleteVideoUseCase);
     }
 
     @Override
@@ -122,6 +126,11 @@ public class VideoController implements VideoAPI {
         return ResponseEntity.ok()
                 .location(URI.create("/videos/" + output.id()))
                 .body(VideoApiPresenter.present(output));
+    }
+
+    @Override
+    public void deleteById(final String id) {
+        this.deleteVideoUseCase.execute(id);
     }
 
     private Resource resourceOf(final MultipartFile part) {
