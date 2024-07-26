@@ -48,6 +48,18 @@ public interface VideoAPI {
     })
     VideoApiResponse getById(@PathVariable(name = "id") String id);
 
+    @GetMapping(value = "{id}/medias/{type}")
+    @Operation(summary = "Get a video media by its type")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Media retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Media was not found"),
+            @ApiResponse(responseCode = "500", description = "An internal server error has occurred"),
+    })
+    ResponseEntity<byte[]> getMediaByType(
+            @PathVariable(name = "id") String id,
+            @PathVariable(name = "type") String type
+    );
+
     @PostMapping(
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
