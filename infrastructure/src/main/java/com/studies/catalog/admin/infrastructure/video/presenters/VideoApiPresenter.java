@@ -1,5 +1,6 @@
 package com.studies.catalog.admin.infrastructure.video.presenters;
 
+import com.studies.catalog.admin.application.video.media.upload.UploadMediaOutput;
 import com.studies.catalog.admin.application.video.retrieve.get.VideoOutput;
 import com.studies.catalog.admin.application.video.retrieve.list.VideoListOutput;
 import com.studies.catalog.admin.application.video.update.UpdateVideoOutput;
@@ -75,6 +76,10 @@ public interface VideoApiPresenter {
 
     static Pagination<VideoListApiResponse> present(final Pagination<VideoListOutput> page) {
         return page.map(VideoApiPresenter::present);
+    }
+
+    static UploadMediaApiResponse present(final UploadMediaOutput output) {
+        return new UploadMediaApiResponse(output.videoId(), output.mediaType());
     }
 
 }

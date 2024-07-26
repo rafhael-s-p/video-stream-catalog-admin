@@ -5,15 +5,21 @@ import com.studies.catalog.admin.application.video.create.CreateVideoUseCase;
 import com.studies.catalog.admin.application.video.delete.DeleteVideoUseCase;
 import com.studies.catalog.admin.application.video.media.get.GetMediaInput;
 import com.studies.catalog.admin.application.video.media.get.GetMediaUseCase;
+import com.studies.catalog.admin.application.video.media.upload.UploadMediaInput;
+import com.studies.catalog.admin.application.video.media.upload.UploadMediaUseCase;
 import com.studies.catalog.admin.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.studies.catalog.admin.application.video.retrieve.list.ListVideosUseCase;
 import com.studies.catalog.admin.application.video.update.UpdateVideoInput;
 import com.studies.catalog.admin.application.video.update.UpdateVideoUseCase;
 import com.studies.catalog.admin.domain.castmember.CastMemberID;
 import com.studies.catalog.admin.domain.category.CategoryID;
+import com.studies.catalog.admin.domain.exceptions.NotificationException;
 import com.studies.catalog.admin.domain.genre.GenreID;
 import com.studies.catalog.admin.domain.pagination.Pagination;
+import com.studies.catalog.admin.domain.validation.Error;
 import com.studies.catalog.admin.domain.video.Resource;
+import com.studies.catalog.admin.domain.video.VideoMediaType;
+import com.studies.catalog.admin.domain.video.VideoResource;
 import com.studies.catalog.admin.domain.video.VideoSearchQuery;
 import com.studies.catalog.admin.infrastructure.api.VideoAPI;
 import com.studies.catalog.admin.infrastructure.utils.HashingUtils;
@@ -43,19 +49,22 @@ public class VideoController implements VideoAPI {
     private final CreateVideoUseCase createVideoUseCase;
     private final UpdateVideoUseCase updateVideoUseCase;
     private final DeleteVideoUseCase deleteVideoUseCase;
+    private final UploadMediaUseCase uploadMediaUseCase;
 
     public VideoController(final ListVideosUseCase listVideosUseCase,
                            final GetVideoByIdUseCase getVideoByIdUseCase,
                            final GetMediaUseCase getMediaUseCase,
                            final CreateVideoUseCase createVideoUseCase,
                            final UpdateVideoUseCase updateVideoUseCase,
-                           final DeleteVideoUseCase deleteVideoUseCase) {
+                           final DeleteVideoUseCase deleteVideoUseCase,
+                           final UploadMediaUseCase uploadMediaUseCase) {
         this.listVideosUseCase = Objects.requireNonNull(listVideosUseCase);
         this.getVideoByIdUseCase = Objects.requireNonNull(getVideoByIdUseCase);
         this.getMediaUseCase = Objects.requireNonNull(getMediaUseCase);
         this.createVideoUseCase = Objects.requireNonNull(createVideoUseCase);
         this.updateVideoUseCase = Objects.requireNonNull(updateVideoUseCase);
         this.deleteVideoUseCase = Objects.requireNonNull(deleteVideoUseCase);
+        this.uploadMediaUseCase = Objects.requireNonNull(uploadMediaUseCase);
     }
 
     @Override
@@ -183,6 +192,21 @@ public class VideoController implements VideoAPI {
     @Override
     public void deleteById(final String id) {
         this.deleteVideoUseCase.execute(id);
+    }
+
+    @Override
+    public ResponseEntity<?> uploadMediaByType(final String id, final String type, final MultipartFile media) {
+        final var aType = VideoMediaType.of(type)
+                .orElseThrow(() -> NotificationException.with(new Error("Invalid %s for VideoMediaType".formatted(type))));
+
+        final var anInput =
+                UploadMediaInput.with(id, VideoResource.with(aType, resourceOf(media)));
+
+        final var output = this.uploadMediaUseCase.execute(anInput);
+
+        return ResponseEntity
+                .created(URI.create("/videos/%s/medias/%s".formatted(id, type)))
+                .body(VideoApiPresenter.present(output));
     }
 
     private Resource resourceOf(final MultipartFile part) {
