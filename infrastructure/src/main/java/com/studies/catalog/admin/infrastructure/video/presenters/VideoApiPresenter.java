@@ -1,13 +1,12 @@
 package com.studies.catalog.admin.infrastructure.video.presenters;
 
 import com.studies.catalog.admin.application.video.retrieve.get.VideoOutput;
+import com.studies.catalog.admin.application.video.retrieve.list.VideoListOutput;
 import com.studies.catalog.admin.application.video.update.UpdateVideoOutput;
+import com.studies.catalog.admin.domain.pagination.Pagination;
 import com.studies.catalog.admin.domain.video.ImageMedia;
 import com.studies.catalog.admin.domain.video.VideoMedia;
-import com.studies.catalog.admin.infrastructure.video.models.ImageMediaApiResponse;
-import com.studies.catalog.admin.infrastructure.video.models.UpdateVideoApiResponse;
-import com.studies.catalog.admin.infrastructure.video.models.VideoApiResponse;
-import com.studies.catalog.admin.infrastructure.video.models.VideoMediaApiResponse;
+import com.studies.catalog.admin.infrastructure.video.models.*;
 
 public interface VideoApiPresenter {
 
@@ -62,6 +61,20 @@ public interface VideoApiPresenter {
 
     static UpdateVideoApiResponse present(final UpdateVideoOutput output) {
         return new UpdateVideoApiResponse(output.id());
+    }
+
+    static VideoListApiResponse present(final VideoListOutput output) {
+        return new VideoListApiResponse(
+                output.id(),
+                output.title(),
+                output.description(),
+                output.createdAt(),
+                output.updatedAt()
+        );
+    }
+
+    static Pagination<VideoListApiResponse> present(final Pagination<VideoListOutput> page) {
+        return page.map(VideoApiPresenter::present);
     }
 
 }

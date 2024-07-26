@@ -1,8 +1,10 @@
 package com.studies.catalog.admin.infrastructure.api;
 
+import com.studies.catalog.admin.domain.pagination.Pagination;
 import com.studies.catalog.admin.infrastructure.video.models.CreateVideoApiRequest;
 import com.studies.catalog.admin.infrastructure.video.models.UpdateVideoApiRequest;
 import com.studies.catalog.admin.infrastructure.video.models.VideoApiResponse;
+import com.studies.catalog.admin.infrastructure.video.models.VideoListApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,6 +20,24 @@ import java.util.Set;
 @RequestMapping(value = "videos")
 @Tag(name = "Video")
 public interface VideoAPI {
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "List all videos paginated")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Videos listed"),
+            @ApiResponse(responseCode = "422", description = "Query param was invalid"),
+            @ApiResponse(responseCode = "500", description = "An internal server error has occurred"),
+    })
+    Pagination<VideoListApiResponse> list(
+            @RequestParam(name = "search", required = false, defaultValue = "") String search,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "perPage", required = false, defaultValue = "25") int perPage,
+            @RequestParam(name = "sort", required = false, defaultValue = "title") String sort,
+            @RequestParam(name = "dir", required = false, defaultValue = "asc") String direction,
+            @RequestParam(name = "cast_members_ids", required = false, defaultValue = "") Set<String> castMembers,
+            @RequestParam(name = "categories_ids", required = false, defaultValue = "") Set<String> categories,
+            @RequestParam(name = "genres_ids", required = false, defaultValue = "") Set<String> genres
+    );
 
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get a video by its identifier")
