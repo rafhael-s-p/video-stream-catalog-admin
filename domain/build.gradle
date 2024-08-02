@@ -6,7 +6,7 @@ plugins {
 group = 'com.studies.catalog.admin.domain'
 
 dependencies {
-    implementation 'com.github.javafaker:javafaker:1.0.2'
+    testImplementation 'com.github.javafaker:javafaker:1.0.2'
 }
 
 configurations {

@@ -1,9 +1,10 @@
 package com.studies.catalog.admin.domain.video;
 
+import com.studies.catalog.admin.domain.UnitTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class ImageMediaTest {
+class ImageMediaTest extends UnitTest {
 
     @Test
     void givenValidParams_whenCallsNewImage_ShouldReturnInstance() {

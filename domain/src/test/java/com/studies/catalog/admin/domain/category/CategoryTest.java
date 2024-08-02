@@ -1,12 +1,13 @@
 package com.studies.catalog.admin.domain.category;
 
+import com.studies.catalog.admin.domain.Fixture;
+import com.studies.catalog.admin.domain.UnitTest;
 import com.studies.catalog.admin.domain.exceptions.DomainException;
 import com.studies.catalog.admin.domain.validation.handler.ThrowsValidationHandler;
-import helpers.TestHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class CategoryTest extends TestHelper {
+class CategoryTest extends UnitTest {
 
     @Test
     void givenValidParams_whenCallNewCategory_thenInstantiateANewCategory() {
@@ -82,7 +83,7 @@ class CategoryTest extends TestHelper {
 
     @Test
     void givenAnInvalidNameLengthMoreThan255_whenCallNewCategoryAndValidate_thenShouldReceiveError() {
-        final var expectedName = faker.lorem().fixedString(257);
+        final var expectedName = Fixture.description256();
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'name' must be between 3 and 255 characters";
         final var expectedDescription = "The most watched category";

@@ -1,6 +1,7 @@
 package com.studies.catalog.admin;
 
 import com.studies.catalog.admin.infrastructure.configuration.ObjectMapperConfig;
+import org.junit.jupiter.api.Tag;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -8,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.lang.annotation.*;
 
+@Tag("integrationTest")
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited

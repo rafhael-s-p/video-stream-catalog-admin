@@ -1,11 +1,12 @@
 package com.studies.catalog.admin.domain.castmember;
 
+import com.studies.catalog.admin.domain.Fixture;
+import com.studies.catalog.admin.domain.UnitTest;
 import com.studies.catalog.admin.domain.exceptions.NotificationException;
-import helpers.TestHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class CastMemberTest extends TestHelper {
+class CastMemberTest extends UnitTest {
 
     @Test
     void givenAValidParams_whenCallsNewMember_thenInstantiateACastMember() {
@@ -59,7 +60,7 @@ class CastMemberTest extends TestHelper {
 
     @Test
     void givenAnInvalidNameWithLengthGreaterThan255_whenCallsNewMember_shouldReceiveANotification() {
-        final var expectedName = faker.lorem().fixedString(257);
+        final var expectedName = Fixture.description256();
         final var expectedType = CastMemberType.ACTRESS;
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'name' must be between 3 and 255 characters";
@@ -163,7 +164,7 @@ class CastMemberTest extends TestHelper {
 
     @Test
     void givenAValidCastMember_whenCallUpdateWithLengthGreaterThan255_shouldReceiveNotification() {
-        final var expectedName = faker.lorem().fixedString(257);
+        final var expectedName = Fixture.description256();
         ;
         final var expectedType = CastMemberType.ACTOR;
         final var expectedErrorCount = 1;
@@ -175,7 +176,7 @@ class CastMemberTest extends TestHelper {
         Assertions.assertNotNull(currentMember);
         Assertions.assertNotNull(currentMember.getId());
 
-        final var currentException = Assertions.assertThrows(
+         final var currentException = Assertions.assertThrows(
                 NotificationException.class,
                 () -> currentMember.update(expectedName, expectedType)
         );
