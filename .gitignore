@@ -41,3 +41,4 @@ bin/
 
 ### Others ###
 git_wrapper.sh
+.env
