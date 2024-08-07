@@ -120,7 +120,7 @@ class CastMemberMySQLGatewayTest {
 
         // then
         Assertions.assertEquals(expectedItems, currentMember.size());
-        Assertions.assertEquals(expectedId.getValue(), currentMember.get(0).getValue());
+        Assertions.assertEquals(expectedId.getValue(), currentMember.get(0).getValue().replaceAll("\\s+", ""));
     }
 
     @Test

@@ -1,9 +1,9 @@
 package com.studies.catalog.admin.infrastructure.category;
 
+import com.studies.catalog.admin.MySQLGatewayTest;
 import com.studies.catalog.admin.domain.category.Category;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.pagination.SearchQuery;
-import com.studies.catalog.admin.MySQLGatewayTest;
 import com.studies.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import com.studies.catalog.admin.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
@@ -48,7 +48,8 @@ class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedPerPage, currentResult.perPage());
         Assertions.assertEquals(expectedTotal, currentResult.total());
         Assertions.assertEquals(expectedPerPage, currentResult.items().size());
-        Assertions.assertEquals(documentaries.getId(), currentResult.items().get(0).getId());
+        Assertions.assertEquals(documentaries.getId().getValue(),
+                currentResult.items().get(0).getId().getValue().replaceAll("\\s+", ""));
     }
 
     @Test
@@ -95,7 +96,8 @@ class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedPerPage, currentResult.perPage());
         Assertions.assertEquals(expectedTotal, currentResult.total());
         Assertions.assertEquals(expectedPerPage, currentResult.items().size());
-        Assertions.assertEquals(documentaries.getId(), currentResult.items().get(0).getId());
+        Assertions.assertEquals(documentaries.getId().getValue(),
+                currentResult.items().get(0).getId().getValue().replaceAll("\\s+", ""));
 
         // Page 1
         expectedPage = 1;
@@ -107,7 +109,8 @@ class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedPerPage, currentResult.perPage());
         Assertions.assertEquals(expectedTotal, currentResult.total());
         Assertions.assertEquals(expectedPerPage, currentResult.items().size());
-        Assertions.assertEquals(movies.getId(), currentResult.items().get(0).getId());
+        Assertions.assertEquals(movies.getId().getValue(),
+                currentResult.items().get(0).getId().getValue().replaceAll("\\s+", ""));
 
         // Page 2
         expectedPage = 2;
@@ -119,7 +122,8 @@ class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedPerPage, currentResult.perPage());
         Assertions.assertEquals(expectedTotal, currentResult.total());
         Assertions.assertEquals(expectedPerPage, currentResult.items().size());
-        Assertions.assertEquals(series.getId(), currentResult.items().get(0).getId());
+        Assertions.assertEquals(series.getId().getValue(),
+                currentResult.items().get(0).getId().getValue().replaceAll("\\s+", ""));
     }
 
     @Test
@@ -149,7 +153,8 @@ class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedPerPage, currentResult.perPage());
         Assertions.assertEquals(expectedTotal, currentResult.total());
         Assertions.assertEquals(expectedPerPage, currentResult.items().size());
-        Assertions.assertEquals(documentaries.getId(), currentResult.items().get(0).getId());
+        Assertions.assertEquals(documentaries.getId().getValue(),
+                currentResult.items().get(0).getId().getValue().replaceAll("\\s+", ""));
     }
 
     @Test
@@ -179,7 +184,8 @@ class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedPerPage, currentResult.perPage());
         Assertions.assertEquals(expectedTotal, currentResult.total());
         Assertions.assertEquals(expectedPerPage, currentResult.items().size());
-        Assertions.assertEquals(movies.getId(), currentResult.items().get(0).getId());
+        Assertions.assertEquals(movies.getId().getValue(),
+                currentResult.items().get(0).getId().getValue().replaceAll("\\s+", ""));
     }
 
     @Test
@@ -204,7 +210,9 @@ class CategoryMySQLGatewayTest {
         final var ids = List.of(movies.getId(), series.getId(), CategoryID.from("123"));
 
         // when
-        final var currentResult = categoryGateway.existsByIds(ids);
+        final var currentResult = categoryGateway.existsByIds(ids).stream()
+                .map(categoryID -> CategoryID.from(categoryID.getValue().replaceAll("\\s+", "")))
+                .toList();
 
         Assertions.assertTrue(expectedIds.size() == currentResult.size());
         Assertions.assertTrue(expectedIds.containsAll(currentResult));

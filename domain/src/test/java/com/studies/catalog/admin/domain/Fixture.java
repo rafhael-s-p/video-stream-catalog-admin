@@ -21,6 +21,22 @@ public final class Fixture {
         return FAKER.name().fullName();
     }
 
+    public static String description255() {
+        return FAKER.lorem().fixedString(255);
+    }
+
+    public static String description258() {
+        return FAKER.lorem().fixedString(258);
+    }
+
+    public static String description4000() {
+        return FAKER.lorem().fixedString(4000);
+    }
+
+    public static String description4003() {
+        return FAKER.lorem().fixedString(4003);
+    }
+
     public static Integer year() {
         return FAKER.random().nextInt(2020, 2030);
     }

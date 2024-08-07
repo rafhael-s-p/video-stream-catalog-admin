@@ -1,15 +1,16 @@
 package com.studies.catalog.admin.domain.genre;
 
+import com.studies.catalog.admin.domain.Fixture;
+import com.studies.catalog.admin.domain.UnitTest;
 import com.studies.catalog.admin.domain.category.CategoryID;
 import com.studies.catalog.admin.domain.exceptions.NotificationException;
-import helpers.TestHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class GenreTest extends TestHelper {
+class GenreTest extends UnitTest {
 
     @Test
     void givenValidParams_whenCallNewGenre_shouldInstantiateAGenre() {
@@ -59,7 +60,7 @@ class GenreTest extends TestHelper {
 
     @Test
     void givenInvalidNameWithLengthGreaterThan255_whenCallNewGenreAndValidate_shouldReceiveAError() {
-        final var expectedName = faker.lorem().fixedString(257);
+        final var expectedName = Fixture.description258();
         final var expectedIsActive = true;
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'name' must be between 1 and 255 characters";
