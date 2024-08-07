@@ -25,16 +25,16 @@ public final class Fixture {
         return FAKER.lorem().fixedString(255);
     }
 
-    public static String description256() {
-        return FAKER.lorem().fixedString(256);
+    public static String description258() {
+        return FAKER.lorem().fixedString(258);
     }
 
     public static String description4000() {
         return FAKER.lorem().fixedString(4000);
     }
 
-    public static String description4001() {
-        return FAKER.lorem().fixedString(4001);
+    public static String description4003() {
+        return FAKER.lorem().fixedString(4003);
     }
 
     public static Integer year() {

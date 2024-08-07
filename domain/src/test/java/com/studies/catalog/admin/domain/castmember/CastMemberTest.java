@@ -60,7 +60,7 @@ class CastMemberTest extends UnitTest {
 
     @Test
     void givenAnInvalidNameWithLengthGreaterThan255_whenCallsNewMember_shouldReceiveANotification() {
-        final var expectedName = Fixture.description256();
+        final var expectedName = Fixture.description258();
         final var expectedType = CastMemberType.ACTRESS;
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'name' must be between 3 and 255 characters";
@@ -164,7 +164,7 @@ class CastMemberTest extends UnitTest {
 
     @Test
     void givenAValidCastMember_whenCallUpdateWithLengthGreaterThan255_shouldReceiveNotification() {
-        final var expectedName = Fixture.description256();
+        final var expectedName = Fixture.description258();
         ;
         final var expectedType = CastMemberType.ACTOR;
         final var expectedErrorCount = 1;

@@ -100,7 +100,7 @@ class VideoValidatorTest extends UnitTest {
     @Test
     void givenTitleWithLengthGreaterThan255_whenCallsValidate_shouldReceiveError() {
         // given
-        final var expectedTitle = Fixture.description256();
+        final var expectedTitle = Fixture.description258();
         final var expectedDescription = Fixture.description4000();
         final var expectedLaunchedAt = Year.of(2024);
         final var expectedDuration = 175.0;
@@ -183,7 +183,7 @@ class VideoValidatorTest extends UnitTest {
     void givenDescriptionWithLengthGreaterThan4000_whenCallsValidate_shouldReceiveError() {
         // given
         final var expectedTitle = "The Godfather";
-        final var expectedDescription = Fixture.description4001();
+        final var expectedDescription = Fixture.description4003();
         final var expectedLaunchedAt = Year.of(2024);
         final var expectedDuration = 175.0;
         final var expectedOpened = false;

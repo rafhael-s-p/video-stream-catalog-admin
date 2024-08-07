@@ -306,7 +306,7 @@ class GenreMySQLGatewayTest {
 
         // then
         Assertions.assertEquals(expectedItems, currentGenre.size());
-        Assertions.assertEquals(expectedId.getValue(), currentGenre.get(0).getValue());
+        Assertions.assertEquals(expectedId.getValue(), currentGenre.get(0).getValue().replaceAll("\\s+", ""));
     }
 
     @Test

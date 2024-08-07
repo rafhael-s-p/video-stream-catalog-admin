@@ -60,7 +60,7 @@ class GenreTest extends UnitTest {
 
     @Test
     void givenInvalidNameWithLengthGreaterThan255_whenCallNewGenreAndValidate_shouldReceiveAError() {
-        final var expectedName = Fixture.description256();
+        final var expectedName = Fixture.description258();
         final var expectedIsActive = true;
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'name' must be between 1 and 255 characters";

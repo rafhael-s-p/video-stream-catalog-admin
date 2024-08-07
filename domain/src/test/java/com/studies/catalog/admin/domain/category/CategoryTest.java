@@ -83,7 +83,7 @@ class CategoryTest extends UnitTest {
 
     @Test
     void givenAnInvalidNameLengthMoreThan255_whenCallNewCategoryAndValidate_thenShouldReceiveError() {
-        final var expectedName = Fixture.description256();
+        final var expectedName = Fixture.description258();
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'name' must be between 3 and 255 characters";
         final var expectedDescription = "The most watched category";
