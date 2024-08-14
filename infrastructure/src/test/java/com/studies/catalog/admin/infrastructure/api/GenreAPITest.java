@@ -1,6 +1,7 @@
 package com.studies.catalog.admin.infrastructure.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.studies.catalog.admin.ApiTest;
 import com.studies.catalog.admin.ControllerTest;
 import com.studies.catalog.admin.application.genre.create.CreateGenreOutput;
 import com.studies.catalog.admin.application.genre.create.CreateGenreUseCase;
@@ -35,7 +36,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -64,25 +64,26 @@ class GenreAPITest {
     private DeleteGenreUseCase deleteGenreUseCase;
 
     @Test
-    void givenAValidInput_whenCallsCreateGenre_shouldReturnGenreId() throws Exception {
+    void givenAValidRequest_whenCallsCreateGenre_shouldReturnGenreId() throws Exception {
         // given
         final var expectedName = "Action";
         final var expectedCategories = List.of("123", "456");
         final var expectedIsActive = true;
         final var expectedId = "123";
 
-        final var anInput =
+        final var aRequest =
                 new CreateGenreApiRequest(expectedName, expectedCategories, expectedIsActive);
 
         when(createGenreUseCase.execute(any()))
                 .thenReturn(CreateGenreOutput.from(expectedId));
 
         // when
-        final var aRequest = post("/genres")
+        final var request = post("/genres")
+                .with(ApiTest.GENRES_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(anInput));
+                .content(this.mapper.writeValueAsString(aRequest));
 
-        final var response = this.mvc.perform(aRequest)
+        final var response = this.mvc.perform(request)
                 .andDo(print());
 
         // then
@@ -106,18 +107,19 @@ class GenreAPITest {
         final var expectedIsActive = true;
         final var expectedErrorMessage = "'name' should not be null";
 
-        final var anInput =
+        final var aRequest =
                 new CreateGenreApiRequest(expectedName, expectedCategories, expectedIsActive);
 
         when(createGenreUseCase.execute(any()))
                 .thenThrow(new NotificationException("Error", Notification.create(new Error(expectedErrorMessage))));
 
         // when
-        final var aRequest = post("/genres")
+        final var request = post("/genres")
+                .with(ApiTest.GENRES_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(anInput));
+                .content(this.mapper.writeValueAsString(aRequest));
 
-        final var response = this.mvc.perform(aRequest)
+        final var response = this.mvc.perform(request)
                 .andDo(print());
 
         // then
@@ -154,11 +156,12 @@ class GenreAPITest {
                 .thenReturn(GenreOutput.from(aGenre));
 
         // when
-        final var aRequest = get("/genres/{id}", expectedId)
+        final var request = get("/genres/{id}", expectedId)
+                .with(ApiTest.GENRES_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isOk())
@@ -184,11 +187,12 @@ class GenreAPITest {
                 .thenThrow(NotFoundException.with(Genre.class, expectedId));
 
         // when
-        final var aRequest = get("/genres/{id}", expectedId.getValue())
+        final var request = get("/genres/{id}", expectedId.getValue())
+                .with(ApiTest.GENRES_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isNotFound())
@@ -199,7 +203,7 @@ class GenreAPITest {
     }
 
     @Test
-    void givenAValidInput_whenCallsUpdateGenre_shouldReturnGenreId() throws Exception {
+    void givenAValidRequest_whenCallsUpdateGenre_shouldReturnGenreId() throws Exception {
         // given
         final var expectedName = "Action";
         final var expectedCategories = List.of("123", "456");
@@ -208,18 +212,19 @@ class GenreAPITest {
         final var aGenre = Genre.newGenre(expectedName, expectedIsActive);
         final var expectedId = aGenre.getId().getValue();
 
-        final var anInput =
+        final var aRequest =
                 new UpdateGenreApiRequest(expectedName, expectedCategories, expectedIsActive);
 
         when(updateGenreUseCase.execute(any()))
                 .thenReturn(UpdateGenreOutput.from(aGenre));
 
         // when
-        final var aRequest = put("/genres/{id}", expectedId)
+        final var request = put("/genres/{id}", expectedId)
+                .with(ApiTest.GENRES_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(anInput));
+                .content(this.mapper.writeValueAsString(aRequest));
 
-        final var response = this.mvc.perform(aRequest)
+        final var response = this.mvc.perform(request)
                 .andDo(print());
 
         // then
@@ -245,18 +250,19 @@ class GenreAPITest {
         final var aGenre = Genre.newGenre("Action", expectedIsActive);
         final var expectedId = aGenre.getId().getValue();
 
-        final var anInput =
+        final var aRequest =
                 new UpdateGenreApiRequest(expectedName, expectedCategories, expectedIsActive);
 
         when(updateGenreUseCase.execute(any()))
                 .thenThrow(new NotificationException("Error", Notification.create(new Error(expectedErrorMessage))));
 
         // when
-        final var aRequest = put("/genres/{id}", expectedId)
+        final var request = put("/genres/{id}", expectedId)
+                .with(ApiTest.GENRES_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(anInput));
+                .content(this.mapper.writeValueAsString(aRequest));
 
-        final var response = this.mvc.perform(aRequest)
+        final var response = this.mvc.perform(request)
                 .andDo(print());
 
         // then
@@ -281,10 +287,11 @@ class GenreAPITest {
                 .when(deleteGenreUseCase).execute(any());
 
         // when
-        final var aRequest = delete("/genres/{id}", expectedId)
+        final var request = delete("/genres/{id}", expectedId)
+                .with(ApiTest.GENRES_JWT)
                 .accept(MediaType.APPLICATION_JSON);
 
-        final var result = this.mvc.perform(aRequest);
+        final var result = this.mvc.perform(request);
 
         // then
         result.andExpect(status().isNoContent());
@@ -312,7 +319,8 @@ class GenreAPITest {
                 .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
 
         // when
-        final var aRequest = get("/genres")
+        final var request = get("/genres")
+                .with(ApiTest.GENRES_JWT)
                 .queryParam("page", String.valueOf(expectedPage))
                 .queryParam("perPage", String.valueOf(expectedPerPage))
                 .queryParam("sort", expectedSort)
@@ -320,7 +328,7 @@ class GenreAPITest {
                 .queryParam("search", expectedTerms)
                 .accept(MediaType.APPLICATION_JSON);
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isOk())
