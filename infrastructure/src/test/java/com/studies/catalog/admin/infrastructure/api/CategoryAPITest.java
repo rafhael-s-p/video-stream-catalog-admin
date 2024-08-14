@@ -1,6 +1,7 @@
 package com.studies.catalog.admin.infrastructure.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.studies.catalog.admin.ApiTest;
 import com.studies.catalog.admin.ControllerTest;
 import com.studies.catalog.admin.application.category.create.CreateCategoryOutput;
 import com.studies.catalog.admin.application.category.create.CreateCategoryUseCase;
@@ -63,19 +64,20 @@ class CategoryAPITest {
     private DeleteCategoryUseCase deleteCategoryUseCase;
 
     @Test
-    void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId() throws Exception {
+    void givenAValidRequest_whenCallsCreateCategory_shouldReturnCategoryId() throws Exception {
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = true;
 
-        final var anInput = new CreateCategoryApiRequest(expectedName, expectedDescription, expectedIsActive);
+        final var aRequest = new CreateCategoryApiRequest(expectedName, expectedDescription, expectedIsActive);
 
         when(createCategoryUseCase.execute(any()))
                 .thenReturn(Right(CreateCategoryOutput.from("321")));
 
         final var request = post("/categories")
+                .with(ApiTest.CATEGORIES_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(anInput));
+                .content(this.mapper.writeValueAsString(aRequest));
 
         this.mvc.perform(request)
                 .andDo(print())
@@ -98,14 +100,15 @@ class CategoryAPITest {
         final var expectedIsActive = true;
         final var expectedMessage = "'name' should not be null";
 
-        final var anInput = new CreateCategoryApiRequest(expectedName, expectedDescription, expectedIsActive);
+        final var aRequest = new CreateCategoryApiRequest(expectedName, expectedDescription, expectedIsActive);
 
         when(createCategoryUseCase.execute(any()))
                 .thenReturn(Left(Notification.create(new Error(expectedMessage))));
 
         final var request = post("/categories")
+                .with(ApiTest.CATEGORIES_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(anInput));
+                .content(this.mapper.writeValueAsString(aRequest));
 
         this.mvc.perform(request)
                 .andDo(print())
@@ -123,20 +126,21 @@ class CategoryAPITest {
     }
 
     @Test
-    void givenAInvalidCommand_whenCallsCreateCategory_thenShouldReturnDomainException() throws Exception {
+    void givenAInvalidRequest_whenCallsCreateCategory_thenShouldReturnDomainException() throws Exception {
         final String expectedName = null;
         final var expectedDescription = "The most watched category";
         final var expectedIsActive = true;
         final var expectedMessage = "'name' should not be null";
 
-        final var anInput = new CreateCategoryApiRequest(expectedName, expectedDescription, expectedIsActive);
+        final var aRequest = new CreateCategoryApiRequest(expectedName, expectedDescription, expectedIsActive);
 
         when(createCategoryUseCase.execute(any()))
                 .thenThrow(DomainException.with(new Error(expectedMessage)));
 
         final var request = post("/categories")
+                .with(ApiTest.CATEGORIES_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(anInput));
+                .content(this.mapper.writeValueAsString(aRequest));
 
         this.mvc.perform(request)
                 .andDo(print())
@@ -170,6 +174,7 @@ class CategoryAPITest {
 
         // when
         final var request = get("/categories/{id}", expectedId)
+                .with(ApiTest.CATEGORIES_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -201,6 +206,7 @@ class CategoryAPITest {
 
         // when
         final var request = get("/categories/{id}", expectedId.getValue())
+                .with(ApiTest.CATEGORIES_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -213,7 +219,7 @@ class CategoryAPITest {
     }
 
     @Test
-    void givenAValidCommand_whenCallsUpdateCategory_shouldReturnCategoryId() throws Exception {
+    void givenAValidRequest_whenCallsUpdateCategory_shouldReturnCategoryId() throws Exception {
         // given
         final var expectedId = "321";
         final var expectedName = "Movies";
@@ -223,13 +229,14 @@ class CategoryAPITest {
         when(updateCategoryUseCase.execute(any()))
                 .thenReturn(Right(UpdateCategoryOutput.from(expectedId)));
 
-        final var aCommand = new UpdateCategoryApiRequest(expectedName, expectedDescription, expectedIsActive);
+        final var aRequest = new UpdateCategoryApiRequest(expectedName, expectedDescription, expectedIsActive);
 
         // when
         final var request = put("/categories/{id}", expectedId)
+                .with(ApiTest.CATEGORIES_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(aCommand));
+                .content(mapper.writeValueAsString(aRequest));
 
         final var response = this.mvc.perform(request)
                 .andDo(print());
@@ -260,13 +267,14 @@ class CategoryAPITest {
         when(updateCategoryUseCase.execute(any()))
                 .thenReturn(Left(Notification.create(new Error(expectedMessage))));
 
-        final var aCommand = new UpdateCategoryApiRequest(expectedName, expectedDescription, expectedIsActive);
+        final var aRequest = new UpdateCategoryApiRequest(expectedName, expectedDescription, expectedIsActive);
 
         // when
         final var request = put("/categories/{id}", expectedId)
+                .with(ApiTest.CATEGORIES_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(aCommand));
+                .content(mapper.writeValueAsString(aRequest));
 
         final var response = this.mvc.perform(request)
                 .andDo(print());
@@ -285,7 +293,7 @@ class CategoryAPITest {
     }
 
     @Test
-    void givenACommandWithInvalidID_whenCallsUpdateCategory_shouldReturnNotFoundException() throws Exception {
+    void givenARequestWithInvalidID_whenCallsUpdateCategory_shouldReturnNotFoundException() throws Exception {
         // given
         final var expectedId = "not-found-id";
         final var expectedName = "Movies";
@@ -297,13 +305,14 @@ class CategoryAPITest {
         when(updateCategoryUseCase.execute(any()))
                 .thenThrow(NotFoundException.with(Category.class, CategoryID.from(expectedId)));
 
-        final var aCommand = new UpdateCategoryApiRequest(expectedName, expectedDescription, expectedIsActive);
+        final var aRequest = new UpdateCategoryApiRequest(expectedName, expectedDescription, expectedIsActive);
 
         // when
         final var request = put("/categories/{id}", expectedId)
+                .with(ApiTest.CATEGORIES_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(aCommand));
+                .content(mapper.writeValueAsString(aRequest));
 
         final var response = this.mvc.perform(request)
                 .andDo(print());
@@ -330,6 +339,7 @@ class CategoryAPITest {
 
         // when
         final var request = delete("/categories/{id}", expectedId)
+                .with(ApiTest.CATEGORIES_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -362,6 +372,7 @@ class CategoryAPITest {
 
         // when
         final var request = get("/categories")
+                .with(ApiTest.CATEGORIES_JWT)
                 .queryParam("page", String.valueOf(expectedPage))
                 .queryParam("perPage", String.valueOf(expectedPerPage))
                 .queryParam("sort", expectedSort)

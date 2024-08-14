@@ -1,11 +1,9 @@
 name: CI/CD Pipeline
 
 on:
-  push:
   pull_request:
     branches:
       - main
-      - ci-cd
       #- develop
       #- 'hotfix/**'
       #- 'release/**'

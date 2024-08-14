@@ -1,6 +1,7 @@
 package com.studies.catalog.admin.infrastructure.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.studies.catalog.admin.ApiTest;
 import com.studies.catalog.admin.ControllerTest;
 import com.studies.catalog.admin.application.video.create.CreateVideoInput;
 import com.studies.catalog.admin.application.video.create.CreateVideoOutput;
@@ -107,7 +108,8 @@ class VideoAPITest {
                 .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
 
         // when
-        final var aRequest = get("/videos")
+        final var request = get("/videos")
+                .with(ApiTest.VIDEOS_JWT)
                 .queryParam("page", String.valueOf(expectedPage))
                 .queryParam("perPage", String.valueOf(expectedPerPage))
                 .queryParam("sort", expectedSort)
@@ -118,7 +120,7 @@ class VideoAPITest {
                 .queryParam("genres_ids", expectedGenres)
                 .accept(MediaType.APPLICATION_JSON);
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isOk())
@@ -170,10 +172,11 @@ class VideoAPITest {
                 .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
 
         // when
-        final var aRequest = get("/videos")
+        final var request = get("/videos")
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON);
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isOk())
@@ -251,10 +254,11 @@ class VideoAPITest {
                 .thenReturn(VideoOutput.from(aVideo));
 
         // when
-        final var aRequest = get("/videos/{id}", expectedId)
+        final var request = get("/videos/{id}", expectedId)
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON);
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isOk())
@@ -311,9 +315,10 @@ class VideoAPITest {
         when(getMediaUseCase.execute(any())).thenReturn(expectedMedia);
 
         // when
-        final var aRequest = get("/videos/{id}/medias/{type}", expectedId.getValue(), expectedMediaType.name());
+        final var request = get("/videos/{id}/medias/{type}", expectedId.getValue(), expectedMediaType.name())
+                .with(ApiTest.VIDEOS_JWT);
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isOk())
@@ -333,10 +338,11 @@ class VideoAPITest {
                 .thenThrow(NotFoundException.with(Video.class, expectedId));
 
         // when
-        final var aRequest = get("/videos/{id}", expectedId)
+        final var request = get("/videos/{id}", expectedId)
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON);
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isNotFound())
@@ -345,7 +351,7 @@ class VideoAPITest {
     }
 
     @Test
-    void givenAnInvalidInput_whenCallsCreateFull_shouldReturnError() throws Exception {
+    void givenAnInvalidRequest_whenCallsCreateFull_shouldReturnError() throws Exception {
         // given
         final var expectedErrorMessage = "title is required";
 
@@ -353,11 +359,12 @@ class VideoAPITest {
                 .thenThrow(NotificationException.with(new Error(expectedErrorMessage)));
 
         // when
-        final var aRequest = multipart("/videos")
+        final var request = multipart("/videos")
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isUnprocessableEntity())
@@ -366,7 +373,7 @@ class VideoAPITest {
     }
 
     @Test
-    void givenAValidInput_whenCallsCreateFull_shouldReturnAnId() throws Exception {
+    void givenAValidRequest_whenCallsCreateFull_shouldReturnAnId() throws Exception {
         // given
         final var marlonBrando = Fixture.CastMembers.marlonBrando();
         final var movies = Fixture.Categories.movies();
@@ -403,12 +410,13 @@ class VideoAPITest {
                 .thenReturn(new CreateVideoOutput(expectedId.getValue()));
 
         // when
-        final var aRequest = multipart("/videos")
+        final var request = multipart("/videos")
                 .file(expectedVideo)
                 .file(expectedTrailer)
                 .file(expectedBanner)
                 .file(expectedThumb)
                 .file(expectedThumbHalf)
+                .with(ApiTest.VIDEOS_JWT)
                 .param("title", expectedTitle)
                 .param("description", expectedDescription)
                 .param("year_launched", String.valueOf(expectedLaunchYear.getValue()))
@@ -422,7 +430,7 @@ class VideoAPITest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
 
-        this.mvc.perform(aRequest)
+        this.mvc.perform(request)
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/videos/" + expectedId.getValue()))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -453,7 +461,7 @@ class VideoAPITest {
     }
 
     @Test
-    void givenAValidInput_whenCallsCreatePartial_shouldReturnId() throws Exception {
+    void givenAValidRequest_whenCallsCreatePartial_shouldReturnId() throws Exception {
         // given
         final var marlonBrando = Fixture.CastMembers.marlonBrando();
         final var movies = Fixture.Categories.movies();
@@ -471,7 +479,7 @@ class VideoAPITest {
         final var expectedGenres = Set.of(crime.getId().getValue());
         final var expectedMembers = Set.of(marlonBrando.getId().getValue());
 
-        final var anInput = new CreateVideoApiRequest(
+        final var aRequest = new CreateVideoApiRequest(
                 expectedTitle,
                 expectedDescription,
                 expectedDuration,
@@ -489,12 +497,13 @@ class VideoAPITest {
 
         // when
 
-        final var aRequest = post("/videos")
+        final var request = post("/videos")
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(anInput));
+                .content(mapper.writeValueAsString(aRequest));
 
-        this.mvc.perform(aRequest)
+        this.mvc.perform(request)
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/videos/" + expectedId.getValue()))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -528,6 +537,7 @@ class VideoAPITest {
     void givenAnEmptyBody_whenCallsCreatePartial_shouldReturnError() throws Exception {
         // when
         final var aRequest = post("/videos")
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -538,7 +548,7 @@ class VideoAPITest {
     }
 
     @Test
-    void givenAnInvalidInput_whenCallsCreatePartial_shouldReturnError() throws Exception {
+    void givenAnInvalidRequest_whenCallsCreatePartial_shouldReturnError() throws Exception {
         // given
         final var expectedErrorMessage = "title is required";
 
@@ -546,7 +556,8 @@ class VideoAPITest {
                 .thenThrow(NotificationException.with(new Error(expectedErrorMessage)));
 
         // when
-        final var aRequest = post("/videos")
+        final var request = post("/videos")
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -555,7 +566,7 @@ class VideoAPITest {
                         }
                         """);
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isUnprocessableEntity())
@@ -564,7 +575,7 @@ class VideoAPITest {
     }
 
     @Test
-    void givenAValidInput_whenCallsUpdateVideo_shouldReturnVideoId() throws Exception {
+    void givenAValidRequest_whenCallsUpdateVideo_shouldReturnVideoId() throws Exception {
         // given
         final var marlonBrando = Fixture.CastMembers.marlonBrando();
         final var movies = Fixture.Categories.movies();
@@ -582,7 +593,7 @@ class VideoAPITest {
         final var expectedGenres = Set.of(crime.getId().getValue());
         final var expectedMembers = Set.of(marlonBrando.getId().getValue());
 
-        final var anInput = new UpdateVideoApiRequest(
+        final var aRequest = new UpdateVideoApiRequest(
                 expectedTitle,
                 expectedDescription,
                 expectedDuration,
@@ -600,12 +611,13 @@ class VideoAPITest {
 
         // when
 
-        final var aRequest = put("/videos/{id}", expectedId.getValue())
+        final var request = put("/videos/{id}", expectedId.getValue())
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(anInput));
+                .content(mapper.writeValueAsString(aRequest));
 
-        this.mvc.perform(aRequest)
+        this.mvc.perform(request)
                 .andExpect(status().isOk())
                 .andExpect(header().string("Location", "/videos/" + expectedId.getValue()))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -636,7 +648,7 @@ class VideoAPITest {
     }
 
     @Test
-    void givenAnInvalidInput_whenCallsUpdateVideo_shouldReturnNotification() throws Exception {
+    void givenAnInvalidRequest_whenCallsUpdateVideo_shouldReturnNotification() throws Exception {
         // given
         final var marlonBrando = Fixture.CastMembers.marlonBrando();
         final var movies = Fixture.Categories.movies();
@@ -657,7 +669,7 @@ class VideoAPITest {
         final var expectedGenres = Set.of(crime.getId().getValue());
         final var expectedMembers = Set.of(marlonBrando.getId().getValue());
 
-        final var anInput = new UpdateVideoApiRequest(
+        final var aRequest = new UpdateVideoApiRequest(
                 expectedTitle,
                 expectedDescription,
                 expectedDuration,
@@ -675,12 +687,13 @@ class VideoAPITest {
 
         // when
 
-        final var aRequest = put("/videos/{id}", expectedId.getValue())
+        final var request = put("/videos/{id}", expectedId.getValue())
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(anInput));
+                .content(mapper.writeValueAsString(aRequest));
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isUnprocessableEntity())
@@ -700,9 +713,10 @@ class VideoAPITest {
         doNothing().when(deleteVideoUseCase).execute(any());
 
         // when
-        final var aRequest = delete("/videos/{id}", expectedId.getValue());
+        final var request = delete("/videos/{id}", expectedId.getValue())
+                .with(ApiTest.VIDEOS_JWT);
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isNoContent());
@@ -724,12 +738,13 @@ class VideoAPITest {
                 .thenReturn(new UploadMediaOutput(expectedId.getValue(), expectedType));
 
         // when
-        final var aRequest = multipart("/videos/{id}/medias/{type}", expectedId.getValue(), expectedType.name())
+        final var request = multipart("/videos/{id}/medias/{type}", expectedId.getValue(), expectedType.name())
                 .file(expectedVideo)
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isCreated())
@@ -761,12 +776,13 @@ class VideoAPITest {
                 new MockMultipartFile("media_file", expectedResource.name(), expectedResource.contentType(), expectedResource.content());
 
         // when
-        final var aRequest = multipart("/videos/{id}/medias/INVALID", expectedId.getValue())
+        final var request = multipart("/videos/{id}/medias/INVALID", expectedId.getValue())
                 .file(expectedVideo)
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
 
-        final var response = this.mvc.perform(aRequest);
+        final var response = this.mvc.perform(request);
 
         // then
         response.andExpect(status().isUnprocessableEntity())

@@ -17,3 +17,7 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: none
+
+keycloak:
+  realm: ${KEYCLOAK_REALM:video-stream}
+  host: ${KEYCLOAK_HOST:http://localhost:8443}

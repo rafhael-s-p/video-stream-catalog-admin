@@ -19,6 +19,10 @@ server:
       worker: 10
       io: 2
 
+keycloak:
+  realm: video-stream
+  host: http://localhost:8443
+
 # DATABASE_DEV_MYSQL_USERNAME: root
 # DATABASE_DEV_MYSQL_PASSWORD: 1234
 # DATABASE_DEV_MYSQL_SCHEMA: adm_videos
