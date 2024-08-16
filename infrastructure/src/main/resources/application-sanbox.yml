@@ -1,0 +1,30 @@
+amqp:
+  admin:
+    auto-create: true
+  host: localhost
+  port: 5672
+  username: adm_videos
+  password: 123456
+
+mysql:
+  username: ${DATABASE_DEV_MYSQL_USERNAME}
+  password: ${DATABASE_DEV_MYSQL_PASSWORD}
+  schema: ${DATABASE_DEV_MYSQL_SCHEMA}
+  url: ${DATABASE_DEV_MYSQL_URL}
+
+server:
+  port: 8080
+  undertow:
+    threads:
+      worker: 10
+      io: 2
+
+keycloak:
+  realm: video-stream
+  host: http://localhost:8443
+
+# DATABASE_DEV_MYSQL_USERNAME: root
+# DATABASE_DEV_MYSQL_PASSWORD: 1234
+# DATABASE_DEV_MYSQL_SCHEMA: adm_videos
+# DATABASE_DEV_MYSQL_URL: localhost:3306
+# SPRING_PROFILES_ACTIVE: dev
