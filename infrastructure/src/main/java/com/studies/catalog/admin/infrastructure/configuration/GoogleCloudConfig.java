@@ -20,7 +20,7 @@ import java.util.Base64;
 import java.util.Objects;
 
 @Configuration
-@Profile({"dev", "prod"})
+@Profile({"!dev & !e2e-test & !integration-test"})
 public class GoogleCloudConfig {
 
     @Bean
