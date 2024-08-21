@@ -1,0 +1,35 @@
+amqp:
+  admin:
+    auto-create: ${AMQP_ADMIN_AUTO_CREATE:false}
+  host: ${AMQP_RABBIT_HOST:localhost}
+  port: ${AMQP_RABBIT_PORT:15672}
+  username: ${AMQP_RABBIT_USERNAME:adm_videos}
+  password: ${AMQP_RABBIT_PASSWORD:123456}
+
+mysql:
+  username: ${DATABASE_MYSQL_USERNAME:root}
+  password: ${DATABASE_MYSQL_PASSWORD:1234}
+  schema: ${DATABASE_MYSQL_SCHEMA:adm_videos}
+  url: ${DATABASE_MYSQL_URL:localhost:3306}
+
+keycloak:
+  realm: ${KEYCLOAK_REALM:video-stream}
+  host: ${KEYCLOAK_HOST:http://localhost:8443}
+
+server:
+  port: 8080
+  undertow:
+    threads:
+      worker: 10
+      io: 2
+
+# DATABASE_MYSQL_USERNAME: root
+# DATABASE_MYSQL_PASSWORD: 1234
+# DATABASE_MYSQL_SCHEMA: adm_videos
+# DATABASE_MYSQL_URL: localhost:3306
+# SPRING_PROFILES_ACTIVE: sandbox
+# AMQP_ADMIN_AUTO_CREATE=false
+# AMQP_RABBIT_HOST=rabbit
+# AMQP_RABBIT_PORT=5672
+# AMQP_RABBIT_USERNAME=adm_videos
+# AMQP_RABBIT_PASSWORD=123456
