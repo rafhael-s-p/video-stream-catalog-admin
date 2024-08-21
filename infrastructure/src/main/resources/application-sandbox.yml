@@ -1,16 +1,20 @@
 amqp:
   admin:
-    auto-create: true
-  host: localhost
-  port: 5672
-  username: adm_videos
-  password: 123456
+    auto-create: ${AMQP_ADMIN_AUTO_CREATE:false}
+  host: ${AMQP_RABBIT_HOST:localhost}
+  port: ${AMQP_RABBIT_PORT:15672}
+  username: ${AMQP_RABBIT_USERNAME:adm_videos}
+  password: ${AMQP_RABBIT_PASSWORD:123456}
 
 mysql:
-  username: ${DATABASE_DEV_MYSQL_USERNAME}
-  password: ${DATABASE_DEV_MYSQL_PASSWORD}
-  schema: ${DATABASE_DEV_MYSQL_SCHEMA}
-  url: ${DATABASE_DEV_MYSQL_URL}
+  username: ${DATABASE_MYSQL_USERNAME:root}
+  password: ${DATABASE_MYSQL_PASSWORD:1234}
+  schema: ${DATABASE_MYSQL_SCHEMA:adm_videos}
+  url: ${DATABASE_MYSQL_URL:localhost:3306}
+
+keycloak:
+  realm: ${KEYCLOAK_REALM:video-stream}
+  host: ${KEYCLOAK_HOST:http://localhost:8443}
 
 server:
   port: 8080
@@ -19,12 +23,13 @@ server:
       worker: 10
       io: 2
 
-keycloak:
-  realm: video-stream
-  host: http://localhost:8443
-
-# DATABASE_DEV_MYSQL_USERNAME: root
-# DATABASE_DEV_MYSQL_PASSWORD: 1234
-# DATABASE_DEV_MYSQL_SCHEMA: adm_videos
-# DATABASE_DEV_MYSQL_URL: localhost:3306
-# SPRING_PROFILES_ACTIVE: dev
+# DATABASE_MYSQL_USERNAME: root
+# DATABASE_MYSQL_PASSWORD: 1234
+# DATABASE_MYSQL_SCHEMA: adm_videos
+# DATABASE_MYSQL_URL: localhost:3306
+# SPRING_PROFILES_ACTIVE: sandbox
+# AMQP_ADMIN_AUTO_CREATE=false
+# AMQP_RABBIT_HOST=rabbit
+# AMQP_RABBIT_PORT=5672
+# AMQP_RABBIT_USERNAME=adm_videos
+# AMQP_RABBIT_PASSWORD=123456

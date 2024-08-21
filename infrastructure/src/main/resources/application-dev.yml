@@ -1,8 +1,8 @@
 mysql:
-  username: ${DATABASE_DEV_MYSQL_USERNAME}
-  password: ${DATABASE_DEV_MYSQL_PASSWORD}
-  schema: ${DATABASE_DEV_MYSQL_SCHEMA}
-  url: ${DATABASE_DEV_MYSQL_URL}
+  username: ${DATABASE_MYSQL_USERNAME}
+  password: ${DATABASE_MYSQL_PASSWORD}
+  schema: ${DATABASE_MYSQL_SCHEMA}
+  url: ${DATABASE_MYSQL_URL}
 
 spring:
   autoconfigure:
@@ -11,8 +11,8 @@ spring:
       - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
       - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
 
-# DATABASE_DEV_MYSQL_USERNAME: root
-# DATABASE_DEV_MYSQL_PASSWORD: 1234
-# DATABASE_DEV_MYSQL_SCHEMA: adm_videos
-# DATABASE_DEV_MYSQL_URL: localhost:3306
+# DATABASE_MYSQL_USERNAME: root
+# DATABASE_MYSQL_PASSWORD: 1234
+# DATABASE_MYSQL_SCHEMA: adm_videos
+# DATABASE_MYSQL_URL: localhost:3306
 # SPRING_PROFILES_ACTIVE: dev
