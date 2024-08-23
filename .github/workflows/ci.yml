@@ -26,7 +26,7 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
       - name: Run tests
-        run: ./gradlew test
+        run: ./gradlew jacocoTestReport
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
