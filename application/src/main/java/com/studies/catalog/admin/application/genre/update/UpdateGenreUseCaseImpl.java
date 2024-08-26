@@ -33,11 +33,11 @@ public class UpdateGenreUseCaseImpl extends UpdateGenreUseCase {
     }
 
     @Override
-    public UpdateGenreOutput execute(final UpdateGenreInput aCommand) {
-        final var anId = GenreID.from(aCommand.id());
-        final var aName = aCommand.name();
-        final var isActive = aCommand.isActive();
-        final var categories = toCategoryId(aCommand.categories());
+    public UpdateGenreOutput execute(final UpdateGenreInput anInput) {
+        final var anId = GenreID.from(anInput.id());
+        final var aName = anInput.name();
+        final var isActive = anInput.isActive();
+        final var categories = toCategoryId(anInput.categories());
 
         final var aGenre = this.genreGateway.findById(anId)
                 .orElseThrow(notFound(anId));
@@ -48,7 +48,7 @@ public class UpdateGenreUseCaseImpl extends UpdateGenreUseCase {
 
         if (notification.hasError())
             throw new NotificationException(
-                    "Could not update Aggregate Genre %s".formatted(aCommand.id()), notification);
+                    "Could not update Aggregate Genre %s".formatted(anInput.id()), notification);
 
         return UpdateGenreOutput.from(this.genreGateway.update(aGenre));
     }

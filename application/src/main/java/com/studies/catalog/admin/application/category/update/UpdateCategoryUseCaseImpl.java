@@ -23,11 +23,11 @@ public class UpdateCategoryUseCaseImpl extends UpdateCategoryUseCase {
     }
 
     @Override
-    public Either<Notification, UpdateCategoryOutput> execute(final UpdateCategoryInput aCommand) {
-        final var anId = CategoryID.from(aCommand.id());
-        final var aName = aCommand.name();
-        final var aDescription = aCommand.description();
-        final var isActive = aCommand.isActive();
+    public Either<Notification, UpdateCategoryOutput> execute(final UpdateCategoryInput anInput) {
+        final var anId = CategoryID.from(anInput.id());
+        final var aName = anInput.name();
+        final var aDescription = anInput.description();
+        final var isActive = anInput.isActive();
 
         final var aCategory = this.categoryGateway.findById(anId)
                 .orElseThrow(notFound(anId));
