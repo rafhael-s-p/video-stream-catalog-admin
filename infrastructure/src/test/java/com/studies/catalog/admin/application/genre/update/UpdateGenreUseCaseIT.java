@@ -112,7 +112,7 @@ class UpdateGenreUseCaseIT {
     }
 
     @Test
-    void givenAValidCommandWithInactiveGenre_whenCallsUpdateGenre_shouldReturnGenreId() {
+    void givenAValidInputWithInactiveGenre_whenCallsUpdateGenre_shouldReturnGenreId() {
         // given
         final var aGenre = genreGateway.create(Genre.newGenre("actonn", true));
 
